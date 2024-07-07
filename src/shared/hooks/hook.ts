@@ -1,1 +1,1 @@
-export const hook = () => {};
+export {};
