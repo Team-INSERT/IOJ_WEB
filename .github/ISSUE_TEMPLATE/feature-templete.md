@@ -1,7 +1,7 @@
 ---
 name: Feature Templete
 about: 기능 추가 이슈 템플릿 입니다.
-title: ''
+title: 'Feature : '
 labels: "\U0001F914 Question"
 assignees: ''
 
