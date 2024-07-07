@@ -1,6 +1,11 @@
 const theme = {
   black: "#000000",
+  pink: "#FF48AB",
   white: "#FFFFFF",
+  insertBlue: "#007CFF",
+  green: "#7ECE40",
+  warningRed: "#E33434",
+  correctGreen: "#24B984",
 
   grey100: "#F2F2F2",
   grey200: "#D9D9D9",
@@ -23,16 +28,13 @@ const theme = {
   blueDarkActive: "#003873",
   blueDarker: "#002859",
 
-  redLight: "#FFEDF7",
-  redLightHover: "#FFE4F2",
-  redLightActive: "#FFC6E5",
-  redNormal: "#FF48AB",
-  redNormalHover: "#E6419A",
-  redNormalActive: "#CC3A89",
-  redDark: "#BF3680",
-  redDarkHover: "#992B67",
-  redDarkActive: "#73204D",
-  redDarker: "#59193C",
+  characterBlue: "#6B71FF",
+  characterPink: "#FF6AC3",
+  characterRed: "#Ff6B6B",
+  characterPurple: "C446EE",
+  characterNeon: "#65EEE83",
+  characterOrange: "FF984D",
+  characterSkyblue: "#5CE2FF",
 };
 
 export default theme;
