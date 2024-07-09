@@ -1,3 +1,9 @@
 import * as S from "./style";
 
-export const Game = () => {};
+export const Game = () => {
+  return (
+    <>
+      <S.GameLayout></S.GameLayout>
+    </>
+  );
+};
