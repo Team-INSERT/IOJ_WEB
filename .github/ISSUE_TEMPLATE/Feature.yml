@@ -13,7 +13,7 @@ body:
     attributes:
       label: ✅ 해야 할 일
       description: 해야 할 일을 작성해 주세요.
-      placeholder: ◻︎ User Entity 작성
+      placeholder: ◻︎ 체크리스트 작성
     validations:
       required: true
   - type: textarea
