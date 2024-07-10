@@ -4,8 +4,10 @@ import { GameCard, MainHeader } from "../../../../shared/components";
 import * as S from "./style";
 import Person from "../../../../assets/Person";
 import Footer from "../../../../shared/components/footer";
+import { useState } from "react";
 
 export const Main = () => {
+  const [isLogin,setIsLogin] = useState(false)
   return (
     <>
       <MainHeader />
@@ -67,6 +69,7 @@ export const Main = () => {
           <S.RecordSubTitle>보이지 않는다면 로그인을 해주세요.</S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
+          {isLogin ? null : <S.Blind />}
           <S.CardLayout>
             <GameCard mode="문제 모아보기" />
             <GameCard mode="역대 전적" />

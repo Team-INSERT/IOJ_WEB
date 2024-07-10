@@ -38,7 +38,7 @@ export const Info = styled.p`
 export const ExplainLayout = styled.div`
   width: 100%;
   ${flex.COLUMN_CENTER}
-  padding-top: 4.75rem;
+  padding-top: 4.5rem;
   padding-bottom: 4.375rem;
 `;
 export const ExplainContent = styled.div`
@@ -99,6 +99,7 @@ export const RecordSubTitle = styled.p`
 export const RecordContent = styled.div`
   ${flex.CENTER}
   gap: 2.75rem;
+  position: relative;
 `
 export const CardLayout = styled.div`
   ${flex.CENTER}
@@ -146,4 +147,12 @@ export const PersonCount = styled.p`
 export const BlueText = styled.span`
   color: ${theme.insertBlue};
   margin: 0;
+`
+export const Blind = styled.div`
+  position: absolute;
+  width: 120%;
+  height: 140%;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.01);
 `
