@@ -34,6 +34,7 @@ export const Details = styled.div`
 `;
 export const Login = styled.div`
   color: ${theme.grey600};
+  cursor: pointer;
 `;
 export const Setting = styled.div`
   color: ${theme.grey600};
