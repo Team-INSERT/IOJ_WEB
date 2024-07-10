@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { NexonFont, Pretendard, theme } from "../style";
 
 type ButtonMode = "big" | "exit" | "small" | "choose" | "warn";
-type ColorMode = "gray" | "blue" | "glowBlue" | "red" | "glowRed" | "green";
+type ColorMode = "gray" | "blue" | "glowBlue" | "red" | "glowRed" | "green" | "white";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   mode: ButtonMode;
@@ -68,6 +68,15 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
             background-color: #22aa7a;
           }
         `;
+      case "white":
+        return css`
+          background-color: ${theme.white};
+          color: ${theme.grey900};
+          border: none;
+          &:hover {
+            background-color: ${theme.grey100};
+          }
+        `
       default:
         return css``;
     }

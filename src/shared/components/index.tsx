@@ -10,4 +10,8 @@ export { default as GameCard } from "./GameCard/index";
 export { default as Question } from "./Question/index";
 export { default as Room } from "./Room/index";
 export { default as WaitingRoom } from "./WaitingRoom";
+<<<<<<< HEAD
 export { default as Starts } from "./Stars";
+=======
+export { default as Starts } from "./Stars";
+>>>>>>> 176077a5b8a10b4a0fc0efa5c0c23c6795b39d9e
