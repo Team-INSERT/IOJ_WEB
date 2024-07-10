@@ -1,6 +1,6 @@
 import IojLogo from "../../../..//assets/IojLogo";
 import Button from "../../../../shared/components/Button";
-import { MainHeader } from "../../../../shared/components";
+import { GameCard, MainHeader } from "../../../../shared/components";
 import * as S from "./style";
 
 export const Main = () => {
@@ -40,8 +40,32 @@ export const Main = () => {
         </S.ExplainContent>
       </S.ExplainLayout>
       <S.QuestionLayout>
-        <S.AllQuestions></S.AllQuestions>
+        <S.AllSubjects>
+          <S.SubjectLayout>
+            <S.SubjectText>전체 문제 수</S.SubjectText>
+            <S.SubjectCount>00000+</S.SubjectCount>
+          </S.SubjectLayout>
+          <S.SubjectLayout>
+            <S.SubjectText>풀린 문제 수</S.SubjectText>
+            <S.SubjectCount>00000</S.SubjectCount>
+          </S.SubjectLayout>
+          <S.SubjectLayout>
+            <S.SubjectText>현재 개인 순위</S.SubjectText>
+            <S.SubjectCount>미공개</S.SubjectCount>
+          </S.SubjectLayout>
+          <S.SubjectLayout>
+            <S.SubjectText>채점 가능한 언어	</S.SubjectText>
+            <S.SubjectCount>6</S.SubjectCount>
+          </S.SubjectLayout>
+        </S.AllSubjects>
       </S.QuestionLayout>
+      <S.RecordLayout>
+        <S.RecordTitle>나의 기록</S.RecordTitle>
+        <S.RecordSubTitle>보이지 않는다면 로그인을 해주세요.</S.RecordSubTitle>
+        <div>
+          <GameCard mode="커스텀 모드" />
+        </div>
+      </S.RecordLayout>
     </>
   );
 };

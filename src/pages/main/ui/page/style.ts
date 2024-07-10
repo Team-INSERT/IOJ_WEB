@@ -56,11 +56,37 @@ export const QuestionLayout = styled.div`
   padding: 3.4375rem 0 3.4375rem 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.50) 100%), ${theme.grey900};
 `;
-export const AllQuestions = styled.div`
-  ${flex.COLUMN_START}
-  gap: 24px;
+export const AllSubjects = styled.div`
+  ${flex.CENTER}
+  gap: 6.25rem;
 `
-export const AllQuestionText = styled.p`
+export const SubjectLayout = styled.div`
+  ${flex.COLUMN_HORIZONTAL}
+  gap: 24px;  
+`
+export const SubjectText = styled.p`
   ${Pretendard.BigText}
   color: ${theme.grey200};
+  margin: 0;
+`
+export const SubjectCount = styled.p`
+  ${Pretendard.BigTitle2}
+  color: ${theme.grey100};
+  margin: 0;
+  padding-bottom: 3.25rem;
+`
+export const RecordLayout = styled.div`
+  width: 100%;
+  padding: 6rem 0 5.25rem 0;
+  ${flex.COLUMN_CENTER}
+`
+export const RecordTitle = styled.p`
+  margin: 0;
+  ${Pretendard.BigTitle}
+  color: ${theme.grey900};
+`
+export const RecordSubTitle = styled.p`
+  margin: 1.25rem 0 0 0;
+  ${Pretendard.BigText}
+  color: ${theme.grey600};
 `

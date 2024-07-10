@@ -11,6 +11,7 @@ export const Layout = styled.div`
   border-radius: 15px;
   background-color: ${theme.blueDark};
   cursor: pointer;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
 export const ImgContainer = styled.div`
