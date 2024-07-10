@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@8.5.1",
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@monaco-editor/react": "^4.6.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
