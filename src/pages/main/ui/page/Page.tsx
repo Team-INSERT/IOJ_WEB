@@ -1,12 +1,17 @@
 import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
-import { GameCard, MainHeader } from "@/shared/components";
+import { GameCard, MainHeader, Question } from "@/shared/components";
 import * as S from "./style";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/footer";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Main = () => {
+  const navigate = useNavigate()
+  const questionCount = "00000"
+  const solvedQuestions = "00000"
+  const langCount = "6"
   const [isLogin,setIsLogin] = useState(false)
   return (
     <>
@@ -27,7 +32,7 @@ export const Main = () => {
             </S.Info>
           </S.TextBox>
           <div>
-            <Button color="white" mode="big">
+            <Button color="white" mode="big" onClick={() => navigate("/game")}>
               게임 바로가기
             </Button>
           </div>
@@ -47,11 +52,11 @@ export const Main = () => {
         <S.AllSubjects>
           <S.SubjectLayout>
             <S.SubjectText>전체 문제 수</S.SubjectText>
-            <S.SubjectCount>00000+</S.SubjectCount>
+            <S.SubjectCount>{questionCount}+</S.SubjectCount>
           </S.SubjectLayout>
           <S.SubjectLayout>
             <S.SubjectText>풀린 문제 수</S.SubjectText>
-            <S.SubjectCount>00000</S.SubjectCount>
+            <S.SubjectCount>{solvedQuestions}</S.SubjectCount>
           </S.SubjectLayout>
           <S.SubjectLayout>
             <S.SubjectText>현재 개인 순위</S.SubjectText>
@@ -59,7 +64,7 @@ export const Main = () => {
           </S.SubjectLayout>
           <S.SubjectLayout>
             <S.SubjectText>채점 가능한 언어	</S.SubjectText>
-            <S.SubjectCount>6</S.SubjectCount>
+            <S.SubjectCount>{langCount}</S.SubjectCount>
           </S.SubjectLayout>
         </S.AllSubjects>
       </S.QuestionLayout>

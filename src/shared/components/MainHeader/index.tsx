@@ -31,7 +31,7 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.Login>로그인</S.Login>|<S.Setting>설정</S.Setting>
+        <S.Login onClick={() => navigate("/login")}>로그인</S.Login>|<S.Setting>설정</S.Setting>
       </S.Details>
     </S.Layout>
   );
