@@ -1,9 +1,9 @@
-import IojLogo from "../../../..//assets/IojLogo";
-import Button from "../../../../shared/components/Button";
-import { GameCard, MainHeader } from "../../../../shared/components";
+import IojLogo from "@/assets/IojLogo";
+import Button from "@/shared/components/Button";
+import { GameCard, MainHeader } from "@/shared/components";
 import * as S from "./style";
-import Person from "../../../../assets/Person";
-import Footer from "../../../../shared/components/footer";
+import Person from "@/assets/Person";
+import Footer from "@/shared/components/footer";
 import { useState } from "react";
 
 export const Main = () => {
