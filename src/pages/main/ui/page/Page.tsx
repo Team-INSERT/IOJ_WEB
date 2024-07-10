@@ -1,6 +1,6 @@
+import IojLogo from "../../../..//assets/IojLogo";
 import InsertLogo from "../../../../assets/InsertLogo";
 import * as S from "./style";
-import { Header } from "@/shared/components";
 
 export const Main = () => {
   return (
@@ -17,7 +17,7 @@ export const Main = () => {
       </S.BackgroundLayout>
       <S.ExplainLayout>
         <S.ExplainContent>
-          <InsertLogo />
+          <IojLogo width="180px" height="51.153px" />
           <S.DevideLine />
           <S.ExplainText>인서트 온라인 저지에서 온라인으로 상대방과 코딩 경쟁을 할 수 있습니다</S.ExplainText>
         </S.ExplainContent>
