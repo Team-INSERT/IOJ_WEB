@@ -11,6 +11,7 @@ export const Layout = styled.div`
 export const Logo = styled.div`
   ${flex.VERTICAL}
   margin-left: 3.5rem;
+  cursor: pointer;
 `;
 export const Menus = styled.div`
   ${flex.FLEX}
