@@ -32,7 +32,7 @@ const theme = {
   characterPink: "#FF6AC3",
   characterRed: "#FF6B6B",
   characterPurple: "#C446EE",
-  characterNeon: "#65EEE83",
+  characterNeon: "#65EE83",
   characterOrange: "#FF984D",
   characterSkyblue: "#5CE2FF",
 };
