@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 const MainHeader = () => {
   const MenusDetails = [
-    { id: 1, name: "홈", navigate: "/footer" }, // navigate 경로들은 예시로 해놨습니다.
-    { id: 2, name: "게임하기", navigate: "/footer" },
-    { id: 3, name: "랭킹", navigate: "/footer" },
-    { id: 4, name: "문제", navigate: "/footer" },
-    { id: 5, name: "게임소개", navigate: "/footer" },
-    { id: 6, name: "가이드", navigate: "/footer" },
+    { id: 1, name: "홈", navigate: "/" }, // navigate 경로들은 예시로 해놨습니다.
+    { id: 2, name: "게임하기", navigate: "/game" },
+    { id: 3, name: "랭킹", navigate: "/ranking" },
+    { id: 4, name: "문제", navigate: "/question" },
+    { id: 5, name: "게임소개", navigate: "/introduce" },
+    { id: 6, name: "가이드", navigate: "/guide" },
   ];
 
   const navigate = useNavigate();
