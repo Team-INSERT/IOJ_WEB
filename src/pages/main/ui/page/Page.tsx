@@ -1,6 +1,6 @@
-import { GameCard } from "../../../../shared/components";
-import IojLogo from "../../../..//assets/IojLogo";
-import InsertLogo from "../../../../assets/InsertLogo";
+import { GameCard } from "@/shared/components";
+import IojLogo from "@/assets/IojLogo";
+import InsertLogo from "@/assets/InsertLogo";
 import * as S from "./style";
 
 export const Main = () => {
