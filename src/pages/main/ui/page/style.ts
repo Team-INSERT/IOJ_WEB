@@ -1,6 +1,7 @@
 import { Pretendard, flex, theme } from "../../../../shared/style";
 import styled from "styled-components";
 import code from "../../../../assets/code.jpg";
+import { prependListener } from "process";
 
 export const BackgroundLayout = styled.div`
   background-image: url(${code});
@@ -79,6 +80,11 @@ export const RecordLayout = styled.div`
   width: 100%;
   padding: 6rem 0 5.25rem 0;
   ${flex.COLUMN_CENTER}
+  gap: 5rem;
+`
+export const RecordTextLayout = styled.div`
+  ${flex.COLUMN_CENTER}
+  gap: 1.25rem;
 `
 export const RecordTitle = styled.p`
   margin: 0;
@@ -86,7 +92,58 @@ export const RecordTitle = styled.p`
   color: ${theme.grey900};
 `
 export const RecordSubTitle = styled.p`
-  margin: 1.25rem 0 0 0;
   ${Pretendard.BigText}
   color: ${theme.grey600};
+  margin: 0;
+`
+export const RecordContent = styled.div`
+  ${flex.CENTER}
+  gap: 2.75rem;
+`
+export const CardLayout = styled.div`
+  ${flex.CENTER}
+  gap: 3.25rem;
+`
+export const RankLayout = styled.div`
+  ${flex.COLUMN_CENTER}
+  gap: 2rem;
+`
+export const DarkCircle = styled.div`
+  width: 15rem;
+  height: 15rem;
+  background-color: ${theme.grey200};
+  border-radius: 50%;
+  ${flex.CENTER}
+`
+export const BrightCircle = styled.div`
+  width: 12.5rem;
+  height: 12.5rem;
+  background-color: ${theme.white};
+  border-radius: 50%;
+  ${flex.CENTER}
+`
+export const Persent = styled.p`
+  ${Pretendard.BigTitle}
+  color: ${theme.insertBlue};
+`
+export const RankInfoLayout = styled.div`
+  ${flex.CENTER}
+  gap: 0.75rem;
+`
+export const RankInfoTexts = styled.div`
+  ${flex.COLUMN_HORIZONTAL}
+  gap: 0.75rem;
+`
+export const TopPercent = styled.p`
+  ${Pretendard.BigText}
+  margin: 0;
+`
+export const PersonCount = styled.p`
+  ${Pretendard.Text}
+  font-weight: bold;
+  margin: 0;
+`
+export const BlueText = styled.span`
+  color: ${theme.insertBlue};
+  margin: 0;
 `

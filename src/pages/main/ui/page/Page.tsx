@@ -2,6 +2,8 @@ import IojLogo from "../../../..//assets/IojLogo";
 import Button from "../../../../shared/components/Button";
 import { GameCard, MainHeader } from "../../../../shared/components";
 import * as S from "./style";
+import Person from "../../../../assets/Person";
+import Footer from "../../../../shared/components/footer";
 
 export const Main = () => {
   return (
@@ -60,12 +62,32 @@ export const Main = () => {
         </S.AllSubjects>
       </S.QuestionLayout>
       <S.RecordLayout>
-        <S.RecordTitle>나의 기록</S.RecordTitle>
-        <S.RecordSubTitle>보이지 않는다면 로그인을 해주세요.</S.RecordSubTitle>
-        <div>
-          <GameCard mode="커스텀 모드" />
-        </div>
+        <S.RecordTextLayout>
+          <S.RecordTitle>나의 기록</S.RecordTitle>
+          <S.RecordSubTitle>보이지 않는다면 로그인을 해주세요.</S.RecordSubTitle>
+        </S.RecordTextLayout>
+        <S.RecordContent>
+          <S.CardLayout>
+            <GameCard mode="문제 모아보기" />
+            <GameCard mode="역대 전적" />
+          </S.CardLayout>
+          <S.RankLayout>
+            <S.DarkCircle>
+              <S.BrightCircle>
+                <S.Persent>0%</S.Persent>
+              </S.BrightCircle>
+            </S.DarkCircle>
+            <S.RankInfoLayout>
+              <Person />
+              <S.RankInfoTexts>
+                <S.TopPercent>상위 <S.BlueText>100%</S.BlueText></S.TopPercent>
+                <S.PersonCount><S.BlueText>18000</S.BlueText>명 보다 높은 승률이에요</S.PersonCount>
+              </S.RankInfoTexts>
+            </S.RankInfoLayout>
+          </S.RankLayout>
+        </S.RecordContent>
       </S.RecordLayout>
+      <Footer />
     </>
   );
 };
