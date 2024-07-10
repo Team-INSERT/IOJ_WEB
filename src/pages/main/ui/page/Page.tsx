@@ -12,7 +12,7 @@ export const Main = () => {
   const questionCount = "00000"
   const solvedQuestions = "00000"
   const langCount = "6"
-  const [isLogin,setIsLogin] = useState(false)
+  const [isLogin,setIsLogin] = useState(true)
   return (
     <>
       <MainHeader />

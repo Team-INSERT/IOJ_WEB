@@ -23,17 +23,14 @@ export const TextBox = styled.div`
 export const Title = styled.p`
   ${Pretendard.BigText}
   color: ${theme.grey100};
-  margin: 0;
 `;
 export const SubTitle = styled.p`
   ${Pretendard.BigTitle}
   color: ${theme.white};
-  margin: 0;
 `;
 export const Info = styled.p`
   ${Pretendard.SmallText}
   color: ${theme.grey200};
-  margin: 0;
 `;
 export const ExplainLayout = styled.div`
   width: 100%;
@@ -68,12 +65,10 @@ export const SubjectLayout = styled.div`
 export const SubjectText = styled.p`
   ${Pretendard.BigText}
   color: ${theme.grey200};
-  margin: 0;
 `
 export const SubjectCount = styled.p`
   ${Pretendard.BigTitle2}
   color: ${theme.grey100};
-  margin: 0;
   padding-bottom: 3.25rem;
 `
 export const RecordLayout = styled.div`
@@ -87,14 +82,12 @@ export const RecordTextLayout = styled.div`
   gap: 1.25rem;
 `
 export const RecordTitle = styled.p`
-  margin: 0;
   ${Pretendard.BigTitle}
   color: ${theme.grey900};
 `
 export const RecordSubTitle = styled.p`
   ${Pretendard.BigText}
   color: ${theme.grey600};
-  margin: 0;
 `
 export const RecordContent = styled.div`
   ${flex.CENTER}
@@ -137,16 +130,13 @@ export const RankInfoTexts = styled.div`
 `
 export const TopPercent = styled.p`
   ${Pretendard.BigText}
-  margin: 0;
 `
 export const PersonCount = styled.p`
   ${Pretendard.Text}
   font-weight: bold;
-  margin: 0;
 `
 export const BlueText = styled.span`
   color: ${theme.insertBlue};
-  margin: 0;
 `
 export const Blind = styled.div`
   position: absolute;
