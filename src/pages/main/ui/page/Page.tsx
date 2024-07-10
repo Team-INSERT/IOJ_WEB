@@ -1,3 +1,4 @@
+import { GameCard } from "../../../../shared/components";
 import IojLogo from "../../../..//assets/IojLogo";
 import InsertLogo from "../../../../assets/InsertLogo";
 import * as S from "./style";
@@ -22,6 +23,7 @@ export const Main = () => {
           <S.ExplainText>인서트 온라인 저지에서 온라인으로 상대방과 코딩 경쟁을 할 수 있습니다</S.ExplainText>
         </S.ExplainContent>
       </S.ExplainLayout>
+      <GameCard mode="역대 전적" />
     </>
   );
 };
