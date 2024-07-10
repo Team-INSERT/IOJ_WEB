@@ -7,6 +7,13 @@ import BasicMarkUp from "../../../assets/BasicMarkUp.png";
 import CustomBackground from "../../../assets/CustomBackground.svg";
 import ContestBackground from "../../../assets/ContestBackground.svg";
 import BasicBackground from "../../../assets/BasicBackground.svg";
+import BookMarkUp from "../../../assets/Book.png";
+import AllQuestionMarkUp from "../../../assets/AllQuestionMaskUp.png";
+import ChartMarkUp from "../../../assets/ChartLineUp.svg";
+import HistoryMarkUp from "../../../assets/HistoriyMaskUp.png";
+import MainCardBackground from "../../../assets/MainCardBackground.svg"
+import AllQuestionsLogo from "../../../assets/AllQuestionsLogo";
+import HistoryLogo from "../../../assets/HistoryLogo";
 
 interface Modetype {
   mode: string;
@@ -35,6 +42,20 @@ const GameCard = ({ mode }: Modetype) => {
       subtitle1: "자유롭게 게임을 만들어서",
       subtitle2: "다양한 경험을 할 수 있어요!",
     },
+    {
+      id: 4,
+      markup: AllQuestionMarkUp,
+      mode: "문제 모아보기",
+      subtitle1: "지금까지 풀었던 문제를",
+      subtitle2: "확인해보세요!",
+    },
+    {
+      id: 5,
+      markup: HistoryMarkUp,
+      mode: "역대 전적",
+      subtitle1: "많은 사람들과 대회를 통해",
+      subtitle2: "전적을 높여보세요!",
+    },
   ];
 
   const detail = Details.find((detail) => detail.mode === mode);
@@ -50,6 +71,8 @@ const GameCard = ({ mode }: Modetype) => {
     background = ContestBackground;
   } else if (detail.id === 3) {
     background = CustomBackground;
+  } else if (detail.id === 5 || detail.id === 4){
+    background = MainCardBackground;
   } else {
     background = "";
   }
@@ -64,6 +87,8 @@ const GameCard = ({ mode }: Modetype) => {
         {mode === "커스텀 모드" || mode === "베이직 모드" ? (
           <CustomLogo />
         ) : null}
+        {mode === "문제 모아보기" && <AllQuestionsLogo />}
+        {mode === "역대 전적" && <HistoryLogo />}
         <S.Title>{detail.mode}</S.Title>
         <S.SubTitle>
           <S.Text>{detail.subtitle1}</S.Text>
