@@ -10,8 +10,18 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
-<<<<<<< HEAD
 }
-=======
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
->>>>>>> 176077a5b8a10b4a0fc0efa5c0c23c6795b39d9e
+
+@font-face {
+  font-family: "NEXONFootballGothicBA1";
+  src: url("https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}

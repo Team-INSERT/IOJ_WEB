@@ -1,8 +1,13 @@
 import styled from "styled-components";
+import { Pretendard, theme, flex } from "../../../../shared/style";
 
 export const EditorLayout = styled.div`
-  width: 100%;
+  background-color: #1e1e1e;
+  ${flex.COLUMN_FLEX};
+  width: 50%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+`;
+
+export const ButtonBox = styled.div`
+  ${flex.FLEX};
 `;
