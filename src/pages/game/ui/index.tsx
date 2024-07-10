@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flex } from "@/shared/style";
+import { flex, theme } from "@/shared/style";
 
 export const Game = () => {
   return (
