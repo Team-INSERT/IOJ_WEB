@@ -12,11 +12,12 @@ export const BackgroundLayout = styled.div`
 `;
 export const ContentBox = styled.div`
   ${flex.COLUMN_FLEX}
-  width: 399px;
+  gap: 16px;
 `;
 export const TextBox = styled.div`
   ${flex.COLUMN_FLEX}
   width: 100%;
+  gap: 12px;
 `;
 export const Title = styled.p`
   ${Pretendard.BigText}
@@ -55,3 +56,11 @@ export const QuestionLayout = styled.div`
   padding: 3.4375rem 0 3.4375rem 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.50) 100%), ${theme.grey900};
 `;
+export const AllQuestions = styled.div`
+  ${flex.COLUMN_START}
+  gap: 24px;
+`
+export const AllQuestionText = styled.p`
+  ${Pretendard.BigText}
+  color: ${theme.grey200};
+`
