@@ -1,4 +1,4 @@
-import { flex } from "@/shared/style";
+import { Pretendard, flex } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
@@ -20,4 +20,7 @@ export const GreyBg = styled.div`
   bottom: 0;
   left: 0;
   height: 607px;
+`
+export const Title = styled.p`
+  ${Pretendard.Title}
 `
