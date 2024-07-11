@@ -12,7 +12,7 @@ export const Layout = styled.div`
   padding: 34px 0 17px 120px;
 `;
 export const Title = styled.div`
-  ${NexonFont.NexonBigTitle2}
+  ${NexonFont.NexonBigTitle}
   color: ${theme.grey900};
 `;
 export const Date = styled.div`
