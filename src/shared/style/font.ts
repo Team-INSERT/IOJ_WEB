@@ -28,8 +28,8 @@ export const Pretendard = {
   BigTitle: fontGenerator(700, 2.875, 110, "Pretendard-Regular"),
   Title: fontGenerator(700, 2.313, 130, "Pretendard-Regular"),
   SmallTitle: fontGenerator(700, 1.875, 130, "Pretendard-Regular"),
-  BigText: fontGenerator(700, 1.5, 130, "Pretendard-Regular"),
-  Text: fontGenerator(700, 1.188, 130, "Pretendard-Regular"),
+  BigText: fontGenerator(600, 1.5, 130, "Pretendard-Regular"),
+  Text: fontGenerator(400, 1.188, 130, "Pretendard-Regular"),
   SmallText: fontGenerator(700, 0.938, 130, "Pretendard-Regular"),
-  Caption: fontGenerator(700, 0.75, 130, "Pretendard-Regular"),
+  Caption: fontGenerator(400, 0.75, 130, "Pretendard-Regular"),
 };

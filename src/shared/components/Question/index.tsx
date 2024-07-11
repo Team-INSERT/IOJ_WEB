@@ -27,3 +27,4 @@ const Question = ({ mode, qustionNumebr, number, title, level }: Details) => {
 };
 
 export default Question;
+
