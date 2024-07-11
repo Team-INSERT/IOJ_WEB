@@ -8,11 +8,13 @@ interface ContainerProps {
 export const Layout = styled.div`
   width: 100%;
   ${flex.HORIZONTAL}
+  position: relative;
 `
 export const Content = styled.div`
   ${flex.COLUMN_CENTER}
   gap: 3.75rem;
   padding-top: 6.25rem;
+  padding-bottom: 12rem;
 `
 export const BlueBg = styled.div`
   position: absolute;
@@ -45,7 +47,7 @@ export const PropertyText = styled.p`
     width: 174px;
   }
 `
-export const Questions = styled.div`
+export const QuestionsNames = styled.div`
   ${flex.START}
   gap: 16px;
 `
@@ -64,4 +66,39 @@ export const BlueLine = styled.hr`
   border: none;
   background: linear-gradient(90deg, #F2F2F2 0%, #007cff 100%);
   margin-top: 20px;
+`
+export const RankingLayout = styled.div`
+  margin-top: 40px;
+  width: 100%;
+  ${flex.COLUMN_HORIZONTAL}
+  gap: 16px;
+`
+export const UserRow = styled.div`
+  ${flex.START}
+  gap: 40px;
+`
+export const Ranking = styled.p`
+  ${NexonFont.NexonBigText}
+  color: ${theme.blueNormal};
+  width: 61px;
+`
+export const Name = styled.p`
+  ${NexonFont.NexonBigText}
+  color: ${theme.black};
+  width: 162px;
+`
+export const Questions = styled.div`
+  ${flex.START}
+  gap: 16px;
+`
+export const Question = styled.div<ContainerProps>`
+  width: ${({ childCount }) => `calc((894px - (${childCount} - 1) * 16px) / ${childCount})`}; 
+  height: 32px;
+  background-color: ${theme.correctGreen};
+  border-radius: 4px;
+  ${flex.CENTER}
+`
+export const QuestionSolveRank = styled.p`
+  ${NexonFont.NexonBigText}
+  color: ${theme.white};
 `
