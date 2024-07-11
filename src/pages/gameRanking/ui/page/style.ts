@@ -1,8 +1,11 @@
 import { NexonFont, Pretendard, flex, theme } from "@/shared/style";
 import styled from "styled-components";
 
-interface ContainerProps {
-  childCount: number;
+interface QuestionSumProps {
+  questionSum: number;
+}
+interface RankColorProps {
+  rank: string;
 }
 
 export const Layout = styled.div`
@@ -51,8 +54,8 @@ export const QuestionsNames = styled.div`
   ${flex.START}
   gap: 16px;
 `
-export const QuestionLayout = styled.div<ContainerProps>`
-  width: ${({ childCount }) => `calc((894px - (${childCount} - 1) * 16px) / ${childCount})`};
+export const QuestionLayout = styled.div<QuestionSumProps>`
+  width: ${({ questionSum }) => `calc((894px - (${questionSum} - 1) * 16px) / ${questionSum})`};
   height: 27px;
   ${flex.CENTER}
 `
@@ -77,9 +80,24 @@ export const UserRow = styled.div`
   ${flex.START}
   gap: 40px;
 `
-export const Ranking = styled.p`
+export const Ranking = styled.p<RankColorProps>`
   ${NexonFont.NexonBigText}
-  color: ${theme.blueNormal};
+  color: ${({ rank }) => {
+    switch(rank) {
+      case "1":
+        return theme.blueNormal;
+      case "2":
+        return theme.blueNormalHover;
+      case "3":
+        return theme.blueNormalActive;
+      case "4":
+        return theme.blueDark;
+      case "5":
+        return theme.blueDarkHover;
+      default:
+        return theme.grey900;
+    }
+  }};
   width: 61px;
 `
 export const Name = styled.p`
@@ -91,12 +109,23 @@ export const Questions = styled.div`
   ${flex.START}
   gap: 16px;
 `
-export const Question = styled.div<ContainerProps>`
-  width: ${({ childCount }) => `calc((894px - (${childCount} - 1) * 16px) / ${childCount})`}; 
+export const Question = styled.div<QuestionSumProps>`
+  width: ${({ questionSum }) => `calc((894px - (${questionSum} - 1) * 16px) / ${questionSum})`}; 
   height: 32px;
   background-color: ${theme.correctGreen};
   border-radius: 4px;
   ${flex.CENTER}
+`
+export const NotSolved = styled.div<QuestionSumProps>`
+  width: ${({ questionSum }) => `calc((894px - (${questionSum} - 1) * 16px) / ${questionSum})`}; 
+  height: 32px;
+  border-radius: 4px;
+`
+export const RedQuestion = styled.div<QuestionSumProps>`
+  width: ${({ questionSum }) => `calc((894px - (${questionSum} - 1) * 16px) / ${questionSum})`}; 
+  height: 32px;
+  background-color: #FA5C5C;
+  border-radius: 4px;
 `
 export const QuestionSolveRank = styled.p`
   ${NexonFont.NexonBigText}
