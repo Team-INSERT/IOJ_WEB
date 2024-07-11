@@ -17,17 +17,20 @@ export const GameRanking = () => {
       <S.Content>
         <S.Title>{title}</S.Title>
         <S.Chart>
-          <S.PropertyText>순위</S.PropertyText>
-          <S.PropertyText>이름</S.PropertyText>
-          <S.Questions>
-            {
-              questions.map((item,index) => (
-                <S.QuestionLayout childCount={questions.length}>
-                  <S.QuestionName>{item}</S.QuestionName>
-                </S.QuestionLayout>
-              ))
-            }
-          </S.Questions>
+          <S.Attribute>
+            <S.PropertyText>순위</S.PropertyText>
+            <S.PropertyText>이름</S.PropertyText>
+            <S.Questions>
+              {
+                questions.map((item,index) => (
+                  <S.QuestionLayout childCount={questions.length}>
+                    <S.QuestionName>{item}</S.QuestionName>
+                  </S.QuestionLayout>
+                ))
+              }
+            </S.Questions>
+          </S.Attribute>
+          <S.BlueLine />
         </S.Chart>
       </S.Content>
     </S.Layout>

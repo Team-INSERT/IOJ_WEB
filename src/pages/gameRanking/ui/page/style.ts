@@ -29,6 +29,9 @@ export const Title = styled.p`
   ${Pretendard.Title}
 `
 export const Chart = styled.div`
+  ${flex.COLUMN_CENTER}
+`
+export const Attribute = styled.div`
   ${flex.START}
   gap: 28px;
 `
@@ -54,4 +57,11 @@ export const QuestionLayout = styled.div<ContainerProps>`
 export const QuestionName = styled.p`
   ${NexonFont.NexonBigText}
   color: ${theme.grey800};
+`
+export const BlueLine = styled.hr`
+  width: 100%;
+  height: 2px;
+  border: none;
+  background: linear-gradient(90deg, #F2F2F2 0%, #007cff 100%);
+  margin-top: 20px;
 `
