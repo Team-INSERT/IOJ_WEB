@@ -8,6 +8,26 @@ export const EditorLayout = styled.div`
   height: 100%;
 `;
 
+export const FileName = styled.div`
+  ${Pretendard.Text};
+  color: ${theme.white};
+  font-weight: 600;
+`;
+
+export const HeaderBox = styled.div`
+  ${flex.BETWEEN}
+  padding: 2% 2%;
+`;
+
 export const ButtonBox = styled.div`
-  ${flex.FLEX};
+  width: 100%;
+  ${flex.END}
+`;
+export const Button = styled.div`
+  margin-left: 1%;
+`;
+
+export const TestBox = styled.div`
+  ${flex.FLEX}
+  background-color: ${theme.black};
 `;

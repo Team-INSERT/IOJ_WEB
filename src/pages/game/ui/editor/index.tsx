@@ -6,14 +6,43 @@ export const CodeEditor = () => {
   return (
     <>
       <S.EditorLayout>
-        <S.ButtonBox></S.ButtonBox>
+        <S.HeaderBox>
+          <S.FileName>Main.py</S.FileName>
+          <S.ButtonBox>
+            <S.Button>
+              <Button mode="small" color="blue">
+                Python
+              </Button>
+            </S.Button>
+            <S.Button>
+              <Button mode="small" color="blue">
+                테스트케이스
+              </Button>
+            </S.Button>
+            <S.Button>
+              <Button mode="small" color="blue">
+                실행
+              </Button>
+            </S.Button>
+            <S.Button>
+              <Button mode="small" color="green">
+                제출
+              </Button>
+            </S.Button>
+          </S.ButtonBox>
+        </S.HeaderBox>
+
         <Editor
           theme="vs-dark"
-          height="50em"
+          height="50rem"
           width="100%"
           defaultLanguage="javascript"
-          defaultValue="코드를 입력하세요"
+          defaultValue=""
+          options={{
+            fontSize: 16,
+          }}
         />
+        <S.TestBox></S.TestBox>
       </S.EditorLayout>
     </>
   );

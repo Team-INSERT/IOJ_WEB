@@ -5,7 +5,7 @@ export { default as MainHeader } from "./MainHeader/index";
 export { default as ContestTitle } from "./InGame/ContestTitle/index";
 export { default as Result } from "./InGame/Result/index";
 export { default as UserCompartment } from "./InGame/UserCompartment/index";
-export { default as footer } from "./footer/index";
+export { default as Footer } from "./footer/index";
 export { default as GameCard } from "./GameCard/index";
 export { default as Question } from "./Question/index";
 export { default as Room } from "./Room/index";

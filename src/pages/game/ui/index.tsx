@@ -6,17 +6,21 @@ import { Pretendard, theme, flex } from "../../../shared/style";
 
 export const Game = () => {
   return (
-    <>
+    <GameLayout>
       <GameHeader />
-      <GameLayout>
+      <GameBox>
         <Problem />
         <CodeEditor />
-      </GameLayout>
-    </>
+      </GameBox>
+    </GameLayout>
   );
 };
 
 export const GameLayout = styled.div`
+  width: 100%;
+  height: 80%;
+`;
+export const GameBox = styled.div`
   ${flex.HORIZONTAL}
   width: 100%;
   height: 100%;
