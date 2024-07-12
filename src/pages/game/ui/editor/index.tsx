@@ -31,10 +31,9 @@ export const CodeEditor = () => {
             </S.Button>
           </S.ButtonBox>
         </S.HeaderBox>
-
         <Editor
           theme="vs-dark"
-          height="50rem"
+          height="30rem"
           width="100%"
           defaultLanguage="javascript"
           defaultValue=""
@@ -42,7 +41,13 @@ export const CodeEditor = () => {
             fontSize: 16,
           }}
         />
-        <S.TestBox></S.TestBox>
+        <S.TestBox>
+          <S.TestHeader>
+            <S.TestRun>실행</S.TestRun>
+            <S.TestCase>테스트케이스</S.TestCase>
+          </S.TestHeader>
+        </S.TestBox>
+        x
       </S.EditorLayout>
     </>
   );

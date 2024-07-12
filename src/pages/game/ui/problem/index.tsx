@@ -7,7 +7,9 @@ export const Problem = () => {
         <S.ProblemNo>25534</S.ProblemNo>
         <S.NameBox>
           <S.ProblemName>A+B</S.ProblemName>
-          <Stars value={3} />
+          <S.Star>
+            <Stars value={3} />
+          </S.Star>
         </S.NameBox>
       </S.ProblemTitleBox>
       <S.ProblemContentBox>

@@ -23,6 +23,9 @@ export const NameBox = styled.div`
   ${flex.BETWEEN}
 `;
 
+export const Star = styled.div`
+  ${flex.FLEX}
+`;
 export const ProblemName = styled.p`
   ${Pretendard.SmallTitle};
   padding-bottom: 2%;

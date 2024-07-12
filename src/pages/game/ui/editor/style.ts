@@ -28,6 +28,19 @@ export const Button = styled.div`
 `;
 
 export const TestBox = styled.div`
-  ${flex.FLEX}
+  ${flex.COLUMN_FLEX}
   background-color: ${theme.black};
+  height: 16rem;
 `;
+
+export const TestHeader = styled.div`
+  ${flex.FLEX}
+  background-color: ${theme.grey900};
+  height: 2rem;
+`;
+
+export const TestRun = styled.div`
+  font-size: 20px;
+`;
+
+export const TestCase = styled.div``;
