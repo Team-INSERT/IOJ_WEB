@@ -1,7 +1,7 @@
 import React from "react";
-import * as S from "./style";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
+import * as S from "./style";
 
 export const GameRanking = () => {
   const title = "2024학년도 1학년 알고리즘 경진대회";
@@ -83,7 +83,7 @@ export const GameRanking = () => {
             <S.PropertyText>순위</S.PropertyText>
             <S.PropertyText>이름</S.PropertyText>
             <S.QuestionsNames>
-              {questions.map((item, index) => (
+              {questions.map((item) => (
                 <S.QuestionLayout questionSum={questions.length}>
                   <S.QuestionName>{item}</S.QuestionName>
                 </S.QuestionLayout>
@@ -92,35 +92,25 @@ export const GameRanking = () => {
           </S.Attribute>
           <S.BlueLine />
           <S.RankingLayout>
-            {players.map((player, playerIndex) => (
-              <S.UserRow key={playerIndex}>
+            {players.map((player) => (
+              <S.UserRow key={player.rank}>
                 <S.Ranking rank={player.rank}>{player.rank}</S.Ranking>
                 <S.Name>{player.name}</S.Name>
                 <S.Questions>
                   {player.questions.map((result, index) => {
                     if (result === "") {
-                      return (
-                        <S.NotSolved
-                          questionSum={questions.length}
-                          key={index}
-                        />
-                      );
-                    } else if (result === "wrong") {
-                      return (
-                        <S.RedQuestion
-                          questionSum={questions.length}
-                          key={index}
-                        />
-                      );
-                    } else {
-                      return (
-                        <S.Question questionSum={questions.length} key={index}>
-                          <S.QuestionSolveRank>
-                            {player.questions[index]}
-                          </S.QuestionSolveRank>
-                        </S.Question>
-                      );
+                      return <S.NotSolved questionSum={questions.length} />;
                     }
+                    if (result === "wrong") {
+                      return <S.RedQuestion questionSum={questions.length} />;
+                    }
+                    return (
+                      <S.Question questionSum={questions.length}>
+                        <S.QuestionSolveRank>
+                          {player.questions[index]}
+                        </S.QuestionSolveRank>
+                      </S.Question>
+                    );
                   })}
                 </S.Questions>
               </S.UserRow>
@@ -131,3 +121,5 @@ export const GameRanking = () => {
     </S.Layout>
   );
 };
+
+export default GameRanking;

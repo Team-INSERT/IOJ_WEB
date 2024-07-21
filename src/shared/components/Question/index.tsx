@@ -1,6 +1,6 @@
+import Stars from "@/shared/components/Stars";
+import QuestionCategory from "@/assets/QuestinCategory";
 import * as S from "./style";
-import QuestionCategory from "../../../assets/QuestinCategory";
-import Stars from "../../components/Stars";
 
 interface Details {
   qustionNumebr: string;

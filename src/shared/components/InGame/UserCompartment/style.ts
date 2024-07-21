@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import InGameUserPartment from "../../../../assets/InGameUserPartment.svg";
-import InGameHoverUserPartment from "./../../../../assets/InGameHoverUserPartment.svg";
+import InGameUserPartment from "@/assets/InGameUserPartment.svg";
+import InGameHoverUserPartment from "@/assets/InGameHoverUserPartment.svg";
 import { NexonFont, flex } from "../../../style";
 
 export const Layout = styled.div`

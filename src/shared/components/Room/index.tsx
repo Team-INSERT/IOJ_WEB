@@ -1,6 +1,6 @@
+import Contest from "@/assets/Contest.svg";
+import Customization from "@/assets/Customization.svg";
 import * as S from "./style";
-import Contest from "../../../assets/Contest.svg";
-import Customization from "../../../assets/Customization.svg";
 
 interface RoomProps {
   link: string;
