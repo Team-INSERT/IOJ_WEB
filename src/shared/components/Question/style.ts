@@ -1,5 +1,5 @@
-import { Pretendard, flex } from "../../style";
 import styled from "styled-components";
+import { Pretendard, flex } from "@/shared/style";
 
 export const Layout = styled.div`
   padding: 4px 8px;

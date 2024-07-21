@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { flex } from "../../style";
-import { theme } from "../../style";
+import { flex,theme } from "@/shared/style";
 
 export const Layout = styled.div`
   padding: 53px 195px 37px 194px;
