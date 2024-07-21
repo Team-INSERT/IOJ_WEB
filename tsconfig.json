@@ -17,6 +17,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "**/*.ts", "**/*.tsx","craco.config.cjs",".eslintrc.js"]
+  "include": ["src", "**/*.ts", "**/*.tsx","craco.config.cjs"]
 }
 
