@@ -7,12 +7,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
-const Main = () => {
+export const Main = () => {
   const navigate = useNavigate();
   const questionCount = "00000";
   const solvedQuestions = "00000";
   const langCount = "6";
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   return (
     <>
       <MainHeader />
@@ -105,5 +105,3 @@ const Main = () => {
     </>
   );
 };
-
-export default Main;

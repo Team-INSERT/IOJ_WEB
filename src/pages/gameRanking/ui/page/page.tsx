@@ -121,5 +121,3 @@ export const GameRanking = () => {
     </S.Layout>
   );
 };
-
-export default GameRanking;
