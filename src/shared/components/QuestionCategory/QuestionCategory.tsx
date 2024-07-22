@@ -25,4 +25,3 @@ const QuestionCategory = ({ mode }: questionCategoryProps) => {
 };
 
 export default QuestionCategory;
-
