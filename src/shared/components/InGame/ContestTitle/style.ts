@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import ContestTitle from "../../../../assets/ContestTitle.svg";
-import { NexonFont, theme } from "../../../../shared/style";
+import ContestTitle from "@/assets/ContestTitle.svg";
+import { NexonFont, theme } from "@/shared/style";
 
 export const BackgroundLayout = styled.div`
   background-image: url(${ContestTitle});

@@ -1,18 +1,18 @@
 import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
-import { GameCard, MainHeader, Question } from "@/shared/components";
-import * as S from "./style";
+import { GameCard, MainHeader } from "@/shared/components";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/footer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as S from "./style";
 
 export const Main = () => {
-  const navigate = useNavigate()
-  const questionCount = "00000"
-  const solvedQuestions = "00000"
-  const langCount = "6"
-  const [isLogin,setIsLogin] = useState(false)
+  const navigate = useNavigate();
+  const questionCount = "00000";
+  const solvedQuestions = "00000";
+  const langCount = "6";
+  const [isLogin, setIsLogin] = useState(false);
   return (
     <>
       <MainHeader />
@@ -63,7 +63,7 @@ export const Main = () => {
             <S.SubjectCount>미공개</S.SubjectCount>
           </S.SubjectLayout>
           <S.SubjectLayout>
-            <S.SubjectText>채점 가능한 언어	</S.SubjectText>
+            <S.SubjectText>채점 가능한 언어 </S.SubjectText>
             <S.SubjectCount>{langCount}</S.SubjectCount>
           </S.SubjectLayout>
         </S.AllSubjects>
@@ -71,7 +71,9 @@ export const Main = () => {
       <S.RecordLayout>
         <S.RecordTextLayout>
           <S.RecordTitle>나의 기록</S.RecordTitle>
-          <S.RecordSubTitle>보이지 않는다면 로그인을 해주세요.</S.RecordSubTitle>
+          <S.RecordSubTitle>
+            보이지 않는다면 로그인을 해주세요.
+          </S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
           {isLogin ? null : <S.Blind />}
@@ -88,8 +90,12 @@ export const Main = () => {
             <S.RankInfoLayout>
               <Person />
               <S.RankInfoTexts>
-                <S.TopPercent>상위 <S.BlueText>100%</S.BlueText></S.TopPercent>
-                <S.PersonCount><S.BlueText>18000</S.BlueText>명 보다 높은 승률이에요</S.PersonCount>
+                <S.TopPercent>
+                  상위 <S.BlueText>100%</S.BlueText>
+                </S.TopPercent>
+                <S.PersonCount>
+                  <S.BlueText>18000</S.BlueText>명 보다 높은 승률이에요
+                </S.PersonCount>
               </S.RankInfoTexts>
             </S.RankInfoLayout>
           </S.RankLayout>

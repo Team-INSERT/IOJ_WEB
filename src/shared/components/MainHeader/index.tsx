@@ -1,6 +1,6 @@
-import * as S from "./style";
-import IojLogo from "../../../assets/IojLogo";
 import { useNavigate } from "react-router-dom";
+import IojLogo from "@/assets/IojLogo";
+import * as S from "./style";
 
 const MainHeader = () => {
   const MenusDetails = [

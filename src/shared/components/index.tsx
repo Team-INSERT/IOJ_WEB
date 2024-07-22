@@ -1,4 +1,4 @@
-//공통 컴포넌트들 불러오기
+// 공통 컴포넌트들 불러오기
 export { default as Button } from "./Button";
 export { default as GameHeader } from "./GameHeader/index";
 export { default as MainHeader } from "./MainHeader/index";

@@ -1,5 +1,4 @@
-import Character from "../../../../assets/Character";
-import { theme } from "../../../style";
+import Character from "@/assets/Character";
 import * as S from "./style";
 
 interface Details {
@@ -7,13 +6,11 @@ interface Details {
   color: string;
 }
 
-const UserCompartment = ({ UserName, color }: Details) => {
-  return (
-    <S.Layout>
-      <Character color={color} />
-      <S.UserName>{UserName}</S.UserName>
-    </S.Layout>
-  );
-};
+const UserCompartment = ({ UserName, color }: Details) => (
+  <S.Layout>
+    <Character color={color} />
+    <S.UserName>{UserName}</S.UserName>
+  </S.Layout>
+);
 
 export default UserCompartment;
