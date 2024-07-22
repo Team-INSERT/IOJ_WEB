@@ -17,7 +17,7 @@ const MainHeader = () => {
   return (
     <S.Layout>
       <S.Logo>
-        <IojLogo />
+        <IojLogo onClick={() => navigate("/")}/>
       </S.Logo>
       <S.Menus>
         {MenusDetails.map((item) => (
