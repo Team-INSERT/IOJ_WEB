@@ -20,7 +20,7 @@ const QuestionCategory = ({ mode }: questionCategoryProps) => {
         </S.Layout>
       );
     default:
-      return <S.Layout color={theme.white}></S.Layout>;
+      return <S.Layout color={theme.white} />;
   }
 };
 
