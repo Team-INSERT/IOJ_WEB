@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { NexonFont, flex, theme } from "@/shared/style";
+import GameCardHover from "@/assets/GameCardHover.svg"
 
 interface DetailsProps {
   bgImage: string;
