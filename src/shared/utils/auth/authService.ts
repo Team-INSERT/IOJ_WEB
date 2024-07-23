@@ -1,4 +1,4 @@
-import { customAxios, publicAxios } from "../customAxios";
+import { customAxios } from "../customAxios";
 
 export const fetchUserData = async () => {
   try {
@@ -11,7 +11,7 @@ export const fetchUserData = async () => {
 
 export const authorizeAccess = async (accessToken: String) => {
   try {
-    const response = await publicAxios.post(
+    const response = await customAxios.post(
       "/auth",
       {
         accessToken,

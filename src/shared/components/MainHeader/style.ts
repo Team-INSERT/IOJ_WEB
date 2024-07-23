@@ -22,9 +22,13 @@ export const Menus = styled.div`
   top: 56px;
   right: 15.75rem;
 `;
-export const Menu = styled.div<{ isHome: boolean }>`
-  color: ${(props) => (props.isHome ? `${theme.black}` : `${theme.grey600}`)};
+export const Menu = styled.div<{ isActive: boolean }>`
+  color: ${({ isActive }) => (isActive ? theme.black : theme.grey600)};
   cursor: pointer;
+  
+  &:hover {
+    color: ${theme.black};
+  }
 `;
 export const Details = styled.div`
   ${flex.FLEX}
@@ -38,6 +42,10 @@ export const Details = styled.div`
 export const Login = styled.div`
   color: ${theme.grey600};
   cursor: pointer;
+
+  &:hover {
+    color: ${theme.grey700};
+  }
 `;
 export const Setting = styled.div`
   color: ${theme.grey600};

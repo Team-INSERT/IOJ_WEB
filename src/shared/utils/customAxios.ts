@@ -3,14 +3,13 @@ import axios, { AxiosInstance } from "axios";
 export const customAxios: AxiosInstance = axios.create({
   baseURL: "http://182.218.148.184:8888",
 });
-export const publicAxios: AxiosInstance = axios.create({
-  baseURL: "http://182.218.148.184:8888",
-});
 
 customAxios.interceptors.request.use((data) => {
   const token = localStorage.getItem("access");
   const config = data;
-  config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
@@ -22,7 +21,7 @@ customAxios.interceptors.response.use(
     }
     try {
       const reFreshToken = localStorage.getItem("refresh");
-      const { data } = await publicAxios.post("/auth/refresh", {
+      const { data } = await customAxios.post("/auth/refresh", {
         reFreshToken,
       });
       localStorage.setItem("access", data.accessToken);

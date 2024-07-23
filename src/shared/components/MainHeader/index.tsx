@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import IojLogo from "@/assets/IojLogo";
+import { useEffect, useState } from "react";
 import * as S from "./style";
 
 const MainHeader = () => {
@@ -13,17 +14,26 @@ const MainHeader = () => {
   ];
 
   const navigate = useNavigate();
-  
+  const location = useLocation();
+  const [userName, setUserName] = useState("로그인");
+
+  useEffect(() => {
+    const stolenName = localStorage.getItem("name");
+    if (stolenName) {
+      setUserName(stolenName);
+    }
+  }, []);
+
   return (
     <S.Layout>
       <S.Logo>
-        <IojLogo onClick={() => navigate("/")}/>
+        <IojLogo onClick={() => navigate("/")} />
       </S.Logo>
       <S.Menus>
         {MenusDetails.map((item) => (
           <S.Menu
             key={item.id}
-            isHome={item.id === 1}
+            isActive={location.pathname === item.navigate}
             onClick={() => navigate(item.navigate)}
           >
             {item.name}
@@ -31,7 +41,8 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.Login onClick={() => navigate("/login")}>로그인</S.Login>|<S.Setting>설정</S.Setting>
+        <S.Login onClick={() => navigate("/login")}>{userName}</S.Login>|
+        <S.Setting>설정</S.Setting>
       </S.Details>
     </S.Layout>
   );

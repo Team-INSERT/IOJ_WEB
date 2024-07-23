@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { MainHeader } from "@/shared/components";
 import Google from "@/assets/Google";
-import { publicAxios } from "@/shared/utils/customAxios";
+import { customAxios } from "@/shared/utils/customAxios";
 import * as S from "./style";
 
 export const Login = () => {
   let OAUTH_URL = "";
   useEffect(() => {
     (async () => {
-      const { data } = await publicAxios.get("/auth");
+      const { data } = await customAxios.get("/auth");
       OAUTH_URL = data;
     })();
   }, []);
