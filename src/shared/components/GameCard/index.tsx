@@ -8,7 +8,7 @@ import ContestBackground from "@/assets/ContestBackground.svg";
 import BasicBackground from "@/assets/BasicBackground.svg";
 import AllQuestionMarkUp from "@/assets/AllQuestionMaskUp.png";
 import HistoryMarkUp from "@/assets/HistoriyMaskUp.png";
-import MainCardBackground from "@/assets/MainCardBackground.svg"
+import MainCardBackground from "@/assets/MainCardBackground.svg";
 import AllQuestionsLogo from "@/assets/AllQuestionsLogo";
 import HistoryLogo from "@/assets/HistoryLogo";
 import * as S from "./style";
