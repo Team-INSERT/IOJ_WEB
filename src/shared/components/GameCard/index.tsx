@@ -1,17 +1,17 @@
+import CustomLogo from "@/assets/CustomLogo";
+import ContestLogo from "@/assets/ContestLogo";
+import ContestMarkUp from "@/assets/ContestMaskUp.png";
+import CustomMarkUp from "@/assets/CustomMaskUp.png";
+import BasicMarkUp from "@/assets/BasicMarkUp.png";
+import CustomBackground from "@/assets/CustomBackground.svg";
+import ContestBackground from "@/assets/ContestBackground.svg";
+import BasicBackground from "@/assets/BasicBackground.svg";
+import AllQuestionMarkUp from "@/assets/AllQuestionMaskUp.png";
+import HistoryMarkUp from "@/assets/HistoriyMaskUp.png";
+import MainCardBackground from "@/assets/MainCardBackground.svg"
+import AllQuestionsLogo from "@/assets/AllQuestionsLogo";
+import HistoryLogo from "@/assets/HistoryLogo";
 import * as S from "./style";
-import CustomLogo from "../../../assets/CustomLogo";
-import ContestLogo from "../../../assets/ContestLogo";
-import ContestMarkUp from "../../../assets/ContestMaskUp.png";
-import CustomMarkUp from "../../../assets/CustomMaskUp.png";
-import BasicMarkUp from "../../../assets/BasicMarkUp.png";
-import CustomBackground from "../../../assets/CustomBackground.svg";
-import ContestBackground from "../../../assets/ContestBackground.svg";
-import BasicBackground from "../../../assets/BasicBackground.svg";
-import AllQuestionMarkUp from "../../../assets/AllQuestionMaskUp.png";
-import HistoryMarkUp from "../../../assets/HistoriyMaskUp.png";
-import MainCardBackground from "../../../assets/MainCardBackground.svg";
-import AllQuestionsLogo from "../../../assets/AllQuestionsLogo";
-import HistoryLogo from "../../../assets/HistoryLogo";
 
 interface Modetype {
   mode: string;
@@ -56,7 +56,7 @@ const GameCard = ({ mode }: Modetype) => {
     },
   ];
 
-  const detail = Details.find((detail) => detail.mode === mode);
+  const detail = Details.find((item) => item.mode === mode);
 
   if (!detail) {
     return <div>해당 모드를 찾을 수 없음.</div>;

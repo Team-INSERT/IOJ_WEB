@@ -1,4 +1,4 @@
-import { theme } from "../../../style";
+import { theme } from "@/shared/style";
 import * as S from "./style";
 
 interface Details {
@@ -25,25 +25,26 @@ const Result = ({
   submitTime,
 }: Details) => {
   let color;
+  let koreanResult;
   switch (result) {
     case "correct":
-      result = "정답입니다!!";
+      koreanResult = "정답입니다!!";
       color = theme.correctGreen;
       break;
     case "incorrect":
-      result = "오답입니다";
+      koreanResult = "오답입니다";
       color = theme.warningRed;
       break;
     case "compileError":
-      result = "컴파일에러";
+      koreanResult = "컴파일에러";
       color = theme.blueDarkHover;
       break;
     case "runtimeError":
-      result = "런타임에러";
+      koreanResult = "런타임에러";
       color = "#762EBF";
       break;
     default:
-      result = result;
+      koreanResult = result;
       color = "inherit";
   }
 
@@ -54,7 +55,7 @@ const Result = ({
           <S.SubmitNumber>{submitNumber}</S.SubmitNumber>
           <S.UserName>{userName}</S.UserName>
           <S.QuestionNumber>{questionNumber}</S.QuestionNumber>
-          <S.Result color={color}>{result}</S.Result>
+          <S.Result color={color}>{koreanResult}</S.Result>
           <S.Memory>
             <div>{memory}</div>
             <S.RedText>KB</S.RedText>

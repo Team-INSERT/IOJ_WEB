@@ -1,6 +1,6 @@
+import Stars from "@/shared/components/Stars";
+import QuestionCategory from "@/assets/QuestinCategory";
 import * as S from "./style";
-import Stars from "../../components/Stars";
-import QuestionCategory from "../QuestionCategory/QuestionCategory";
 
 interface Details {
   mode: string;
@@ -27,4 +27,3 @@ const Question = ({ mode, qustionNumebr, number, title, level }: Details) => {
 };
 
 export default Question;
-

@@ -23,10 +23,10 @@ const ContestQuestion = () => {
       </S.RemainingTimeContainer>
         <S.QuestionTitle>문제</S.QuestionTitle>
         <S.Question>
-          <Question qustionNumebr="A" number={1} title="A + B = ?" level={4} />
-          <Question qustionNumebr="B" number={1} title="A + B = ?" level={4} />
-          <Question qustionNumebr="C" number={1} title="A + B = ?" level={4} />
-          <Question qustionNumebr="D" number={1} title="A + B = ?" level={4} />
+          <Question mode="success" qustionNumebr="A" number={1} title="A + B = ?" level={4} />
+          <Question mode="wrong" qustionNumebr="B" number={1} title="A + B = ?" level={4} />
+          <Question mode="" qustionNumebr="C" number={1} title="A + B = ?" level={4} />
+          <Question mode="success" qustionNumebr="D" number={1} title="A + B = ?" level={4} />
         </S.Question>
     </S.Layout>
   );
