@@ -4,7 +4,6 @@ import { Main } from "@/pages/main/ui/page/Page";
 import { GameRanking } from "@/pages/gameRanking";
 import { Login } from "@/pages/login";
 
-
 const App = () => (
   <Router>
     <Routes>
