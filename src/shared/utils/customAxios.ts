@@ -1,6 +1,9 @@
 import axios, { AxiosInstance } from "axios";
 
-const customAxios: AxiosInstance = axios.create({
+export const customAxios: AxiosInstance = axios.create({
+  baseURL: "http://182.218.148.184:8888",
+});
+export const publicAxios: AxiosInstance = axios.create({
   baseURL: "http://182.218.148.184:8888",
 });
 
@@ -19,12 +22,9 @@ customAxios.interceptors.response.use(
     }
     try {
       const reFreshToken = localStorage.getItem("refresh");
-      const { data } = await axios.post(
-        "http://182.218.148.184:8888/auth/refresh",
-        {
-          reFreshToken,
-        },
-      );
+      const { data } = await publicAxios.post("/auth/refresh", {
+        reFreshToken,
+      });
       localStorage.setItem("access", data.accessToken);
       const { config } = err;
       if (config.headers) {
@@ -36,5 +36,3 @@ customAxios.interceptors.response.use(
     }
   },
 );
-
-export default customAxios;

@@ -1,43 +1,44 @@
-import { useEffect } from "react";
-import axios from "axios";
-import customAxios from "../customAxios";
+import { customAxios, publicAxios } from "../customAxios";
 
-export const useAuthService = () => {
-  useEffect(() => {
-    const { hash } = window.location;
-    const params = new URLSearchParams(hash.substring(1));
-    const accessToken = params.get("access_token");
+export const fetchUserData = async () => {
+  try {
+    const { data } = await customAxios.get("/user");
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
 
-    if (accessToken) {
-      (async () => {
-        try {
-          const response = await axios.post(
-            "http://182.218.148.184:8888/auth",
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              accessToken,
-            },
-          );
+export const authorizeAccess = async (accessToken: String) => {
+  try {
+    const response = await publicAxios.post(
+      "/auth",
+      {
+        accessToken,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-          if (response.data.accessToken && response.data.refreshToken) {
-            localStorage.setItem("access", response.data.accessToken);
-            localStorage.setItem("refresh", response.data.refreshToken);
-          }
-          if (
-            localStorage.getItem("access") &&
-            localStorage.getItem("refresh")
-          ) {
-            const { data } = await customAxios.get("/user");
-            localStorage.setItem("name", data.nickname);
-            localStorage.setItem("color", data.color)
-            window.location.replace("/");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      })();
+    const { accessToken: newAccessToken, refreshToken } = response.data;
+
+    if (newAccessToken && refreshToken) {
+      localStorage.setItem("access", newAccessToken);
+      localStorage.setItem("refresh", refreshToken);
     }
-  }, []);
+
+    if (localStorage.getItem("access") && localStorage.getItem("refresh")) {
+      const userData = await fetchUserData();
+      localStorage.setItem("name", userData.nickname);
+      localStorage.setItem("color", userData.color);
+      window.location.replace("/");
+    }
+
+    return true;
+  } catch (error) {
+    return error;
+  }
 };

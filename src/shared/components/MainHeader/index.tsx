@@ -13,7 +13,7 @@ const MainHeader = () => {
   ];
 
   const navigate = useNavigate();
-
+  
   return (
     <S.Layout>
       <S.Logo>
