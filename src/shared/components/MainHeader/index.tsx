@@ -12,17 +12,25 @@ const MainHeader = () => {
     { id: 5, name: "게임소개", navigate: "/introduce" },
     { id: 6, name: "가이드", navigate: "/guide" },
   ];
+  const stolenName = localStorage.getItem("name");
 
   const navigate = useNavigate();
   const location = useLocation();
   const [userName, setUserName] = useState("로그인");
 
   useEffect(() => {
-    const stolenName = localStorage.getItem("name");
     if (stolenName) {
       setUserName(stolenName);
     }
   }, []);
+
+  const onNameClick = () => {
+    if (stolenName) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <S.Layout>
@@ -41,7 +49,7 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.Login onClick={() => navigate("/login")}>{userName}</S.Login>|
+        <S.Login onClick={onNameClick}>{userName}</S.Login>|
         <S.Setting>설정</S.Setting>
       </S.Details>
     </S.Layout>
