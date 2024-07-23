@@ -26,7 +26,7 @@ const MainHeader = () => {
 
   const onNameClick = () => {
     if (stolenName) {
-      navigate("/profile");
+      navigate("/setting");
     } else {
       navigate("/login");
     }
@@ -49,8 +49,8 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.Login onClick={onNameClick}>{userName}</S.Login>|
-        <S.Setting>설정</S.Setting>
+        <S.DetailText onClick={onNameClick}>{userName}</S.DetailText>|
+        <S.DetailText onClick={() => navigate("/setting")}>설정</S.DetailText>
       </S.Details>
     </S.Layout>
   );

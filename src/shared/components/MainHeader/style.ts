@@ -39,14 +39,11 @@ export const Details = styled.div`
   right: 9.25rem;
   top: 16px;
 `;
-export const Login = styled.div`
+export const DetailText = styled.div`
   color: ${theme.grey600};
   cursor: pointer;
 
   &:hover {
     color: ${theme.grey700};
   }
-`;
-export const Setting = styled.div`
-  color: ${theme.grey600};
 `;
