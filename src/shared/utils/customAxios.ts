@@ -20,10 +20,13 @@ customAxios.interceptors.response.use(
       return Promise.reject(err);
     }
     try {
-      const reFreshToken = localStorage.getItem("refresh");
-      const { data } = await customAxios.post("/auth/refresh", {
-        reFreshToken,
-      });
+      const refreshToken = localStorage.getItem("refresh");
+      const { data } = await axios.post(
+        "http://182.218.148.184:8888/auth/refresh",
+        {
+          refreshToken,
+        },
+      );
       localStorage.setItem("access", data.accessToken);
       const { config } = err;
       if (config.headers) {
