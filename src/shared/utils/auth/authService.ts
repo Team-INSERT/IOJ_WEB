@@ -26,11 +26,11 @@ export const authorizeAccess = async (accessToken: String) => {
     const { accessToken: newAccessToken, refreshToken } = response.data;
 
     if (newAccessToken && refreshToken) {
-      localStorage.setItem("access", newAccessToken);
-      localStorage.setItem("refresh", refreshToken);
+      localStorage.setItem("accessToken", newAccessToken);
+      localStorage.setItem("refreshToken", refreshToken);
     }
 
-    if (localStorage.getItem("access") && localStorage.getItem("refresh")) {
+    if (localStorage.getItem("accessToken") && localStorage.getItem("refreshToken")) {
       const userData = await fetchUserData();
       localStorage.setItem("name", userData.nickname);
       localStorage.setItem("color", userData.color);

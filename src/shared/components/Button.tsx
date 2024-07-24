@@ -95,7 +95,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
       case "big":
         return css`
           padding: 12px 60px;
-          font-weight: bold;
+          font-weight: 700 !important;
           ${Pretendard.Text}
         `;
       case "exit":

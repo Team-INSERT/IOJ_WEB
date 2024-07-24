@@ -5,7 +5,7 @@ export const customAxios: AxiosInstance = axios.create({
 });
 
 customAxios.interceptors.request.use((data) => {
-  const token = localStorage.getItem("access");
+  const token = localStorage.getItem("accessToken");
   const config = data;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -20,14 +20,14 @@ customAxios.interceptors.response.use(
       return Promise.reject(err);
     }
     try {
-      const refreshToken = localStorage.getItem("refresh");
+      const refreshToken = localStorage.getItem("refreshToken");
       const { data } = await axios.post(
         "http://182.218.148.184:8888/auth/refresh",
         {
           refreshToken,
         },
       );
-      localStorage.setItem("access", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
       const { config } = err;
       if (config.headers) {
         config.headers.Authorization = `Bearer ${data.accessToken}`;

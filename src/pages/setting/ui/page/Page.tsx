@@ -6,15 +6,15 @@ import * as S from "./style";
 export const Setting = () => {
   const stolenName = localStorage.getItem("name")
   const onLogoutClick = async () => {
-    const refreshToken = localStorage.getItem("refresh");
+    const refreshToken = localStorage.getItem("refreshToken");
     try {
       await customAxios.delete("/auth", {
         data: { refreshToken },
       });
       localStorage.removeItem("name");
       localStorage.removeItem("color");
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       window.location.href = "/";
     } catch (error) {
       console.error(error);

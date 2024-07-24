@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Main } from "@/pages/main/ui/page/Page";
+import { Main } from "@/pages/main";
 import { GameRanking } from "@/pages/gameRanking";
 import { Login } from "@/pages/login";
 import { useAuthService } from "@/shared/utils/auth/useAuthService";
