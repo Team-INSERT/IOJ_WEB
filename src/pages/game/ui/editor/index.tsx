@@ -1,6 +1,8 @@
 import * as S from "./style";
 import Editor from "@monaco-editor/react";
 import { Button } from "shared/components";
+import { Dropdown } from "shared/components";
+import { TestBox } from "../testbox";
 
 export const CodeEditor = () => {
   return (
@@ -10,9 +12,7 @@ export const CodeEditor = () => {
           <S.FileName>Main.py</S.FileName>
           <S.ButtonBox>
             <S.Button>
-              <Button mode="small" color="blue">
-                Python
-              </Button>
+              <Dropdown />
             </S.Button>
             <S.Button>
               <Button mode="small" color="blue">
@@ -35,19 +35,15 @@ export const CodeEditor = () => {
           theme="vs-dark"
           height="30rem"
           width="100%"
-          defaultLanguage="javascript"
+          defaultLanguage="C++"
           defaultValue=""
           options={{
             fontSize: 16,
           }}
         />
-        <S.TestBox>
-          <S.TestHeader>
-            <S.TestRun>실행</S.TestRun>
-            <S.TestCase>테스트케이스</S.TestCase>
-          </S.TestHeader>
-        </S.TestBox>
-        x
+        <S.TestBoxLayout>
+          <TestBox />
+        </S.TestBoxLayout>
       </S.EditorLayout>
     </>
   );
