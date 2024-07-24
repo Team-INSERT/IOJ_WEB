@@ -21,7 +21,6 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
     <>
       {Array.from({ length: 5 }).map((_, index) => (
         <span
-          key={index}
           onClick={() => handleClick(index)}
           style={{ cursor: setting ? "pointer" : "default" }}
         >

@@ -1,8 +1,16 @@
+import React from "react";
 import styled, { css } from "styled-components";
 import { NexonFont, Pretendard, theme } from "../style";
 
 type ButtonMode = "big" | "exit" | "small" | "choose" | "warn";
-type ColorMode = "gray" | "blue" | "glowBlue" | "red" | "glowRed" | "green" | "white";
+type ColorMode =
+  | "gray"
+  | "blue"
+  | "glowBlue"
+  | "red"
+  | "glowRed"
+  | "green"
+  | "white";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   mode: ButtonMode;
@@ -76,7 +84,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
           &:hover {
             background-color: ${theme.grey100};
           }
-        `
+        `;
       default:
         return css``;
     }
@@ -132,8 +140,8 @@ const StyledButton = styled.button<ButtonProps>`
   cursor: pointer;
 `;
 
-const Button = ({ mode, color, ...props }: ButtonProps) => {
-  return <StyledButton mode={mode} color={color} {...props} />;
-};
+const Button = ({ mode, color, ...props }: ButtonProps) => (
+  <StyledButton mode={mode} color={color} {...props} />
+);
 
 export default Button;

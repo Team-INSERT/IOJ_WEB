@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { NexonFont, Pretendard, flex, theme } from "../../style";
+import { NexonFont, Pretendard, flex, theme } from "@/shared/style";
 
 export const Layout = styled.div`
   padding: 14px 0;

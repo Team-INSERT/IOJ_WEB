@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { NexonFont, flex, theme } from "../../style";
+import { NexonFont, flex, theme } from "@/shared/style";
 
 interface LayoutProps {
   backgroundImage: string;

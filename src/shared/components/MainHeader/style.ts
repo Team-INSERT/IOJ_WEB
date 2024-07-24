@@ -2,13 +2,16 @@ import styled from "styled-components";
 import { Pretendard, flex, theme } from "../../style";
 
 export const Layout = styled.div`
+  background-color: ${theme.white};
   height: 100px;
   ${flex.FLEX}
   position: relative;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
 `;
 export const Logo = styled.div`
   ${flex.VERTICAL}
   margin-left: 3.5rem;
+  cursor: pointer;
 `;
 export const Menus = styled.div`
   ${flex.FLEX}

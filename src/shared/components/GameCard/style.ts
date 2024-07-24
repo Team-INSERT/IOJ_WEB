@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { NexonFont, flex, theme } from "../../style";
+import { NexonFont, flex, theme } from "@/shared/style";
 
 interface DetailsProps {
   bgImage: string;
