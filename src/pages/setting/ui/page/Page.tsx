@@ -4,6 +4,7 @@ import { customAxios } from "@/shared/utils/customAxios";
 import * as S from "./style";
 
 export const Setting = () => {
+  const stolenName = localStorage.getItem("name")
   const onLogoutClick = async () => {
     const refreshToken = localStorage.getItem("refresh");
     try {
@@ -23,7 +24,9 @@ export const Setting = () => {
   return (
     <>
       <MainHeader />
-      <S.Logout onClick={onLogoutClick}>로그아웃</S.Logout>
+      {
+        stolenName ? <S.Logout onClick={onLogoutClick}>로그아웃</S.Logout> : <p>로그인하세요</p>
+      }
     </>
   );
 };
