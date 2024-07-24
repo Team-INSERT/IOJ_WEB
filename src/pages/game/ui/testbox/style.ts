@@ -42,6 +42,9 @@ export const TestCasesHeader = styled.h2`
   margin-bottom: 10px;
 `;
 
+export const TestBox = styled.div`
+${flex.BETWEEN}`;
+
 export const TestCasesNote = styled.p`
   ${Pretendard.Caption}
   margin-bottom: 16px;
@@ -50,6 +53,11 @@ export const TestCasesNote = styled.p`
   border-radius: 5px;
   padding: 2%;
 `;
+
+export const Button = styled.div`
+${flex.END}
+`;
+
 
 export const Table = styled.table`
   width: 100%;

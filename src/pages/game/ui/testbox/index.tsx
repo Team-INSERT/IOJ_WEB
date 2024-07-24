@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "shared/components";
 import * as S from "./style";
 
 export const TestBox = () => {
@@ -49,9 +50,16 @@ export const TestBox = () => {
       <S.Content>
         {activeTab === "execution" && (
           <>
+          <S.TestBox> 
             <S.Text>
               프로세스가 시작되었습니다. (입력값을 직접 입력해주세요.)
             </S.Text>
+            <S.Button>
+              <Button mode="small" color="red">
+                정지
+              </Button>
+            </S.Button>
+          </S.TestBox> 
             <S.Text>{">"}</S.Text>
             <S.Text>프로세스가 종료되었습니다.</S.Text>
           </>
