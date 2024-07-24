@@ -1,12 +1,11 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import IojLogo from "../../../../assets/IojLogo";
 import Button from "../../../../shared/components/Button";
-import { GameCard, MainHeader} from "../../../../shared/components";
+import { GameCard, MainHeader } from "../../../../shared/components";
 import * as S from "./style";
 import Person from "../../../../assets/Person";
 import Footer from "../../../../shared/components/footer";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 
 export const Main = () => {
   const navigate = useNavigate();

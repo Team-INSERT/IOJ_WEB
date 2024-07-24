@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Pretendard, theme,flex } from "../../../../shared/style";
+import { Pretendard, theme, flex } from "../../../../shared/style";
 
 interface TabProps {
   active: boolean;
@@ -43,7 +43,8 @@ export const TestCasesHeader = styled.h2`
 `;
 
 export const TestBox = styled.div`
-${flex.BETWEEN}`;
+  ${flex.BETWEEN}
+`;
 
 export const TestCasesNote = styled.p`
   ${Pretendard.Caption}
@@ -55,9 +56,8 @@ export const TestCasesNote = styled.p`
 `;
 
 export const Button = styled.div`
-${flex.END}
+  ${flex.END}
 `;
-
 
 export const Table = styled.table`
   width: 100%;
@@ -99,4 +99,5 @@ export const TableCell = styled.td`
 `;
 
 export const StyledSpan = styled.span`
-color:${theme.insertBlue}`;
+  color: ${theme.insertBlue};
+`;
