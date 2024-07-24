@@ -16,7 +16,7 @@ export const FileName = styled.div`
 
 export const HeaderBox = styled.div`
   ${flex.BETWEEN}
-  padding: 2% 2%;
+  padding: 2%;
 `;
 
 export const ButtonBox = styled.div`
@@ -31,4 +31,5 @@ export const TestBoxLayout = styled.div`
   ${flex.COLUMN_FLEX}
   background-color: ${theme.black};
   height: 16rem;
+  overflow: auto;
 `;

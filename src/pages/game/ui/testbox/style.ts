@@ -1,13 +1,12 @@
 import styled from "styled-components";
-import { Pretendard, theme, flex } from "../../../../shared/style";
+import { Pretendard, theme,flex } from "../../../../shared/style";
 
 interface TabProps {
   active: boolean;
 }
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${flex.COLUMN_FLEX}
   width: 100%;
   height: 100%;
   background-color: #222;
@@ -15,13 +14,14 @@ export const Container = styled.div`
 `;
 
 export const TabContainer = styled.div`
-  display: flex;
-  background-color: #333;
+  ${flex.FLEX}
+  background-color: ${theme.grey900};
 `;
 
 export const Tab = styled.div<TabProps>`
   padding: 10px 20px;
-  color: white;
+  color: ${theme.white};
+  font-size: 16px;
   cursor: pointer;
   border-bottom: ${({ active }) => (active ? "2px solid white" : "none")};
 `;
@@ -46,7 +46,7 @@ export const TestCasesNote = styled.p`
   ${Pretendard.Caption}
   margin-bottom: 16px;
   font-weight: 400;
-  background: #4d4d4d;
+  background: ${theme.grey800};
   border-radius: 5px;
   padding: 2%;
 `;
@@ -55,19 +55,20 @@ export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  background-color: #333;
+  background-color: ${theme.grey900};
   border: 1px solid #555;
 `;
 
 export const TableHead = styled.thead`
-  background-color: #333;
+  background-color: ${theme.grey900};
 `;
 
 export const TableBody = styled.tbody``;
 
 export const TableHeadRow = styled.tr`
-  background-color: #333;
+  background-color: ${theme.grey900};
 `;
+
 export const TableRow = styled.tr`
   background-color: black;
 `;
@@ -75,7 +76,7 @@ export const TableRow = styled.tr`
 export const TableHeader = styled.th`
   padding: 10px;
   font-weight: 400;
-  color: #fff;
+  color: ${theme.white};
   text-align: left;
   font-size: 12px;
   white-space: nowrap;
@@ -85,6 +86,9 @@ export const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #555;
   font-size: 12px;
-  color: #fff;
+  color: ${theme.white};
   word-break: break-word;
 `;
+
+export const StyledSpan = styled.span`
+color:${theme.insertBlue}`;

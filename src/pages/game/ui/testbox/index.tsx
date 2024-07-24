@@ -59,7 +59,7 @@ export const TestBox = () => {
         {activeTab === "testCases" && (
           <>
             <S.TestCasesHeader>
-              테스트케이스 일치 비율 : <span>0</span> / 2
+              테스트케이스 일치 비율 : <S.StyledSpan>0</S.StyledSpan> / 2
             </S.TestCasesHeader>
             <S.TestCasesNote>
               각 입력 케이스의 값이 실제 채점 방식과 동일한 방식으로 표준입력에
