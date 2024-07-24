@@ -2,7 +2,7 @@ import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
 import { GameCard, MainHeader } from "@/shared/components";
 import Person from "@/assets/Person";
-import Footer from "@/shared/components/footer";
+import Footer from "@/shared/components/Footer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";

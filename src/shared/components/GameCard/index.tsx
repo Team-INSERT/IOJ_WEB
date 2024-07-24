@@ -8,7 +8,7 @@ import ContestBackground from "@/assets/ContestBackground.svg";
 import BasicBackground from "@/assets/BasicBackground.svg";
 import AllQuestionMarkUp from "@/assets/AllQuestionMaskUp.png";
 import HistoryMarkUp from "@/assets/HistoriyMaskUp.png";
-import MainCardBackground from "@/assets/MainCardBackground.svg"
+import MainCardBackground from "@/assets/MainCardBackground.svg";
 import AllQuestionsLogo from "@/assets/AllQuestionsLogo";
 import HistoryLogo from "@/assets/HistoryLogo";
 import * as S from "./style";
@@ -69,14 +69,14 @@ const GameCard = ({ mode }: Modetype) => {
     background = ContestBackground;
   } else if (detail.id === 3) {
     background = CustomBackground;
-  } else if (detail.id === 5 || detail.id === 4){
+  } else if (detail.id === 5 || detail.id === 4) {
     background = MainCardBackground;
   } else {
     background = "";
   }
 
   return (
-    <S.Layout>
+    <S.Layout id={detail.id}>
       <S.ImgContainer>
         <img src={detail.markup} alt={`${detail.mode} 이미지`} />
       </S.ImgContainer>
