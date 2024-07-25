@@ -1,6 +1,6 @@
 import Editor from "@monaco-editor/react";
-import Button from "../../../../shared/components/Button";
-import Dropdown from "../../../../shared/components/DropDown";
+import Button from "@/shared/components/Button";
+import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import * as S from "./style";
 

@@ -1,6 +1,6 @@
-import * as S from "./style";
-import Clock from "../../../assets/Clock";
+import Clock from "@/assets/Clock";
 import Button from "../Button";
+import * as S from "./style";
 
 const GameHeader = () => (
   <S.Layout>

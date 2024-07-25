@@ -1,5 +1,5 @@
+import { Stars } from "@/shared/components";
 import * as S from "./style";
-import { Stars } from "../../../../shared/components";
 
 export const Problem = () => (
   <S.ProblemLayout>

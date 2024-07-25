@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../../../shared/components/Button";
+import Button from "@/shared/components/Button";
 import * as S from "./style";
 
 export const TestBox = () => {

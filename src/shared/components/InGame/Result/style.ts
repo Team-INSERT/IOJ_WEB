@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Pretendard, flex, theme } from "../../../style";
+import { Pretendard, flex, theme } from "@/shared/style";
 
 export const Layout = styled.table`
   border-collapse: collapse;

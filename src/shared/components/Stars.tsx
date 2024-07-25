@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Star from "../../assets/Star";
-import BlueStar from "../../assets/BlueStar";
+import Star from "@/assets/Star";
+import BlueStar from "@/assets/BlueStar";
 
 interface StarsProps {
   read?: boolean;
