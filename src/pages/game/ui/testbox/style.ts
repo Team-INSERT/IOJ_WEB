@@ -20,7 +20,7 @@ export const TabContainer = styled.div`
 
 export const Tab = styled.div<TabProps>`
   padding: 12px 20px;
-  color: ${theme.white};
+  color: ${({ active }) => (active ? "white" : "#999")};
   font-size: 16px;
   cursor: pointer;
   border-bottom: ${({ active }) => (active ? "2px solid white" : "none")};
