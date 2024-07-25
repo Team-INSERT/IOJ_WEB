@@ -1,18 +1,18 @@
-import IojLogo from "@/assets/IojLogo";
-import Button from "@/shared/components/Button";
-import { GameCard, MainHeader } from "@/shared/components";
-import Person from "@/assets/Person";
-import Footer from "@/shared/components/Footer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import IojLogo from "../../../../assets/IojLogo";
+import Button from "../../../../shared/components/Button";
+import { GameCard, MainHeader } from "../../../../shared/components";
 import * as S from "./style";
+import Person from "../../../../assets/Person";
+import Footer from "../../../../shared/components/footer";
 
 export const Main = () => {
   const navigate = useNavigate();
   const questionCount = "00000";
   const solvedQuestions = "00000";
   const langCount = "6";
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   return (
     <>
       <MainHeader />

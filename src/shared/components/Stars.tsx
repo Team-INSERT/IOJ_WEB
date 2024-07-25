@@ -18,7 +18,7 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
   };
 
   return (
-    <div>
+    <>
       {Array.from({ length: 5 }).map((_, index) => (
         <span
           onClick={() => handleClick(index)}
@@ -27,7 +27,7 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
           {index < currentStarsValue ? <BlueStar /> : <Star />}
         </span>
       ))}
-    </div>
+    </>
   );
 };
 
