@@ -1,6 +1,6 @@
+import InsertLogo from "@/assets/InsertLogo";
+import GithubLogo from "@/assets/GithubLogo";
 import * as S from "./style";
-import InsertLogo from "../../../assets/InsertLogo";
-import GithubLogo from "../../../assets/GithubLogo";
 
 const Footer = () => (
   <S.Layout>

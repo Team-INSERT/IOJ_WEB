@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import IojLogo from "../../../../assets/IojLogo";
-import Button from "../../../../shared/components/Button";
-import { GameCard, MainHeader } from "../../../../shared/components";
+import IojLogo from "@/assets/IojLogo";
+import Button from "@/shared/components/Button";
+import Person from "@/assets/Person";
+import Footer from "@/shared/components/Footer";
+import { GameCard, MainHeader } from "@/shared/components";
 import * as S from "./style";
-import Person from "../../../../assets/Person";
-import Footer from "../../../../shared/components/footer";
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export const Main = () => {
             </S.Info>
           </S.TextBox>
           <div>
-            <Button color="white" mode="big" onClick={() => navigate("/game")}>
+            <Button color="white" mode="big" onClick={() => window.open("/game", "_blank", "noopener")}>
               게임 바로가기
             </Button>
           </div>

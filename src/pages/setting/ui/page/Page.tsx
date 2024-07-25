@@ -5,6 +5,7 @@ import * as S from "./style";
 
 export const Setting = () => {
   const stolenName = localStorage.getItem("name")
+
   const onLogoutClick = async () => {
     const refreshToken = localStorage.getItem("refresh");
     try {

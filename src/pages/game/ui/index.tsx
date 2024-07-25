@@ -1,8 +1,8 @@
 import styled from "styled-components";
+import { GameHeader } from "@/shared/components";
+import { flex } from "@/shared/style";
 import { CodeEditor } from "./editor";
-import { GameHeader } from "../../../shared/components";
 import { Problem } from "./problem";
-import { flex } from "../../../shared/style";
 
 export const GameLayout = styled.div`
   width: 100%;
