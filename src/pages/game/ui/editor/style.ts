@@ -12,16 +12,18 @@ export const FileName = styled.div`
   ${Pretendard.Text};
   color: ${theme.white};
   font-weight: 600;
+  padding: 0 20px 12px 20px;
+  border-bottom: 2px solid white;
 `;
 
 export const HeaderBox = styled.div`
   ${flex.BETWEEN}
-  padding: 2%;
 `;
 
 export const ButtonBox = styled.div`
   width: 100%;
   ${flex.END}
+  padding: 20px;
 `;
 export const Button = styled.div`
   margin-left: 1%;
