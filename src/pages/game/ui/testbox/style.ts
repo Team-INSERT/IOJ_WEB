@@ -19,7 +19,7 @@ export const TabContainer = styled.div`
 `;
 
 export const Tab = styled.div<TabProps>`
-  padding: 10px 20px;
+  padding: 12px 20px;
   color: ${theme.white};
   font-size: 16px;
   cursor: pointer;
@@ -100,4 +100,18 @@ export const TableCell = styled.td`
 
 export const StyledSpan = styled.span`
   color: ${theme.insertBlue};
+`;
+
+export const ResultBoxContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+export const ResultBox = styled.div`
+  padding: 16px;
+  background-color: ${theme.grey800};
+  color: ${theme.white};
+  border-radius: 4px;
 `;

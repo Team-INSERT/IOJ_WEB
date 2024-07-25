@@ -100,9 +100,12 @@ export const TestBox = () => {
           </>
         )}
         {activeTab === "results" && (
-          <div>
-            <S.Text>제출 결과 화면</S.Text>
-          </div>
+          <S.ResultBoxContainer>
+            <S.ResultBox>처리중...</S.ResultBox>
+            <S.ResultBox>정답입니다.</S.ResultBox>
+            <S.ResultBox>오답입니다.</S.ResultBox>
+            <S.ResultBox>런타임 에러</S.ResultBox>
+          </S.ResultBoxContainer>
         )}
       </S.Content>
     </S.Container>

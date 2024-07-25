@@ -2,19 +2,7 @@ import styled from "styled-components";
 import { CodeEditor } from "./editor";
 import { GameHeader } from "../../../shared/components";
 import { Problem } from "./problem";
-import { Pretendard, theme, flex } from "../../../shared/style";
-
-export const Game = () => {
-  return (
-    <GameLayout>
-      <GameHeader />
-      <GameBox>
-        <Problem />
-        <CodeEditor />
-      </GameBox>
-    </GameLayout>
-  );
-};
+import { flex } from "../../../shared/style";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -25,3 +13,13 @@ export const GameBox = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+export const Game = () => (
+  <GameLayout>
+    <GameHeader />
+    <GameBox>
+      <Problem />
+      <CodeEditor />
+    </GameBox>
+  </GameLayout>
+);
