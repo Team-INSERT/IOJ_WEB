@@ -7,6 +7,7 @@ export const Layout = styled.div`
   border-radius: 4px;
   background: var(--white, #fff);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 `;
 export const QustionNumber = styled.div`
   font-weight: bold;

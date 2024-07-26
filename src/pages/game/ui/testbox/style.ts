@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Pretendard, theme, flex } from "../../../../shared/style";
+import { Pretendard, theme, flex } from "@/shared/style";
 
 interface TabProps {
   active: boolean;

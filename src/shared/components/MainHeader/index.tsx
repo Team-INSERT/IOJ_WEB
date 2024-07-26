@@ -24,6 +24,10 @@ const MainHeader = () => {
     }
   }, []);
 
+  const headerItemClick = (url: string) => {
+    window.open(url, "_blank", "noopener, noreferrer");
+  };
+
   const onNameClick = () => {
     if (stolenName) {
       navigate("/setting");
@@ -42,7 +46,7 @@ const MainHeader = () => {
           <S.Menu
             key={item.id}
             isActive={location.pathname === item.navigate}
-            onClick={() => navigate(item.navigate)}
+            onClick={() => headerItemClick(item.navigate)}
           >
             {item.name}
           </S.Menu>

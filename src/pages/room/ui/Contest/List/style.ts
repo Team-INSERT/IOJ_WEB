@@ -2,12 +2,14 @@ import { flex, NexonFont, Pretendard } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 160px 300px 0 300px;
   ${flex.COLUMN_CENTER}
 `;
+export const ContentLayout = styled.div`
+  margin-top: 88px;
+`
 export const TitleContainer = styled.div`
   ${flex.FLEX}
-  width: 100%;
+  width: 1089px;
 `;
 export const Title = styled.div`
   ${NexonFont.NexonBigTitle}

@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
-import UserCompartment from "../../../assets/UserCompartment.svg";
-import NoneUser from "../../../assets/NoneUser.svg";
-import { NexonFont, flex } from "../../style";
+import UserCompartment from "@/assets/UserCompartment.svg";
+import NoneUser from "@/assets/NoneUser.svg";
+import { NexonFont, flex } from "@/shared/style";
 
 interface LayoutProps {
   status: string;

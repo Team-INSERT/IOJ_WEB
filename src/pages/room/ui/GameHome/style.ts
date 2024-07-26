@@ -1,10 +1,9 @@
 import { flex, NexonFont, theme } from "@/shared/style";
 import styled from "styled-components";
-import GameCardHover from "../../../../assets/GameCardHover.svg"
 
 export const Layout = styled.div`
   ${flex.COLUMN_VERTICAL}
-  padding: 136px 336px 0 336px;
+  padding: 5rem 21rem 0 21rem;
 `;
 export const Title = styled.div`
   ${NexonFont.NexonBigTitle}

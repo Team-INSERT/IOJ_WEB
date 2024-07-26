@@ -2,7 +2,7 @@ import { flex, Pretendard, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 100px 120px 194px 120px;
+  padding: 40px 120px 194px 120px;
 `;
 export const TitleContainer = styled.div`
   ${flex.CENTER}
