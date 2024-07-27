@@ -1,4 +1,4 @@
-import { Button, MainHeader } from "@/shared/components";
+import { Button, Footer, MainHeader } from "@/shared/components";
 import * as S from "./style";
 
 export const Admin = () => (
@@ -39,5 +39,6 @@ export const Admin = () => (
       </S.ListLayout>
       <S.DevideLine />
     </S.Layout>
+    <Footer />
   </>
 );

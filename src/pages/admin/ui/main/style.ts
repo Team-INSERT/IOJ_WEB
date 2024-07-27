@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const Layout = styled.div`
   padding: 0 5.5rem 0 5.5rem;
   margin-top: 28px;
+  padding-bottom: 180px;
 `;
 export const Title = styled.p`
   ${Pretendard.SmallTitle}
