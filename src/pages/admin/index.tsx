@@ -1,0 +1,1 @@
+export { Admin } from "./ui/main/page";

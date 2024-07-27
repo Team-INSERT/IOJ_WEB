@@ -2,7 +2,7 @@ import { GameCard } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
-const GameHome = () => {
+export const GameHome = () => {
   const navigate = useNavigate();
   return (
     <S.Layout>
@@ -19,5 +19,3 @@ const GameHome = () => {
     </S.Layout>
   );
 };
-
-export default GameHome;
