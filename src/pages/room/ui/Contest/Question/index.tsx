@@ -2,7 +2,7 @@ import { Button, Question } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
-const ContestQuestion = () => {
+export const ContestQuestion = () => {
   const navigate = useNavigate();
   return (
     <S.Layout>
@@ -63,5 +63,3 @@ const ContestQuestion = () => {
     </S.Layout>
   );
 };
-
-export default ContestQuestion;

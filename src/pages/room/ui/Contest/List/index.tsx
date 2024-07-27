@@ -2,7 +2,7 @@ import { Button, ContestTitle } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
-const ContestList = () => {
+export const ContestList = () => {
   const navigate = useNavigate();
   return (
     <S.Layout>
@@ -35,5 +35,3 @@ const ContestList = () => {
     </S.Layout>
   );
 };
-
-export default ContestList;

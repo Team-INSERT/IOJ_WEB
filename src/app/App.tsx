@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Main } from "@/pages/main/index";
-import { Game } from "@/pages/game/index";
+import { useAuthService } from "@/shared/utils/auth/useAuthService";
+import { Main } from "@/pages/main";
+import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
 import { Setting } from "@/pages/setting";
-import { useAuthService } from "@/shared/utils/auth/useAuthService";
-import GameHome from "@/pages/room/ui/GameHome";
-import ContestList from "@/pages/room/ui/Contest/List";
-import ContestQuestion from "@/pages/room/ui/Contest/Question";
+import { GameHome,ContestList,ContestQuestion } from "@/pages/room";
+import { Admin } from "@/pages/admin";
 
 const App = () => {
   useAuthService();
@@ -20,6 +19,7 @@ const App = () => {
         <Route path="/game/contest" element={<ContestList />} />
         <Route path="/game/contest/questions" element={<ContestQuestion />} />
         <Route path="/game/contest/code" element={<Game />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );
