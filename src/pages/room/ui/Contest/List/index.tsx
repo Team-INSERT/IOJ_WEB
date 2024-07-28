@@ -43,7 +43,11 @@ export const ContestList = () => {
             <div
               key={detail.id}
               onClick={() =>
-                navigate(`/game/contest/question?contestId=${detail.id}`)
+                navigate(
+                  `/game/contest/questions?contestId=${detail.id}&contestTitle=${encodeURIComponent(
+                    detail.title,
+                  )}`,
+                )
               }
             >
               <ContestTitle

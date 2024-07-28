@@ -1,13 +1,43 @@
 import { Button, Question } from "@/shared/components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { contestProblem } from "@/pages/game/api/gameApi";
 import * as S from "./style";
+
+interface problem {
+  id: number;
+  level: number;
+  title: string;
+  status: string;
+}
 
 export const ContestQuestion = () => {
   const navigate = useNavigate();
+  const [problemDetail, setProblemDetail] = useState<problem[]>([]);
+  const [query] = useSearchParams();
+  const id = query.get("contestId");
+  const contestTitle = query.get("contestTitle");
+
+  useEffect(() => {
+    const list = async () => {
+      if (!id) {
+        console.error("Contest ID가 제공되지 않았습니다.");
+        return;
+      }
+      const contestId = parseInt(id, 10);
+      try {
+        const res = await contestProblem(contestId);
+        setProblemDetail(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    list();
+  });
   return (
     <S.Layout>
       <S.TitleContainer>
-        <S.Title>2024학년도 1학년 알고리즘 경진대회</S.Title>
+        <S.Title>{contestTitle}</S.Title>
         <S.Button>
           <Button
             mode="small"
@@ -29,36 +59,17 @@ export const ContestQuestion = () => {
       </S.RemainingTimeContainer>
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
-        <div onClick={() => navigate("/game/contest/code")}>
-          <Question
-            mode="success"
-            qustionNumebr="A"
-            number={1}
-            title="A + B = ?"
-            level={4}
-          />
-        </div>
-        <Question
-          mode="wrong"
-          qustionNumebr="B"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
-        <Question
-          mode=""
-          qustionNumebr="C"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
-        <Question
-          mode="success"
-          qustionNumebr="D"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
+        {problemDetail.map((detail) => (
+          <div key={detail.title}>
+            <Question
+              mode={detail.status}
+              qustionNumebr="A"
+              number={detail.id}
+              title={detail.title}
+              level={detail.level}
+            />
+          </div>
+        ))}
       </S.Question>
     </S.Layout>
   );
