@@ -20,19 +20,23 @@ export const Main = () => {
         <S.ContentBox>
           <S.TextBox>
             <S.Title>실시간 코딩 경쟁</S.Title>
-            <S.SubTitle>
-              아이템을 이용한
-              <br />
-              스릴 넘치는 코딩 경기
-            </S.SubTitle>
-            <S.Info>
-              폭탄, 문어먹울, 악마와 같은 재미있고 다양한 아이템으로
-              <br />
-              상대방을 방해해서 이겨봐요!
-            </S.Info>
+            <div>
+              <S.SubTitle>아이템을 이용한</S.SubTitle>
+              <S.SubTitle>스릴 넘치는 코딩 경기</S.SubTitle>
+            </div>
+            <div>
+              <S.Info>
+                폭탄, 문어먹울, 악마와 같은 재미있고 다양한 아이템으로
+              </S.Info>
+              <S.Info>상대방을 방해해서 이겨봐요!</S.Info>
+            </div>
           </S.TextBox>
           <div>
-            <Button color="white" mode="big" onClick={() => window.open("/game", "_blank", "noopener")}>
+            <Button
+              color="white"
+              mode="big"
+              onClick={() => window.open("/game", "_blank", "noopener")}
+            >
               게임 바로가기
             </Button>
           </div>

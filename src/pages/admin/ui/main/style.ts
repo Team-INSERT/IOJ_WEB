@@ -17,12 +17,16 @@ export const DevideLine = styled.div`
 `;
 export const FormLayout = styled.div`
   ${flex.COLUMN_HORIZONTAL}
-  gap: 12px;
+  gap: 16px;
   margin-top: 28px;
 `;
 export const NameLayout = styled.div`
   ${flex.VERTICAL}
-  gap: 40px;
+  gap: 20px;
+`;
+export const InputLayout = styled.div`
+  ${flex.VERTICAL}
+  gap: 46px;
 `;
 export const Subject = styled.p`
   ${Pretendard.BigText}
@@ -30,55 +34,82 @@ export const Subject = styled.p`
 `;
 export const Input = styled.input`
   height: 40px;
-  width: 380px;
+  width: 400px;
   padding: 0 12px 0 12px;
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
+  border: none;
+  border-bottom: 1px solid ${theme.grey400};
   ${flex.VERTICAL}
   ${Pretendard.Text}
 
   &::placeholder {
     color: ${theme.grey400};
   }
+  &:focus {
+    outline: none;
+  }
 `;
 export const PeriodLayout = styled.div`
   ${flex.VERTICAL}
-  gap: 20px;
+  gap: 26px;
 `;
 export const Wave = styled.p`
   ${Pretendard.BigText}
-`
+`;
 export const Period = styled.div`
   ${flex.VERTICAL}
   gap: 16px;
 `;
 export const QuestionLayout = styled.div`
   ${flex.VERTICAL}
-  gap: 61px;
+  gap: 67px;
 `;
 export const DayLayout = styled.div`
   ${flex.FLEX}
   gap: 4px;
-`
+`;
 export const Date = styled.input.attrs({ type: "date" })`
-  color: ${theme.grey400};
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
+  color: ${theme.grey900};
+  border: none;
+  border-bottom: 1px solid ${theme.grey400};
   height: 40px;
   padding: 0 0 0 12px;
   ${Pretendard.Text}
 
+  &:focus {
+    outline: none;
+  }
 `;
 export const Time = styled.input.attrs({ type: "time" })`
-  color: ${theme.grey400};
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
+  color: ${theme.grey900};
+  border: none;
+  border-bottom: 1px solid ${theme.grey400};
   height: 40px;
   padding: 0 12px 0 12px;
   ${Pretendard.Text}
+
+  &:focus {
+    outline: none;
+  }
 `;
+export const AuthorityLayout = styled.div`
+  ${flex.VERTICAL}
+  gap: 20px;
+`;
+export const Select = styled.select`
+  color: ${theme.grey900};
+  border: none;
+  border-bottom: 1px solid ${theme.grey400};
+  height: 40px;
+  padding: 0 8px 0 8px;
+  ${Pretendard.Text}
+
+  &:focus {
+    outline: none;
+  }
+`;
+export const Option = styled.option``;
 export const ListLayout = styled.div`
   ${flex.BETWEEN}
   align-items: end;
   margin-top: 44px;
-`
+`;
