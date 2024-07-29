@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
@@ -12,7 +12,25 @@ export const Main = () => {
   const questionCount = "00000";
   const solvedQuestions = "00000";
   const langCount = "6";
-  const [isLogin, setIsLogin] = useState(true);
+  const [userName,setUserName] = useState("");
+
+  const stolenName = localStorage.getItem("name");
+
+  useEffect(() => {
+    if (stolenName) {
+      setUserName(stolenName);
+    }
+  }, [stolenName]);
+
+  const gameStartClick = () => {
+    if (!stolenName) {
+      alert("로그인이 필요한 서비스입니다.")
+      navigate("/login")
+      return;
+    }
+    window.open("/game", "_blank", "noopener")
+  }
+
   return (
     <>
       <MainHeader />
@@ -35,7 +53,7 @@ export const Main = () => {
             <Button
               color="white"
               mode="big"
-              onClick={() => window.open("/game", "_blank", "noopener")}
+              onClick={gameStartClick}
             >
               게임 바로가기
             </Button>
@@ -80,7 +98,7 @@ export const Main = () => {
           </S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
-          {isLogin ? null : <S.Blind />}
+          {userName ? null : <S.Blind />}
           <S.CardLayout>
             <GameCard mode="문제 모아보기" />
             <GameCard mode="역대 전적" />
