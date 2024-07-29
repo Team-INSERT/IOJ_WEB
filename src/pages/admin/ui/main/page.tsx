@@ -1,8 +1,16 @@
 import { Button, Footer, MainHeader } from "@/shared/components";
 import React, { useState, useEffect, useRef } from "react";
-import { customAxios } from "@/shared/utils/customAxios";
 import { theme } from "@/shared/style";
 import * as S from "./style";
+import { createContestApi } from "../../api/contestCreate";
+
+export interface postBodyProps  {
+  title: string;
+  startTime: string;
+  endTime: string;
+  authority: string;
+  problems: number[];
+};
 
 export const Admin = () => {
   const today = new Date();
@@ -11,16 +19,24 @@ export const Admin = () => {
   const [startDay, setStartDay] = useState({ date: "", time: "" });
   const [endDay, setEndDay] = useState({ date: "", time: "" });
   const [contestName, setContestName] = useState("");
-  const [questions, setQuestions] = useState<string[]>([]);
+  const [questions, setQuestions] = useState<number[]>([]);
   const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
+  const questionsString = questions.join(", ");
+
   const questionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    const questionArray = input.split(",").map((question) => question.trim());
+    const questionArray = input
+      .split(",")
+      .map((question) => {
+        const num = parseInt(question.trim(), 10);
+        return !Number.isNaN(num) ? num : null;
+      })
+      .filter((question) => question !== null) as number[];
     setQuestions(questionArray);
   };
 
@@ -47,21 +63,21 @@ export const Admin = () => {
       alert("참가 권한을 선택해주세요");
     } else {
       try {
-        const postBody = {
+        const postBody: postBodyProps = {
           title: contestName,
           startTime: startDateTime,
           endTime: endDateTime,
           authority: joinAuthority,
-          problems: questions
-            .map((q) => {
-              const num = parseInt(q, 10);
-              return Number.isNaN(num) ? null : num;
-            })
-            .filter((q) => q !== null),
+          problems: questions,
         };
-
-        await customAxios.post("/contest", postBody);
+        await createContestApi(postBody);
         alert("대회가 성공적으로 생성되었습니다!");
+        
+        setContestName("")
+        setStartDay({date: "", time: ""})
+        setEndDay({date: "", time: ""})
+        setQuestions([])
+        setJoinAuthority("")
       } catch (err) {
         console.error(err);
         alert("대회 생성에 실패했습니다.");
@@ -77,16 +93,10 @@ export const Admin = () => {
 
   useEffect(() => {
     if (nameLenghtRef.current && contestNameInputRef.current) {
-      if (contestName.length === 0) {
-        nameLenghtRef.current.style.color = theme.black;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.grey400}`;
-      } else if (contestName.length <= 22) {
-        nameLenghtRef.current.style.color = theme.correctGreen;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.correctGreen}`;
-      } else {
-        nameLenghtRef.current.style.color = theme.warningRed;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.warningRed}`;
-      }
+      const lengthColor = contestName.length === 0 ? theme.black : contestName.length <= 22 ? theme.correctGreen : theme.warningRed;
+      const borderColor = lengthColor;
+      nameLenghtRef.current.style.color = lengthColor;
+      contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
     }
   }, [contestName]);
 
@@ -119,12 +129,14 @@ export const Admin = () => {
                     setStartDay((prev) => ({ ...prev, date: e.target.value }))
                   }
                   min={formattedDate}
+                  value={startDay.date}
                 />
                 <S.Time
                   type="time"
                   onChange={(e) =>
                     setStartDay((prev) => ({ ...prev, time: e.target.value }))
                   }
+                  value={startDay.time}
                 />
               </S.DayLayout>
               <S.Wave>~</S.Wave>
@@ -135,12 +147,14 @@ export const Admin = () => {
                     setEndDay((prev) => ({ ...prev, date: e.target.value }))
                   }
                   min={minEndDate}
+                  value={endDay.date}
                 />
                 <S.Time
                   type="time"
                   onChange={(e) =>
                     setEndDay((prev) => ({ ...prev, time: e.target.value }))
                   }
+                  value={endDay.time}
                 />
               </S.DayLayout>
             </S.Period>
@@ -150,6 +164,7 @@ export const Admin = () => {
             <S.Input
               placeholder="문제번호를 입력하세요 (,로 구분)"
               onChange={questionChange}
+              value={questionsString}
             />
           </S.QuestionLayout>
           <S.AuthorityLayout>
