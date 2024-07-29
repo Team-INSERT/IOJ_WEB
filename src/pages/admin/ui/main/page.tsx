@@ -27,15 +27,21 @@ export const Admin = () => {
   const onCreateClick = async () => {
     const startDateTime = `${startDay.date}T${startDay.time}`;
     const endDateTime = `${endDay.date}T${endDay.time}`;
+    const todayDateTime = new Date();
+
     if (contestName.length === 0) {
       alert("대회명을 입력해주세요.");
+    } else if (contestName.length < 2 || contestName.length > 22) {
+      alert("대회명은 2자 이상 22자 이하여야합니다!");
     } else if (startDateTime.length !== 16 || endDateTime.length !== 16) {
       alert("날짜와 시간을 모두 선택해주세요.");
+    } else if (new Date(startDateTime) <= todayDateTime) {
+      alert("시작 날짜와 시간은 현재 시각 이후여야 합니다.");
     } else if (questions.length === 0) {
       alert("문제를 하나 이상 추가해주세요.");
-    } else if (endDateTime < startDateTime) {
+    } else if (endDateTime <= startDateTime) {
       alert(
-        "끝나는 날짜와 시간이 시작되는 날짜와 시간보다 이전일 수 없습니다!",
+        "끝나는 날짜와 시간이 시작되는 날짜와 시간보다 이전이거나 같을 수 없습니다!",
       );
     } else if (joinAuthority === "") {
       alert("참가 권한을 선택해주세요");
@@ -73,13 +79,13 @@ export const Admin = () => {
     if (nameLenghtRef.current && contestNameInputRef.current) {
       if (contestName.length === 0) {
         nameLenghtRef.current.style.color = theme.black;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.grey400}`
+        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.grey400}`;
       } else if (contestName.length <= 22) {
         nameLenghtRef.current.style.color = theme.correctGreen;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.correctGreen}`
+        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.correctGreen}`;
       } else {
         nameLenghtRef.current.style.color = theme.warningRed;
-        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.warningRed}`
+        contestNameInputRef.current.style.borderBottom = `1px solid ${theme.warningRed}`;
       }
     }
   }, [contestName]);
@@ -149,7 +155,9 @@ export const Admin = () => {
           <S.AuthorityLayout>
             <S.Subject>참가 권한</S.Subject>
             <S.Select onChange={(e) => setJoinAuthority(e.target.value)}>
-              <S.Option value="">권한 선택</S.Option>
+              <S.Option value="" disabled hidden selected>
+                권한 선택
+              </S.Option>
               <S.Option value="USER">모든 사용자</S.Option>
               <S.Option value="FIRST_YEAR">1학년</S.Option>
               <S.Option value="SECOND_YEAR">2학년</S.Option>

@@ -17,7 +17,7 @@ export const DevideLine = styled.div`
 `;
 export const FormLayout = styled.div`
   ${flex.COLUMN_HORIZONTAL}
-  gap: 12px;
+  gap: 16px;
   margin-top: 28px;
 `;
 export const NameLayout = styled.div`
@@ -27,7 +27,7 @@ export const NameLayout = styled.div`
 export const InputLayout = styled.div`
   ${flex.VERTICAL}
   gap: 46px;
-`
+`;
 export const Subject = styled.p`
   ${Pretendard.BigText}
   font-weight: 700 !important;
@@ -54,7 +54,7 @@ export const PeriodLayout = styled.div`
 `;
 export const Wave = styled.p`
   ${Pretendard.BigText}
-`
+`;
 export const Period = styled.div`
   ${flex.VERTICAL}
   gap: 16px;
@@ -66,7 +66,7 @@ export const QuestionLayout = styled.div`
 export const DayLayout = styled.div`
   ${flex.FLEX}
   gap: 4px;
-`
+`;
 export const Date = styled.input.attrs({ type: "date" })`
   color: ${theme.grey900};
   border: none;
@@ -94,7 +94,7 @@ export const Time = styled.input.attrs({ type: "time" })`
 export const AuthorityLayout = styled.div`
   ${flex.VERTICAL}
   gap: 20px;
-`
+`;
 export const Select = styled.select`
   color: ${theme.grey900};
   border: none;
@@ -106,12 +106,10 @@ export const Select = styled.select`
   &:focus {
     outline: none;
   }
-`
-export const Option = styled.option`
-
-`
+`;
+export const Option = styled.option``;
 export const ListLayout = styled.div`
   ${flex.BETWEEN}
   align-items: end;
   margin-top: 44px;
-`
+`;
