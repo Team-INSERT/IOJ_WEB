@@ -12,6 +12,17 @@ interface contest {
 }
 
 export const ContestList = () => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const formattedDate = `${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")} ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    return formattedDate;
+  };
+
   const navigate = useNavigate();
   const [contestDetail, setContestDetail] = useState<contest[]>([]);
 
@@ -20,6 +31,7 @@ export const ContestList = () => {
       try {
         const res = contestList();
         setContestDetail(await res);
+        console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -44,15 +56,15 @@ export const ContestList = () => {
               key={detail.id}
               onClick={() =>
                 navigate(
-                  `/game/contest/questions?contestId=${detail.id}&contestTitle=${encodeURIComponent(
-                    detail.title,
-                  )}`,
+                  `/game/contest/questions?contestId=${detail.id}&contestTitle=${encodeURIComponent(detail.title)}`,
                 )
               }
             >
               <ContestTitle
                 title={detail.title}
-                date={`${detail.startTime} ~ ${detail.endTime}`}
+                date={`${formatDate(`${detail.startTime}`)} ~ ${formatDate(
+                  `${detail.endTime}`,
+                )}`}
               />
             </div>
           ))}
