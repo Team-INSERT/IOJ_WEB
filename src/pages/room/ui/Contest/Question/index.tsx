@@ -35,6 +35,9 @@ export const ContestQuestion = () => {
     };
     list();
   }, [id]);
+
+  const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
+
   return (
     <S.Layout>
       <S.TitleContainer>
@@ -60,11 +63,11 @@ export const ContestQuestion = () => {
       </S.RemainingTimeContainer>
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
-        {problemDetail.map((detail) => (
+        {problemDetail.map((detail, index) => (
           <div key={detail.id}>
             <Question
               mode={detail.status}
-              qustionNumebr="A"
+              qustionNumebr={getQuestionNumber(index)}
               number={detail.id}
               title={detail.title}
               level={detail.level}
