@@ -5,7 +5,7 @@ import * as S from "./style";
 
 const MainHeader = () => {
   const MenusDetails = [
-    { id: 1, name: "홈", navigate: "/" }, // navigate 경로들은 예시로 해놨습니다.
+    { id: 1, name: "홈", navigate: "/" },
     { id: 2, name: "게임하기", navigate: "/game" },
     { id: 3, name: "랭킹", navigate: "/ranking" },
     { id: 4, name: "문제", navigate: "/question" },
@@ -22,10 +22,14 @@ const MainHeader = () => {
     if (stolenName) {
       setUserName(stolenName);
     }
-  }, []);
+  }, [stolenName]);
 
-  const headerItemClick = (url: string) => {
-    window.open(url, "_blank", "noopener, noreferrer");
+  const headerItemClick = (url: string, id: number) => {
+    if (id === 2) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      navigate(url);
+    }
   };
 
   const onNameClick = () => {
@@ -46,7 +50,7 @@ const MainHeader = () => {
           <S.Menu
             key={item.id}
             isActive={location.pathname === item.navigate}
-            onClick={() => headerItemClick(item.navigate)}
+            onClick={() => headerItemClick(item.navigate, item.id)}
           >
             {item.name}
           </S.Menu>
