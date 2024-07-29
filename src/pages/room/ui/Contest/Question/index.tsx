@@ -28,12 +28,13 @@ export const ContestQuestion = () => {
       try {
         const res = await contestProblem(contestId);
         setProblemDetail(res);
+        console.log(res);
       } catch (err) {
         console.log(err);
       }
     };
     list();
-  });
+  }, [id]);
   return (
     <S.Layout>
       <S.TitleContainer>
@@ -60,7 +61,7 @@ export const ContestQuestion = () => {
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
         {problemDetail.map((detail) => (
-          <div key={detail.title}>
+          <div key={detail.id}>
             <Question
               mode={detail.status}
               qustionNumebr="A"
