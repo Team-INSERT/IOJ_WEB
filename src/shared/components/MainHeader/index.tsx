@@ -26,6 +26,11 @@ const MainHeader = () => {
 
   const headerItemClick = (url: string, id: number) => {
     if (id === 2) {
+      if (!stolenName) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/login");
+        return;
+      }
       window.open(url, "_blank", "noopener,noreferrer");
     } else {
       navigate(url);
