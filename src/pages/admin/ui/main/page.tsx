@@ -22,14 +22,14 @@ export const Admin = () => {
   const [questions, setQuestions] = useState<number[]>([]);
   const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  const [questionsInput, setQuestionsInput] = useState("");
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
-  const questionsString = questions.join(", ");
-
   const questionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
+    setQuestionsInput(input);
     const questionArray = input
       .split(",")
       .map((question) => {
@@ -78,6 +78,7 @@ export const Admin = () => {
         setEndDay({ date: "", time: "" });
         setQuestions([]);
         setJoinAuthority("");
+        setQuestionsInput("");
       } catch (err) {
         console.error(err);
         alert("대회 생성에 실패했습니다.");
@@ -169,13 +170,16 @@ export const Admin = () => {
             <S.Input
               placeholder="문제번호를 입력하세요 (,로 구분)"
               onChange={questionChange}
-              value={questionsString}
+              value={questionsInput}
             />
           </S.QuestionLayout>
           <S.AuthorityLayout>
             <S.Subject>참가 권한</S.Subject>
-            <S.Select onChange={(e) => setJoinAuthority(e.target.value)}>
-              <S.Option value="" disabled hidden selected>
+            <S.Select
+              onChange={(e) => setJoinAuthority(e.target.value)}
+              value={joinAuthority}
+            >
+              <S.Option value="" disabled hidden>
                 권한 선택
               </S.Option>
               <S.Option value="USER">모든 사용자</S.Option>
