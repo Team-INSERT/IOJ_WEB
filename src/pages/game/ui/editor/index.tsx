@@ -4,7 +4,6 @@ import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
-import { gameList } from "../../api/gameList";
 import * as S from "./style";
 
 export const CodeEditor = () => {
@@ -32,7 +31,7 @@ export const CodeEditor = () => {
               테스트케이스
             </Button>
           </S.Button>
-          <S.Button onClick={gameList}>
+          <S.Button>
             <Button mode="small" color="blue">
               실행
             </Button>
