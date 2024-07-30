@@ -1,7 +1,7 @@
 import { Button, ContestTitle } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { contestList } from "@/pages/game/api/gameApi";
+import { contestList } from "@/pages/room/api/roomApi";
 import * as S from "./style";
 
 interface contest {

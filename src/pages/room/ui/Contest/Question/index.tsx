@@ -1,7 +1,7 @@
 import { Button, Question } from "@/shared/components";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { contestProblem } from "@/pages/game/api/gameApi";
+import { contestProblem } from "@/pages/room/api/roomApi";
 import * as S from "./style";
 
 interface problem {
@@ -34,7 +34,7 @@ export const ContestQuestion = () => {
       }
     };
     list();
-  }, [id]);
+  }, []);
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
 
@@ -64,7 +64,7 @@ export const ContestQuestion = () => {
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
         {problemDetail.map((detail, index) => (
-          <div key={detail.id}>
+          <div key={detail.id} onClick={() => navigate("/game/contest/code")}>
             <Question
               mode={detail.status}
               qustionNumebr={getQuestionNumber(index)}
