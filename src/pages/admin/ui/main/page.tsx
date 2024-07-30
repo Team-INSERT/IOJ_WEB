@@ -1,5 +1,6 @@
 import { Button, Footer, MainHeader } from "@/shared/components";
 import * as S from "./style";
+import { problem } from "../../api/problem";
 
 export const Admin = () => (
   <>
@@ -33,7 +34,7 @@ export const Admin = () => (
       </S.FormLayout>
       <S.ListLayout>
         <S.Title>CONTEST LIST</S.Title>
-        <Button mode="big" color="blue">
+        <Button mode="big" color="blue" onClick={problem}>
           CREATE
         </Button>
       </S.ListLayout>

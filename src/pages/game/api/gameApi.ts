@@ -1,1 +1,1 @@
-export const gameApi = () => {};
+export const gameAPi = () => {};

@@ -32,7 +32,11 @@ export const Main = () => {
             </S.Info>
           </S.TextBox>
           <div>
-            <Button color="white" mode="big" onClick={() => window.open("/game", "_blank", "noopener")}>
+            <Button
+              color="white"
+              mode="big"
+              onClick={() => window.open("/game", "_blank", "noopener")}
+            >
               게임 바로가기
             </Button>
           </div>
