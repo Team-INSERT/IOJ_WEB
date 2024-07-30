@@ -34,6 +34,9 @@ customAxios.interceptors.response.use(
       }
       return customAxios(config);
     } catch (refreshErr) {
+      alert("토큰이 만료되어 다시 로그인해주세요.")
+      localStorage.clear()
+      window.location.replace("/login")
       return Promise.reject(refreshErr);
     }
   },
