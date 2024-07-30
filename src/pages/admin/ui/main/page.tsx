@@ -2,6 +2,15 @@ import { Button, Footer, MainHeader } from "@/shared/components";
 import * as S from "./style";
 import { problem } from "../../api/problem";
 
+const handleProblemClick = async () => {
+  try {
+    const response = await problem();
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const Admin = () => (
   <>
     <MainHeader />
@@ -34,7 +43,7 @@ export const Admin = () => (
       </S.FormLayout>
       <S.ListLayout>
         <S.Title>CONTEST LIST</S.Title>
-        <Button mode="big" color="blue" onClick={problem}>
+        <Button mode="big" color="blue" onClick={handleProblemClick}>
           CREATE
         </Button>
       </S.ListLayout>

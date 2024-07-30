@@ -23,15 +23,5 @@ const requestData = {
 };
 
 export const problem = async () => {
-  try {
-    const response = await customAxios.post(`/problem`, requestData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return {};
-  }
+  customAxios.post(`/problem`, requestData);
 };
