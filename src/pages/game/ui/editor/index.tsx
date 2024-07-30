@@ -12,7 +12,7 @@ export const CodeEditor = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await execution(1, code);
+      const response = await execution({ id: 1, sourcecode: code });
       console.log(response);
     } catch (error) {
       console.error(error);

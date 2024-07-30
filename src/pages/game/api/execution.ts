@@ -1,28 +1,10 @@
 import { customAxios } from "@/shared/utils/customAxios";
 
-interface ExecutionResponse {
+interface ExecutionRequest {
   id: number;
-  compileStatus: string;
-  pass: boolean;
+  sourcecode: string;
 }
 
-export const execution = async (
-  id: number,
-  sourcecode: string,
-): Promise<ExecutionResponse> => {
-  try {
-    const response = await customAxios.post(
-      `/problem/execution`,
-      { id, sourcecode },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return { id, compileStatus: "Failed", pass: false };
-  }
+export const execution = async (requestBody: ExecutionRequest) => {
+  customAxios.post(`/problem/execution`, requestBody);
 };
