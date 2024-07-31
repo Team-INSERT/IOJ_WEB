@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { NexonFont, theme } from "../style";
@@ -36,7 +36,11 @@ const ArrowIcon = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease;
 `;
 
-const Dropdown = () => {
+interface DropdownProps {
+  onSelectLanguage: (language: string) => void;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("C");
 
@@ -47,6 +51,7 @@ const Dropdown = () => {
   const handleItemClick = (item: string) => {
     setSelectedItem(item);
     setIsOpen(false);
+    onSelectLanguage(item);
   };
 
   return (

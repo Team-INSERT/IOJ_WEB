@@ -8,6 +8,7 @@ import * as S from "./style";
 
 export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
+  const [language, setLanguage] = useState<string>("python");
 
   const handleSubmit = async () => {
     try {
@@ -18,13 +19,17 @@ export const CodeEditor = () => {
     }
   };
 
+  const handleLanguageChange = (selectedLanguage: string) => {
+    setLanguage(selectedLanguage.toLowerCase());
+  };
+
   return (
     <S.EditorLayout>
       <S.HeaderBox>
         <S.FileName>Main.py</S.FileName>
         <S.ButtonBox>
           <S.Button>
-            <Dropdown />
+            <Dropdown onSelectLanguage={handleLanguageChange} />
           </S.Button>
           <S.Button>
             <Button mode="small" color="blue">
@@ -47,7 +52,7 @@ export const CodeEditor = () => {
         theme="vs-dark"
         height="30rem"
         width="100%"
-        defaultLanguage="python"
+        defaultLanguage={language}
         value={code}
         onChange={(value) => setCode(value || "")}
         options={{
