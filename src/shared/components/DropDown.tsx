@@ -63,7 +63,7 @@ const Dropdown = () => {
           Python
         </DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C++")}>C++</DropdownItem>
-        <DropdownItem onClick={() => handleItemClick("C#")}>C#</DropdownItem>
+        <DropdownItem onClick={() => handleItemClick("C")}>C</DropdownItem>
       </DropdownContent>
     </DropdownContainer>
   );
