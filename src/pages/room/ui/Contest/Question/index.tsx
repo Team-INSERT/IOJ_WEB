@@ -4,19 +4,25 @@ import { useEffect, useState } from "react";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import * as S from "./style";
 
-interface problem {
+interface Problem {
   id: number;
   level: number;
   title: string;
   status: string;
 }
 
+interface Contest {
+  title: string;
+  endTime: string;
+  problems: Problem[];
+}
+
 export const ContestQuestion = () => {
   const navigate = useNavigate();
-  const [problemDetail, setProblemDetail] = useState<problem[]>([]);
+  const [contestDetail, setContestDetail] = useState<Contest | null>(null);
+  const [remainingTime, setRemainingTime] = useState<string>("");
   const [query] = useSearchParams();
   const id = query.get("contestId");
-  const contestTitle = query.get("contestTitle");
 
   useEffect(() => {
     const list = async () => {
@@ -26,8 +32,8 @@ export const ContestQuestion = () => {
       }
       const contestId = parseInt(id, 10);
       try {
-        const res = await contestProblem(contestId);
-        setProblemDetail(res);
+        const res: Contest = await contestProblem(contestId);
+        setContestDetail(res);
         console.log(res);
       } catch (err) {
         console.log(err);
@@ -36,12 +42,43 @@ export const ContestQuestion = () => {
     list();
   }, []);
 
+  const calculateRemainingTime = (endTime: string) => {
+    const end = new Date(endTime).getTime();
+    const now = new Date().getTime();
+    const distance = end - now;
+
+    if (distance < 0) {
+      setRemainingTime("종료되었습니다");
+      return;
+    }
+
+    const hours = Math.floor(distance / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    setRemainingTime(`${hours}시간 ${minutes}분 ${seconds}초`);
+  };
+
+  useEffect(() => {
+    if (contestDetail) {
+      const interval = setInterval(() => {
+        calculateRemainingTime(contestDetail.endTime);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+    return undefined;
+  }, [contestDetail]);
+
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
+
+  if (!contestDetail) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <S.Layout>
       <S.TitleContainer>
-        <S.Title>{contestTitle}</S.Title>
+        <S.Title>{contestDetail.title}</S.Title>
         <S.Button>
           <Button
             mode="small"
@@ -53,7 +90,7 @@ export const ContestQuestion = () => {
         </S.Button>
       </S.TitleContainer>
       <S.RemainingTimeContainer>
-        <S.Time>3시간 25분 17초</S.Time>
+        <S.Time>{remainingTime}</S.Time>
         <S.Line />
         <S.ButtonRank>
           <Button mode="small" color="blue">
@@ -63,14 +100,14 @@ export const ContestQuestion = () => {
       </S.RemainingTimeContainer>
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
-        {problemDetail.map((detail, index) => (
-          <div key={detail.id} onClick={() => navigate("/game/contest/code")}>
+        {contestDetail.problems.map((problem, index) => (
+          <div key={problem.id} onClick={() => navigate("/game/contest/code")}>
             <Question
-              mode={detail.status}
+              mode={problem.status}
               qustionNumebr={getQuestionNumber(index)}
-              number={detail.id}
-              title={detail.title}
-              level={detail.level}
+              number={problem.id}
+              title={problem.title}
+              level={problem.level}
             />
           </div>
         ))}
