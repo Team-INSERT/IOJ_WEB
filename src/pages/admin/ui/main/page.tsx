@@ -4,13 +4,13 @@ import { theme } from "@/shared/style";
 import * as S from "./style";
 import { createContestApi } from "../../api/contestCreate";
 
-export interface postBodyProps  {
+export interface postBodyProps {
   title: string;
   startTime: string;
   endTime: string;
   authority: string;
   problems: number[];
-};
+}
 
 export const Admin = () => {
   const today = new Date();
@@ -22,14 +22,14 @@ export const Admin = () => {
   const [questions, setQuestions] = useState<number[]>([]);
   const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  const [questionsInput, setQuestionsInput] = useState("");
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
-  const questionsString = questions.join(", ");
-
   const questionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
+    setQuestionsInput(input);
     const questionArray = input
       .split(",")
       .map((question) => {
@@ -72,12 +72,13 @@ export const Admin = () => {
         };
         await createContestApi(postBody);
         alert("대회가 성공적으로 생성되었습니다!");
-        
-        setContestName("")
-        setStartDay({date: "", time: ""})
-        setEndDay({date: "", time: ""})
-        setQuestions([])
-        setJoinAuthority("")
+
+        setContestName("");
+        setStartDay({ date: "", time: "" });
+        setEndDay({ date: "", time: "" });
+        setQuestions([]);
+        setJoinAuthority("");
+        setQuestionsInput("");
       } catch (err) {
         console.error(err);
         alert("대회 생성에 실패했습니다.");
@@ -93,7 +94,12 @@ export const Admin = () => {
 
   useEffect(() => {
     if (nameLenghtRef.current && contestNameInputRef.current) {
-      const lengthColor = contestName.length === 0 ? theme.black : contestName.length <= 22 ? theme.correctGreen : theme.warningRed;
+      const lengthColor =
+        contestName.length === 0
+          ? theme.black
+          : contestName.length <= 22
+            ? theme.correctGreen
+            : theme.warningRed;
       const borderColor = lengthColor;
       nameLenghtRef.current.style.color = lengthColor;
       contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
@@ -164,13 +170,16 @@ export const Admin = () => {
             <S.Input
               placeholder="문제번호를 입력하세요 (,로 구분)"
               onChange={questionChange}
-              value={questionsString}
+              value={questionsInput}
             />
           </S.QuestionLayout>
           <S.AuthorityLayout>
             <S.Subject>참가 권한</S.Subject>
-            <S.Select onChange={(e) => setJoinAuthority(e.target.value)}>
-              <S.Option value="" disabled hidden selected>
+            <S.Select
+              onChange={(e) => setJoinAuthority(e.target.value)}
+              value={joinAuthority}
+            >
+              <S.Option value="" disabled hidden>
                 권한 선택
               </S.Option>
               <S.Option value="USER">모든 사용자</S.Option>
