@@ -56,7 +56,7 @@ export const ContestList = () => {
               key={detail.id}
               onClick={() =>
                 navigate(
-                  `/game/contest/questions?contestId=${detail.id}&contestTitle=${encodeURIComponent(detail.title)}`,
+                  `/game/contest/questions?contestId=${detail.id}`,
                 )
               }
             >
