@@ -37,21 +37,30 @@ const ArrowIcon = styled.div<{ open: boolean }>`
 `;
 
 interface DropdownProps {
-  onSelectLanguage: (language: string) => void;
+  onSelectLanguage: (language: string, file: string) => void;
 }
+
+const extensions: { [key: string]: string } = {
+  python: "py",
+  java: "java",
+  c: "c",
+  "c++": "cpp",
+};
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("C");
+  const [selectedItem, setSelectedItem] = useState("python");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleItemClick = (item: string) => {
+    const extension = extensions[item.toLowerCase()];
+    const file = `Main.${extension}`;
     setSelectedItem(item);
     setIsOpen(false);
-    onSelectLanguage(item);
+    onSelectLanguage(item.toLowerCase(), file);
   };
 
   return (
