@@ -9,6 +9,7 @@ import * as S from "./style";
 export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
+  const [fileName, setFileName] = useState<string>("Main.py");
 
   const handleSubmit = async () => {
     try {
@@ -19,14 +20,15 @@ export const CodeEditor = () => {
     }
   };
 
-  const handleLanguageChange = (selectedLanguage: string) => {
-    setLanguage(selectedLanguage.toLowerCase());
+  const handleLanguageChange = (selectedLanguage: string, file: string) => {
+    setLanguage(selectedLanguage);
+    setFileName(file);
   };
 
   return (
     <S.EditorLayout>
       <S.HeaderBox>
-        <S.FileName>Main.py</S.FileName>
+        <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
           <S.Button>
             <Dropdown onSelectLanguage={handleLanguageChange} />
