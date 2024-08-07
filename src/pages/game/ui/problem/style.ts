@@ -13,6 +13,22 @@ export const ProblemTitleBox = styled.div`
   border-bottom: 1px solid #d9d9d9;
 `;
 
+export const MiniBox = styled.div`
+  ${flex.FLEX}
+  ${Pretendard.SmallText}
+  font-weight: 400;
+  margin-top: 2%;
+  color: ${theme.insertBlue};
+`;
+
+export const TimeBox = styled.div`
+  margin-right: 2%;
+`;
+export const Memory = styled.div``;
+
+export const span = styled.span`
+  color: ${theme.black};
+`;
 export const ProblemNo = styled.p`
   ${Pretendard.Text};
   font-weight: 400;
