@@ -4,14 +4,15 @@ import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
+import { gameSubmit } from "../../api/gameSubmit";
 import * as S from "./style";
 
 export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
-  const [language, setLanguage] = useState<string>("python");
+  const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
 
-  const handleSubmit = async () => {
+  const handleExecution = async () => {
     try {
       const response = await execution({ id: 1, sourcecode: code });
       console.log(response);
@@ -20,8 +21,21 @@ export const CodeEditor = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      const res = await gameSubmit({
+        id: 1,
+        sourcecode: code,
+        language: languages,
+      });
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage);
+    setLanguage(selectedLanguage.toUpperCase());
     setFileName(file);
   };
 
@@ -38,7 +52,7 @@ export const CodeEditor = () => {
               테스트케이스
             </Button>
           </S.Button>
-          <S.Button>
+          <S.Button onClick={handleExecution}>
             <Button mode="small" color="blue">
               실행
             </Button>
@@ -54,7 +68,7 @@ export const CodeEditor = () => {
         theme="vs-dark"
         height="30rem"
         width="100%"
-        defaultLanguage={language}
+        defaultLanguage={languages.toLowerCase()}
         value={code}
         onChange={(value) => setCode(value || "")}
         options={{
