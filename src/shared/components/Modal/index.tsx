@@ -7,13 +7,21 @@ interface ModalProps {
   title: string;
   subtitle?: string;
   animation?: boolean;
+  onClose: (value: number) => void;
 }
 
-const Modal = ({ status, mode, title, subtitle, animation }: ModalProps) => {
+const Modal = ({
+  status,
+  mode,
+  title,
+  subtitle,
+  animation,
+  onClose,
+}: ModalProps) => {
   const renderFooterButtons = () => {
     if (status === "좋음") {
       return (
-        <Button mode="choose" color="green">
+        <Button mode="choose" color="green" onClick={() => onClose(0)}>
           닫기
         </Button>
       );
@@ -21,10 +29,10 @@ const Modal = ({ status, mode, title, subtitle, animation }: ModalProps) => {
     if (status === "나쁨" && mode === "질문") {
       return (
         <>
-          <Button mode="choose" color="white">
+          <Button mode="choose" color="white" onClick={() => onClose(2)}>
             아니요
           </Button>
-          <Button mode="choose" color="red">
+          <Button mode="choose" color="red" onClick={() => onClose(1)}>
             예
           </Button>
         </>
@@ -32,7 +40,7 @@ const Modal = ({ status, mode, title, subtitle, animation }: ModalProps) => {
     }
     if (status === "나쁨") {
       return (
-        <Button mode="choose" color="red">
+        <Button mode="choose" color="red" onClick={() => onClose(0)}>
           닫기
         </Button>
       );
@@ -41,16 +49,18 @@ const Modal = ({ status, mode, title, subtitle, animation }: ModalProps) => {
   };
 
   return (
-    <S.ModalContainer animation={animation ?? false}>
-      <S.Detail>
-        <S.Image status={status} />
-        <S.Text>
-          <S.Title>{title}</S.Title>
-          {subtitle && <S.SubTitle>{subtitle}</S.SubTitle>}
-        </S.Text>
-      </S.Detail>
-      <S.BtnContainer>{renderFooterButtons()}</S.BtnContainer>
-    </S.ModalContainer>
+    <S.Overlay>
+      <S.ModalContainer animation={animation ?? false}>
+        <S.Detail>
+          <S.Image status={status} />
+          <S.Text>
+            <S.Title>{title}</S.Title>
+            {subtitle && <S.SubTitle>{subtitle}</S.SubTitle>}
+          </S.Text>
+        </S.Detail>
+        <S.BtnContainer>{renderFooterButtons()}</S.BtnContainer>
+      </S.ModalContainer>
+    </S.Overlay>
   );
 };
 
