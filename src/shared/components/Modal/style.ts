@@ -4,12 +4,14 @@ import correct from "@/assets/correct.svg";
 import { flex, Pretendard, theme } from "@/shared/style";
 
 const slideDown = keyframes`
-from {
-  transform: translateY(-100%);
-}
-to {
-  transform: translateY(0);
-}
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
 `;
 
 export const ModalContainer = styled.div<{ animation?: boolean }>`
@@ -19,11 +21,17 @@ export const ModalContainer = styled.div<{ animation?: boolean }>`
   border: 1px solid ${theme.grey200};
   background-color: ${theme.white};
   ${flex.COLUMN_FLEX}
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   ${(props) =>
     props.animation &&
     css`
-      animation: ${slideDown} 1s ease-out;
+      animation: ${slideDown} 0.5s ease-out;
+      top: 10%;
     `}
 `;
 
@@ -38,6 +46,8 @@ export const Image = styled.div<{ status: string }>`
   height: 41px;
   background-image: ${(props) =>
     props.status === "좋음" ? `url(${correct})` : `url(${warning})`};
+  background-size: cover;
+  background-position: center;
 `;
 
 export const Text = styled.div`
@@ -48,19 +58,22 @@ export const Text = styled.div`
 export const Title = styled.span`
   ${Pretendard.Text}
   font-weight: bold;
+  font-size: 18px;
+  color: ${theme.black};
 `;
 
 export const SubTitle = styled.span`
   ${Pretendard.SmallText}
   color: ${theme.grey600};
+  font-size: 14px;
 `;
 
 export const BtnContainer = styled.footer`
   display: flex;
   justify-content: flex-end;
-  background-color: #f9f9f9;
+  background-color: ${theme.grey100};
   padding: 8px 19px;
-  ${flex.FLEX}
   gap: 8px;
   margin-top: auto;
+  border-top: 1px solid ${theme.grey200};
 `;
