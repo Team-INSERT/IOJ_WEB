@@ -1,15 +1,30 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import warning from "@/assets/warning.svg";
 import correct from "@/assets/correct.svg";
 import { flex, Pretendard, theme } from "@/shared/style";
 
-export const ModalContainer = styled.div`
+const slideDown = keyframes`
+from {
+  transform: translateY(-100%);
+}
+to {
+  transform: translateY(0);
+}
+`;
+
+export const ModalContainer = styled.div<{ animation?: boolean }>`
   width: 440px;
   height: 170px;
   border-radius: 8px;
   border: 1px solid ${theme.grey200};
   background-color: ${theme.white};
   ${flex.COLUMN_FLEX}
+
+  ${(props) =>
+    props.animation &&
+    css`
+      animation: ${slideDown} 1s ease-out;
+    `}
 `;
 
 export const Detail = styled.div`

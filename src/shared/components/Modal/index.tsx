@@ -6,9 +6,10 @@ interface ModalProps {
   mode: "알림" | "질문";
   title: string;
   subtitle?: string;
+  animation?: boolean;
 }
 
-const Modal = ({ status, mode, title, subtitle }: ModalProps) => {
+const Modal = ({ status, mode, title, subtitle, animation }: ModalProps) => {
   const renderFooterButtons = () => {
     if (status === "좋음") {
       return (
@@ -40,7 +41,7 @@ const Modal = ({ status, mode, title, subtitle }: ModalProps) => {
   };
 
   return (
-    <S.ModalContainer>
+    <S.ModalContainer animation={animation ?? false}>
       <S.Detail>
         <S.Image status={status} />
         <S.Text>
