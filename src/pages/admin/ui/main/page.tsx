@@ -27,6 +27,7 @@ export const Admin = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalSubtitle, setModalSubitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  const [modalAnimation, setModalAnimation] = useState(false);
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
@@ -40,10 +41,12 @@ export const Admin = () => {
     status: "나쁨" | "좋음",
     title: string,
     subtitle: string,
+    animation: boolean = false,
   ) => {
     setModalStatus(status);
     setModalTitle(title);
     setModalSubitle(subtitle);
+    setModalAnimation(animation);
     setIsModalOpen(true);
   };
 
@@ -120,6 +123,7 @@ export const Admin = () => {
           "좋음",
           "대회 생성에 성공하였습니다!",
           "대회가 성공적으로 생성되었습니다!",
+          true,
         );
 
         setContestName("");
@@ -254,6 +258,7 @@ export const Admin = () => {
           title={modalTitle}
           subtitle={modalSubtitle}
           onClose={handleModalClose}
+          animation={modalAnimation}
         />
       )}
     </>
