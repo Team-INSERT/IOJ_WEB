@@ -4,7 +4,7 @@ import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
-import { gameSubmit } from "../../api/gameSubmit";
+import { contestSubmit } from "../../api/contestSubmt";
 import * as S from "./style";
 
 export const CodeEditor = () => {
@@ -23,8 +23,9 @@ export const CodeEditor = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await gameSubmit({
-        id: 1,
+      const res = await contestSubmit({
+        contestId: 1,
+        problemId: 2,
         sourcecode: code,
         language: languages,
       });

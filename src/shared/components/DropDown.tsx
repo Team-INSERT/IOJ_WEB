@@ -49,7 +49,7 @@ const extensions: { [key: string]: string } = {
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("python");
+  const [selectedItem, setSelectedItem] = useState("Python");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

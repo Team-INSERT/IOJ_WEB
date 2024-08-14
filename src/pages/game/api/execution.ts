@@ -5,6 +5,5 @@ interface ExecutionRequest {
   sourcecode: string;
 }
 
-export const execution = async (requestBody: ExecutionRequest) => {
+export const execution = async (requestBody: ExecutionRequest) =>
   customAxios.post(`/problem/execution`, requestBody);
-};
