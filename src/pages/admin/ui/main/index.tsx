@@ -4,15 +4,15 @@ import { theme } from "@/shared/style";
 import * as S from "./style";
 import { createContestApi } from "../../api/contestCreate";
 
-export interface postBodyProps  {
+export interface postBodyProps {
   title: string;
   startTime: string;
   endTime: string;
   authority: string;
   problems: number[];
-};
+}
 
-export const Admin = () => {
+export const Contest = () => {
   const today = new Date();
   const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
@@ -72,12 +72,12 @@ export const Admin = () => {
         };
         await createContestApi(postBody);
         alert("대회가 성공적으로 생성되었습니다!");
-        
-        setContestName("")
-        setStartDay({date: "", time: ""})
-        setEndDay({date: "", time: ""})
-        setQuestions([])
-        setJoinAuthority("")
+
+        setContestName("");
+        setStartDay({ date: "", time: "" });
+        setEndDay({ date: "", time: "" });
+        setQuestions([]);
+        setJoinAuthority("");
       } catch (err) {
         console.error(err);
         alert("대회 생성에 실패했습니다.");
@@ -93,7 +93,12 @@ export const Admin = () => {
 
   useEffect(() => {
     if (nameLenghtRef.current && contestNameInputRef.current) {
-      const lengthColor = contestName.length === 0 ? theme.black : contestName.length <= 22 ? theme.correctGreen : theme.warningRed;
+      const lengthColor =
+        contestName.length === 0
+          ? theme.black
+          : contestName.length <= 22
+            ? theme.correctGreen
+            : theme.warningRed;
       const borderColor = lengthColor;
       nameLenghtRef.current.style.color = lengthColor;
       contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
