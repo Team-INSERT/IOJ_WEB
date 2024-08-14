@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flex } from "@/shared/style";
+import { flex, theme } from "@/shared/style";
 
 export const StartLayout = styled.div`
   height: 100vh;
@@ -17,7 +17,7 @@ export const CreateContest = styled.div`
 export const CreateQ = styled.div``;
 
 export const Divider = styled.div`
-  border-left: solid 3px #b3b3b3;
+  border-left: solid 3px ${theme.grey400};
   height: 25rem;
   border-radius: 5px;
 `;
