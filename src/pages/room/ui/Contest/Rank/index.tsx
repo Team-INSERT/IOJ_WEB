@@ -3,7 +3,7 @@ import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import * as S from "./style";
 
-export const GameRanking = () => {
+export const ContestRanking = () => {
   const title = "2024학년도 1학년 알고리즘 경진대회";
   const questions = ["A", "B", "C", "D", "E", "F", "G", "H"];
   const players = [
