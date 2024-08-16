@@ -27,17 +27,15 @@ export const ProblemDetail = () => {
         const handleWheel = (event: WheelEvent) => {
           if (event.deltaY !== 0) {
             if (container.scrollWidth > container.clientWidth) {
-              // 가로 스크롤이 필요한 경우
               // eslint-disable-next-line no-param-reassign
-              container.scrollLeft += event.deltaY; // 세로 휠 움직임을 가로 스크롤로 변환
+              container.scrollLeft += event.deltaY; 
               setIsScrolling((prev) => {
                 const newScrolling = [...prev];
                 newScrolling[index] = true;
                 return newScrolling;
               });
-              event.preventDefault(); // 기본 스크롤 동작 방지
+              event.preventDefault();
 
-              // 일정 시간 후에 스크롤 상태 비활성화
               setTimeout(() => {
                 setIsScrolling((prev) => {
                   const newScrolling = [...prev];
