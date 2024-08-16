@@ -38,7 +38,7 @@ export const ContestQuestion = () => {
       }
     };
     list();
-  }, []);
+  }, [contestId]);
 
   const calculateRemainingTime = (endTime: string) => {
     const end = new Date(endTime).getTime();
@@ -91,7 +91,15 @@ export const ContestQuestion = () => {
         <S.Time>{remainingTime}</S.Time>
         <S.Line />
         <S.ButtonRank>
-          <Button mode="small" color="blue">
+          <Button
+            mode="small"
+            color="blue"
+            onClick={() => {
+              navigate(`/game/contest/ranking/${contestId}`, {
+                state: { title: contestDetail.title },
+              });
+            }}
+          >
             순위보러가기
           </Button>
         </S.ButtonRank>
