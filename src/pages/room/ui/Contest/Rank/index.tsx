@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import { gameRakingList } from "@/pages/room/api/roomApi";
+import { useParams, useLocation } from "react-router-dom";
 import * as S from "./style";
 
 interface ProblemStatuses {
@@ -16,12 +17,18 @@ interface Player {
 
 export const ContestRanking = () => {
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
-  const title = "2024학년도 1학년 알고리즘 경진대회";
   const questions = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const { contestId } = useParams<{ contestId: string }>();
+  const location = useLocation();
+  const title = location.state?.title || "대회 제목이 제공되지 않았습니다.";
   useEffect(() => {
     const playerList = async () => {
+      if (!contestId) {
+        console.error("Contest ID가 제공되지 않았습니다.");
+        return;
+      }
       try {
-        const res = await gameRakingList();
+        const res = await gameRakingList(parseInt(contestId, 10));
         setPlayerDetail(res);
         console.log(res);
       } catch (err) {
@@ -29,7 +36,7 @@ export const ContestRanking = () => {
       }
     };
     playerList();
-  }, []);
+  }, [contestId]);
   return (
     <S.Layout>
       <S.BlueBg>
@@ -65,13 +72,23 @@ export const ContestRanking = () => {
                   <S.Questions>
                     {player.problemStatuses.map((result) => {
                       if (result.status === "unsolved") {
-                        return <S.NotSolved questionSum={questions.length} />;
+                        return (
+                          <S.NotSolved
+                            questionSum={playerDetail[0].problemStatuses.length}
+                          />
+                        );
                       }
                       if (result.status === "failed") {
-                        return <S.RedQuestion questionSum={questions.length} />;
+                        return (
+                          <S.RedQuestion
+                            questionSum={playerDetail[0].problemStatuses.length}
+                          />
+                        );
                       }
                       return (
-                        <S.Question questionSum={questions.length}>
+                        <S.Question
+                          questionSum={playerDetail[0].problemStatuses.length}
+                        >
                           <S.QuestionSolveRank>
                             {result.penalty}
                           </S.QuestionSolveRank>
