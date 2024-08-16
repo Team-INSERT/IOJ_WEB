@@ -1,5 +1,5 @@
 import Stars from "@/shared/components/Stars";
-import QuestionCategory from "@/assets/QuestinCategory";
+import QuestionCategory from "../QuestionCategory";
 import * as S from "./style";
 
 interface Details {

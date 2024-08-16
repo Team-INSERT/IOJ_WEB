@@ -3,6 +3,7 @@ import { Pretendard, flex } from "@/shared/style";
 
 export const Layout = styled.div`
   padding: 4px 8px;
+  gap: 35px;
   ${flex.CENTER}
   border-radius: 4px;
   background: var(--white, #fff);
@@ -11,13 +12,14 @@ export const Layout = styled.div`
 `;
 export const QustionNumber = styled.div`
   font-weight: bold;
-  padding-left: 35px;
+  text-align: left;
+  width: 17px;
   ${Pretendard.Text}
   font-weight: bold;
 `;
 export const Number = styled.div`
-  padding: 0 36px;
   font-size: 19px;
+  width: 48px;
   text-align: left;
   ${Pretendard.Text}
 `;

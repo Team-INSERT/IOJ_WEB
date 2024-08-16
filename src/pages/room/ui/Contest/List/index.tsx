@@ -1,9 +1,44 @@
 import { Button, ContestTitle } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { contestList } from "@/pages/room/api/roomApi";
 import * as S from "./style";
 
+interface contest {
+  id: number;
+  title: string;
+  startTime: string;
+  endTime: string;
+}
+
 export const ContestList = () => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const formattedDate = `${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")} ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    return formattedDate;
+  };
+
   const navigate = useNavigate();
+  const [contestDetail, setContestDetail] = useState<contest[]>([]);
+
+  useEffect(() => {
+    const list = async () => {
+      try {
+        const res = contestList();
+        setContestDetail(await res);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    list();
+  }, []);
+
   return (
     <S.Layout>
       <S.ContentLayout>
@@ -16,20 +51,23 @@ export const ContestList = () => {
           </S.Button>
         </S.TitleContainer>
         <S.ContestList>
-          <div onClick={() => navigate("/game/contest/questions")}>
-            <ContestTitle
-              title="2024학년도 1학년 알고리즘 대회"
-              date="09/17 13:30 ~ 09/17 14:30"
-            />
-          </div>
-          <ContestTitle
-            title="2024학년도 2학년 알고리즘 대회"
-            date="09/17 13:30 ~ 09/17 14:30"
-          />
-          <ContestTitle
-            title="2024학년도 3학년 알고리즘 대회"
-            date="09/17 13:30 ~ 09/17 14:30"
-          />
+          {contestDetail.map((detail) => (
+            <div
+              key={detail.id}
+              onClick={() =>
+                navigate(
+                  `/game/contest/${detail.id}`,
+                )
+              }
+            >
+              <ContestTitle
+                title={detail.title}
+                date={`${formatDate(`${detail.startTime}`)} ~ ${formatDate(
+                  `${detail.endTime}`,
+                )}`}
+              />
+            </div>
+          ))}
         </S.ContestList>
       </S.ContentLayout>
     </S.Layout>

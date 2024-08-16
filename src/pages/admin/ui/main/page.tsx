@@ -3,14 +3,24 @@ import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
 import * as S from "./style";
 import { createContestApi } from "../../api/contestCreate";
+import { contestProblemList } from "../../api/constProblemList";
 
-export interface postBodyProps  {
+export interface postBodyProps {
   title: string;
   startTime: string;
   endTime: string;
   authority: string;
   problems: number[];
-};
+}
+
+interface contestProblem {
+  id: number;
+  title: string;
+  startTime: string;
+  endTime: string;
+  problemIds: number[];
+  authority: string;
+}
 
 export const Admin = () => {
   const today = new Date();
@@ -22,6 +32,7 @@ export const Admin = () => {
   const [questions, setQuestions] = useState<number[]>([]);
   const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  const [problem, setProblem] = useState<contestProblem[]>();
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
@@ -72,12 +83,12 @@ export const Admin = () => {
         };
         await createContestApi(postBody);
         alert("대회가 성공적으로 생성되었습니다!");
-        
-        setContestName("")
-        setStartDay({date: "", time: ""})
-        setEndDay({date: "", time: ""})
-        setQuestions([])
-        setJoinAuthority("")
+
+        setContestName("");
+        setStartDay({ date: "", time: "" });
+        setEndDay({ date: "", time: "" });
+        setQuestions([]);
+        setJoinAuthority("");
       } catch (err) {
         console.error(err);
         alert("대회 생성에 실패했습니다.");
@@ -93,12 +104,30 @@ export const Admin = () => {
 
   useEffect(() => {
     if (nameLenghtRef.current && contestNameInputRef.current) {
-      const lengthColor = contestName.length === 0 ? theme.black : contestName.length <= 22 ? theme.correctGreen : theme.warningRed;
+      const lengthColor =
+        contestName.length === 0
+          ? theme.black
+          : contestName.length <= 22
+            ? theme.correctGreen
+            : theme.warningRed;
       const borderColor = lengthColor;
       nameLenghtRef.current.style.color = lengthColor;
       contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
     }
   }, [contestName]);
+
+  useEffect(() => {
+    const showProblemList = async () => {
+      try {
+        const res = await contestProblemList();
+        setProblem(res);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    showProblemList();
+  }, []);
 
   return (
     <>
