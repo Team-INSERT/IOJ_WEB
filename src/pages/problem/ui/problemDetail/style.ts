@@ -1,4 +1,5 @@
 import { Pretendard, flex, theme } from "@/shared/style";
+import { RobotoMono } from "@/shared/style/font";
 import styled from "styled-components";
 
 export const Layout = styled.div`
@@ -72,40 +73,34 @@ export const ProblemInfo = styled.p`
   ${Pretendard.Text}
 `;
 export const ExampleLayout = styled.div`
+  width: 100%;
   ${flex.CENTER}
   align-items: flex-start;
-  gap: 64px;
 `;
 export const ExampleContent = styled.div`
-  width: 600px;
+  width: 50%;
   ${flex.COLUMN_VERTICAL}
   gap: 20px;
+
+  &:first-child {
+    padding-right: 32px;
+  }
+  &:nth-child(2) {
+    padding-left: 32px;
+  }
 `;
 export const ExampleList = styled.div`
   ${flex.COLUMN_VERTICAL}
   gap: 20px;
 `
 export const InputText = styled.pre<{ isScrolling: boolean }>`
-  font-family: "Roboto Mono";
-  font-size: 19px;
-  font-weight: 400;
+  ${RobotoMono.Text}
   width: 100%;
   border: 0.8px solid ${theme.grey400};
   overflow-x: scroll;
   white-space: pre;
   padding: 12px;
-
-  /* 항상 배경을 보여줌 */
-  ::-webkit-scrollbar-track {
-    background: ${theme.grey100};
-  }
-
-  /* 스크롤 중일 때 스크롤바를 표시 */
   ::-webkit-scrollbar {
     height: ${({ isScrolling }) => (isScrolling ? "12px" : "0px")};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${theme.grey400};
   }
 `;
