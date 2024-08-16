@@ -3,14 +3,20 @@ import { MainHeader } from "@/shared/components";
 import Google from "@/assets/Google";
 import { customAxios } from "@/shared/utils/customAxios";
 import * as S from "./style";
+import { authUrl } from "../../api/getAuthUrl";
 
 export const Login = () => {
   let OAUTH_URL = "";
   useEffect(() => {
-    (async () => {
-      const { data } = await customAxios.get("/auth");
-      OAUTH_URL = data;
-    })();
+    const getAuthUrl = async () => {
+      try {
+        const res = await authUrl();
+        OAUTH_URL = res;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAuthUrl()
   }, []);
 
   const locateOauth = () => {
