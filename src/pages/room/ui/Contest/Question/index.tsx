@@ -1,5 +1,5 @@
 import { Button, Question } from "@/shared/components";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import * as S from "./style";
