@@ -6,6 +6,7 @@ import { Login } from "@/pages/login";
 import { Setting } from "@/pages/setting";
 import { GameHome,ContestList,ContestQuestion } from "@/pages/room";
 import { Admin } from "@/pages/admin";
+import { ContestRanking } from "@/pages/room/ui/Contest/Rank";
 
 const App = () => {
   useAuthService();
@@ -17,7 +18,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/setting" element={<Setting />} />
         <Route path="/game/contest" element={<ContestList />} />
-        <Route path="/game/contest/questions" element={<ContestQuestion />} />
+        <Route path="/game/contest/:contestId" element={<ContestQuestion />} />
         <Route path="/game/contest/code" element={<Game />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

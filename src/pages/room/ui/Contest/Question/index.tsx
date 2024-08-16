@@ -1,5 +1,5 @@
 import { Button, Question } from "@/shared/components";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import * as S from "./style";
@@ -21,18 +21,16 @@ export const ContestQuestion = () => {
   const navigate = useNavigate();
   const [contestDetail, setContestDetail] = useState<Contest | null>(null);
   const [remainingTime, setRemainingTime] = useState<string>("");
-  const [query] = useSearchParams();
-  const id = query.get("contestId");
+  const { contestId } = useParams<{ contestId: string }>();
 
   useEffect(() => {
     const list = async () => {
-      if (!id) {
+      if (!contestId) {
         console.error("Contest ID가 제공되지 않았습니다.");
         return;
       }
-      const contestId = parseInt(id, 10);
       try {
-        const res: Contest = await contestProblem(contestId);
+        const res: Contest = await contestProblem(parseInt(contestId, 10));
         setContestDetail(res);
         console.log(res);
       } catch (err) {
