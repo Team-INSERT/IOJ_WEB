@@ -7,6 +7,7 @@ import { Setting } from "@/pages/setting";
 import { GameHome, ContestList, ContestQuestion } from "@/pages/room";
 import { Admin } from "@/pages/admin";
 import { ContestRanking } from "@/pages/room/ui/Contest/Rank";
+import { ProblemDetail } from "@/pages/problem";
 
 const App = () => {
   useAuthService();
@@ -25,6 +26,7 @@ const App = () => {
         />
         <Route path="/game/contest/code" element={<Game />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/problem/1" element={<ProblemDetail />} />
       </Routes>
     </Router>
   );
