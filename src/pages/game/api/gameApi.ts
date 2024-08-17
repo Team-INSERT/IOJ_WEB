@@ -1,1 +1,1 @@
-export const gameApi = () => {};
+import { customAxios } from "@/shared/utils/customAxios";

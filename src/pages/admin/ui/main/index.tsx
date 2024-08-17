@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
 import * as S from "./style";
 import { createContestApi } from "../../api/contestCreate";
+import { contestProblemList } from "../../api/constProblemList";
 
 export interface postBodyProps {
   title: string;
@@ -22,6 +23,7 @@ export const Contest = () => {
   const [questions, setQuestions] = useState<number[]>([]);
   const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  // const [problem, setProblem] = useState<contestProblem[]>();
 
   const nameLenghtRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
@@ -104,6 +106,19 @@ export const Contest = () => {
       contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
     }
   }, [contestName]);
+
+  useEffect(() => {
+    const showProblemList = async () => {
+      try {
+        const res = await contestProblemList();
+        setProblem(res);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    showProblemList();
+  }, []);
 
   return (
     <>

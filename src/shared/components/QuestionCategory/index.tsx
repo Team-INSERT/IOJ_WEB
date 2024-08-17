@@ -7,13 +7,13 @@ type questionCategoryProps = {
 
 const QuestionCategory = ({ mode }: questionCategoryProps) => {
   switch (mode) {
-    case "success":
+    case "solved":
       return (
         <S.Layout color={theme.correctGreen}>
           <S.Text>S</S.Text>
         </S.Layout>
       );
-    case "wrong":
+    case "failed":
       return (
         <S.Layout color="#E54747">
           <S.Text>W</S.Text>
