@@ -5,6 +5,7 @@ import Button from "@/shared/components/Button";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/Footer";
 import { GameCard, MainHeader } from "@/shared/components";
+import Modal from "@/shared/components/Modal";
 import * as S from "./style";
 
 export const Main = () => {
@@ -16,6 +17,14 @@ export const Main = () => {
 
   const stolenName = localStorage.getItem("name");
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태관리
+
+  const handleModalClose = (value: number) => {
+    if (value === 0) {
+      setIsModalOpen(false);
+      navigate("/login");
+    }
+  };
   useEffect(() => {
     if (stolenName) {
       setUserName(stolenName);
@@ -24,11 +33,10 @@ export const Main = () => {
 
   const gameStartClick = () => {
     if (!stolenName) {
-      alert("로그인이 필요한 서비스입니다.");
-      navigate("/login");
-      return;
+      setIsModalOpen(true);
+    } else {
+      window.open("/game", "_blank", "noopener");
     }
-    window.open("/game", "_blank", "noopener");
   };
 
   return (
@@ -120,6 +128,16 @@ export const Main = () => {
         </S.RecordContent>
       </S.RecordLayout>
       <Footer />
+      {isModalOpen && (
+        <Modal
+          status="나쁨"
+          mode="알림"
+          title="로그인이 필요한 서비스입니다."
+          subtitle="게임하기는 로그인을 필요로 합니다!"
+          animation
+          onClose={handleModalClose}
+        />
+      )}
     </>
   );
 };
