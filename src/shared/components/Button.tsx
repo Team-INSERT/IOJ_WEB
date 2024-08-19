@@ -12,12 +12,15 @@ type ColorMode =
   | "green"
   | "white";
 
+type FontType = "nexon" | "pretendard";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   mode: ButtonMode;
   color: ColorMode;
+  font?: FontType;
 }
 
-const ButtonType = (mode: ButtonMode, color: ColorMode) => {
+const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
   const colorStyles = (() => {
     switch (color) {
       case "blue":
@@ -79,8 +82,8 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
       case "white":
         return css`
           background-color: ${theme.white};
-          color: ${theme.grey900};
-          border: none;
+          color: ${theme.grey600};
+          border: 1px solid ${theme.grey200};
           &:hover {
             background-color: ${theme.grey100};
           }
@@ -104,7 +107,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
           ${NexonFont.NexonText}
         `;
       case "small":
-        return color === "green" || color === "gray" || color === "red"
+        return font === "nexon"
           ? css`
               padding: 7px 16px;
               ${NexonFont.NexonSmallText}
@@ -135,13 +138,13 @@ const ButtonType = (mode: ButtonMode, color: ColorMode) => {
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  ${({ mode, color }) => ButtonType(mode, color)}
+  ${({ mode, color, font }) => ButtonType(mode, color, font)}
   border-radius: 4px;
   cursor: pointer;
 `;
 
-const Button = ({ mode, color, ...props }: ButtonProps) => (
-  <StyledButton mode={mode} color={color} {...props} />
+const Button = ({ mode, color, font, ...props }: ButtonProps) => (
+  <StyledButton mode={mode} color={color} font={font} {...props} />
 );
 
 export default Button;

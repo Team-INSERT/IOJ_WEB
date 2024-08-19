@@ -33,3 +33,8 @@ export const Pretendard = {
   SmallText: fontGenerator(700, 0.938, 130, "Pretendard-Regular"),
   Caption: fontGenerator(400, 0.75, 130, "Pretendard-Regular"),
 };
+
+export const RobotoMono = {
+  Text: fontGenerator(400, 1.1875, 130, "Roboto Mono"),
+  SmallText: fontGenerator(400, 0.9375, 130, "Roboto Mono")
+}
