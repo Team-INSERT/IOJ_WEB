@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import IojLogo from "@/assets/IojLogo";
 import { useEffect, useState } from "react";
+import { checkLoginStatus } from "@/pages/main/api/checkLogin";
 import * as S from "./style";
 
 const MainHeader = () => {
@@ -12,21 +13,26 @@ const MainHeader = () => {
     { id: 5, name: "게임소개", navigate: "/introduce" },
     { id: 6, name: "가이드", navigate: "/guide" },
   ];
-  const stolenName = localStorage.getItem("name");
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [userName, setUserName] = useState("로그인");
+
+  const [isLogin, setIsLogin] = useState(false);
+
+  const userName = localStorage.getItem("name")
 
   useEffect(() => {
-    if (stolenName) {
-      setUserName(stolenName);
-    }
-  }, [stolenName]);
+    const verifyLogin = async () => {
+      const loggedIn = await checkLoginStatus();
+      setIsLogin(loggedIn);
+    };
+
+    verifyLogin();
+  }, []);
 
   const headerItemClick = (url: string, id: number) => {
     if (id === 2) {
-      if (!stolenName) {
+      if (!isLogin) {
         alert("로그인이 필요한 서비스입니다.");
         navigate("/login");
         return;
@@ -38,7 +44,7 @@ const MainHeader = () => {
   };
 
   const onNameClick = () => {
-    if (stolenName) {
+    if (isLogin) {
       navigate("/setting");
     } else {
       navigate("/login");
@@ -62,7 +68,7 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.DetailText onClick={onNameClick}>{userName}</S.DetailText>|
+        <S.DetailText onClick={onNameClick}>{userName || "로그인"}</S.DetailText>|
         <S.DetailText onClick={() => navigate("/setting")}>설정</S.DetailText>
       </S.Details>
     </S.Layout>

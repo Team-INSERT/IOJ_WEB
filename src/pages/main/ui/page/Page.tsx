@@ -6,29 +6,31 @@ import Person from "@/assets/Person";
 import Footer from "@/shared/components/Footer";
 import { GameCard, MainHeader } from "@/shared/components";
 import * as S from "./style";
+import { checkLoginStatus } from "../../api/checkLogin";
 
 export const Main = () => {
   const navigate = useNavigate();
   const questionCount = "00000";
   const solvedQuestions = "00000";
   const langCount = "6";
-  const [userName, setUserName] = useState("");
-
-  const stolenName = localStorage.getItem("name");
+  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    if (stolenName) {
-      setUserName(stolenName);
-    }
-  }, [stolenName]);
+    const verifyLogin = async () => {
+      const loggedIn = await checkLoginStatus();
+      setIsLogin(loggedIn);
+    };
+
+    verifyLogin();
+  }, []);
 
   const gameStartClick = () => {
-    if (!stolenName) {
-      alert("로그인이 필요한 서비스입니다.");
-      navigate("/login");
-      return;
+    if (isLogin) {
+      window.open("/game", "_blank", "noopener");
+    } else {
+      alert("게임을 시작하려면 로그인이 필요합니다.");
+      window.location.replace("/login"); // 로그인 페이지로 리다이렉트
     }
-    window.open("/game", "_blank", "noopener");
   };
 
   return (
@@ -94,7 +96,7 @@ export const Main = () => {
           </S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
-          {userName ? null : <S.Blind />}
+          {!isLogin && <S.Blind />}
           <S.CardLayout>
             <GameCard mode="문제 모아보기" />
             <GameCard mode="역대 전적" />

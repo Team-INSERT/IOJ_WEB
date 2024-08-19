@@ -1,3 +1,4 @@
+import { getCookie, setCookie } from "../cookie/cookie";
 import { customAxios } from "../customAxios";
 
 export const fetchUserData = async () => {
@@ -26,11 +27,11 @@ export const authorizeAccess = async (accessToken: String) => {
     const { accessToken: newAccessToken, refreshToken } = response.data;
 
     if (newAccessToken && refreshToken) {
-      localStorage.setItem("access", newAccessToken);
-      localStorage.setItem("refresh", refreshToken);
+      setCookie("accessToken", newAccessToken, {path: "/",});
+      setCookie("refreshToken", refreshToken, { path: "/" });
     }
 
-    if (localStorage.getItem("access") && localStorage.getItem("refresh")) {
+    if (getCookie("accessToken") && getCookie("refreshToken")) {
       const userData = await fetchUserData();
       localStorage.setItem("name", userData.nickname);
       localStorage.setItem("color", userData.color);
