@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { Pretendard, theme } from "../style";
 
 const DropdownContainer = styled.div`
@@ -57,7 +56,7 @@ const DropdownItem = styled.div`
 `;
 
 const ArrowIcon = styled.div<{ open: boolean }>`
-  transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0deg)")};
+  transform: ${({ open }) => (open ? "rotate(0deg)" : "rotate(180deg)")};
   transition: transform 0.3s ease;
 `;
 

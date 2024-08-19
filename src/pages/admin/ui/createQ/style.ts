@@ -152,6 +152,7 @@ export const Out = styled.p`
   color: ${theme.grey900};
 
   &:hover {
+    cursor: pointer;
     color: ${theme.grey100};
   }
 `;

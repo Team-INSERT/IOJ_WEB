@@ -3,6 +3,7 @@ import { Button, MainHeader, Level, Stars } from "@/shared/components";
 import Plus from "@/assets/Plus.svg";
 import Minus from "@/assets/Minus.svg";
 import Check from "@/assets/Check.svg";
+import Out from "@/assets/Out.png";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
@@ -104,6 +105,7 @@ export const Question = () => {
           <S.Box>
             <S.Text>메모리 제한</S.Text>
             <S.MemoryInput
+              type="number"
               value={memoryLimit}
               onChange={(e) => setMemoryLimit(e.target.value)}
             />
@@ -111,6 +113,7 @@ export const Question = () => {
           <S.Box>
             <S.Text>시간 제한</S.Text>
             <S.TimeInput
+              type="number"
               value={timeLimit}
               onChange={(e) => setTimeLimit(e.target.value)}
             />
@@ -151,7 +154,10 @@ export const Question = () => {
             </S.ButtonContainer>
           </S.Box>
           <S.BoxFooter>
-            <S.Out onClick={() => navigate("/admin")}> {`< 나가기`}</S.Out>
+            <S.Out onClick={() => navigate("/admin")}>
+              <img src={Out} alt="Out" />
+              나가기
+            </S.Out>
             <Button mode="small" color="blue">
               문제 생성
             </Button>
