@@ -111,7 +111,7 @@ export const Contest = () => {
     const showProblemList = async () => {
       try {
         const res = await contestProblemList();
-        setProblem(res);
+        // setProblem(res);
         console.log(res);
       } catch (err) {
         console.log(err);

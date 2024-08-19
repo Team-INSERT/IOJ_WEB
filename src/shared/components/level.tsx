@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { Pretendard, theme } from "../style";
 
 const DropdownContainer = styled.div`
@@ -60,14 +61,22 @@ const ArrowIcon = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease;
 `;
 
-const CustomDropdown = ({ options, selectedOption, onSelect }: any) => {
+const CustomDropdown = ({
+  options,
+  selectedOption,
+  onSelect,
+}: {
+  options: number[];
+  selectedOption: number;
+  onSelect: (option: number) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option: string) => {
+  const handleOptionClick = (option: number) => {
     onSelect(option);
     setIsOpen(false);
   };
@@ -75,13 +84,13 @@ const CustomDropdown = ({ options, selectedOption, onSelect }: any) => {
   return (
     <DropdownContainer>
       <DropdownButton onClick={toggleDropdown}>
-        {selectedOption}
+        Lv.{selectedOption}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
       </DropdownButton>
       <DropdownContent open={isOpen}>
-        {options.map((option: string) => (
+        {options.map((option: number) => (
           <DropdownItem key={option} onClick={() => handleOptionClick(option)}>
-            {option}
+            Lv.{option}
           </DropdownItem>
         ))}
       </DropdownContent>
