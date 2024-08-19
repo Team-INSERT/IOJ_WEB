@@ -83,7 +83,7 @@ const CustomDropdown = ({
   return (
     <DropdownContainer>
       <DropdownButton onClick={toggleDropdown}>
-        {selectedOption !== null ? `Lv.${selectedOption}` : "Level"}
+        {selectedOption !== null ? `Lv.${selectedOption}` : "ㅤ"}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
       </DropdownButton>
       <DropdownContent open={isOpen}>
