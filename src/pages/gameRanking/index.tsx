@@ -1,1 +1,0 @@
-export { GameRanking } from './ui/page/page'

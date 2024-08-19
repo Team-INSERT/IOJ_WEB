@@ -1,13 +1,82 @@
 import { Button, Question } from "@/shared/components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { contestProblem } from "@/pages/room/api/roomApi";
 import * as S from "./style";
+
+interface Problem {
+  id: number;
+  level: number;
+  title: string;
+  status: string;
+}
+
+interface Contest {
+  title: string;
+  endTime: string;
+  problems: Problem[];
+}
 
 export const ContestQuestion = () => {
   const navigate = useNavigate();
+  const [contestDetail, setContestDetail] = useState<Contest | null>(null);
+  const [remainingTime, setRemainingTime] = useState<string>("");
+  const { contestId } = useParams<{ contestId: string }>();
+
+  useEffect(() => {
+    const list = async () => {
+      if (!contestId) {
+        console.error("Contest ID가 제공되지 않았습니다.");
+        return;
+      }
+      try {
+        const res: Contest = await contestProblem(parseInt(contestId, 10));
+        setContestDetail(res);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    list();
+  }, [contestId]);
+
+  const calculateRemainingTime = (endTime: string) => {
+    const end = new Date(endTime).getTime();
+    const now = new Date().getTime();
+    const distance = end - now;
+
+    if (distance < 0) {
+      setRemainingTime("종료되었습니다");
+      return;
+    }
+
+    const hours = Math.floor(distance / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    setRemainingTime(`${hours}시간 ${minutes}분 ${seconds}초`);
+  };
+
+  useEffect(() => {
+    if (contestDetail) {
+      const interval = setInterval(() => {
+        calculateRemainingTime(contestDetail.endTime);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+    return undefined;
+  }, [contestDetail]);
+
+  const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
+
+  if (!contestDetail) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <S.Layout>
       <S.TitleContainer>
-        <S.Title>2024학년도 1학년 알고리즘 경진대회</S.Title>
+        <S.Title>{contestDetail.title}</S.Title>
         <S.Button>
           <Button
             mode="small"
@@ -19,46 +88,35 @@ export const ContestQuestion = () => {
         </S.Button>
       </S.TitleContainer>
       <S.RemainingTimeContainer>
-        <S.Time>3시간 25분 17초</S.Time>
+        <S.Time>{remainingTime}</S.Time>
         <S.Line />
         <S.ButtonRank>
-          <Button mode="small" color="blue">
+          <Button
+            mode="small"
+            color="blue"
+            onClick={() => {
+              navigate(`/game/contest/ranking/${contestId}`, {
+                state: { title: contestDetail.title },
+              });
+            }}
+          >
             순위보러가기
           </Button>
         </S.ButtonRank>
       </S.RemainingTimeContainer>
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
-        <div onClick={() => navigate("/game/contest/code")}>
-          <Question
-            mode="success"
-            qustionNumebr="A"
-            number={1}
-            title="A + B = ?"
-            level={4}
-          />
-        </div>
-        <Question
-          mode="wrong"
-          qustionNumebr="B"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
-        <Question
-          mode=""
-          qustionNumebr="C"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
-        <Question
-          mode="success"
-          qustionNumebr="D"
-          number={1}
-          title="A + B = ?"
-          level={4}
-        />
+        {contestDetail.problems.map((problem, index) => (
+          <div key={problem.id} onClick={() => navigate("/game/contest/code")}>
+            <Question
+              mode={problem.status}
+              qustionNumebr={getQuestionNumber(index)}
+              number={problem.id}
+              title={problem.title}
+              level={problem.level}
+            />
+          </div>
+        ))}
       </S.Question>
     </S.Layout>
   );

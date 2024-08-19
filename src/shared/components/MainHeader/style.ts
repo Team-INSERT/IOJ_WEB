@@ -22,8 +22,8 @@ export const Menus = styled.div`
   top: 56px;
   right: 15.75rem;
 `;
-export const Menu = styled.div<{ isActive: boolean }>`
-  color: ${({ isActive }) => (isActive ? theme.black : theme.grey600)};
+export const Menu = styled.div<{ $isActive: boolean }>`
+  color: ${({ $isActive }) => ($isActive ? theme.black : theme.grey600)};
   cursor: pointer;
   
   &:hover {

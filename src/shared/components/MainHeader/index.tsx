@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { checkLoginStatus } from "@/pages/main/api/checkLogin";
 import { getCookie } from "@/shared/utils/cookie/cookie";
 import * as S from "./style";
+import Modal from "../Modal";
 
 const MainHeader = () => {
   const MenusDetails = [
@@ -19,9 +20,10 @@ const MainHeader = () => {
   const location = useLocation();
 
   const [isLogin, setIsLogin] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const accessToken = getCookie("accessToken")
-  const refreshToken = getCookie("refreshToken")
+  const accessToken = getCookie("accessToken");
+  const refreshToken = getCookie("refreshToken");
 
   useEffect(() => {
     const verifyLogin = async () => {
@@ -35,8 +37,7 @@ const MainHeader = () => {
   const headerItemClick = (url: string, id: number) => {
     if (id === 2) {
       if (!isLogin) {
-        alert("로그인이 필요한 서비스입니다.");
-        navigate("/login");
+        setIsModalOpen(true)
         return;
       }
       window.open(url, "_blank", "noopener,noreferrer");
@@ -53,27 +54,51 @@ const MainHeader = () => {
     }
   };
 
+  const handleModalClose = (value: number) => {
+    if (value === 0) {
+      setIsModalOpen(false);
+      navigate("/login");
+    }
+  };
+
   return (
-    <S.Layout>
-      <S.Logo>
-        <IojLogo onClick={() => navigate("/")} />
-      </S.Logo>
-      <S.Menus>
-        {MenusDetails.map((item) => (
-          <S.Menu
-            key={item.id}
-            isActive={location.pathname === item.navigate}
-            onClick={() => headerItemClick(item.navigate, item.id)}
-          >
-            {item.name}
-          </S.Menu>
-        ))}
-      </S.Menus>
-      <S.Details>
-        <S.DetailText onClick={onNameClick}>{(accessToken && refreshToken) ? localStorage.getItem("name") : "로그인"}</S.DetailText>|
-        <S.DetailText onClick={() => navigate("/setting")}>설정</S.DetailText>
-      </S.Details>
-    </S.Layout>
+    <>
+      <S.Layout>
+        <S.Logo>
+          <IojLogo onClick={() => navigate("/")} />
+        </S.Logo>
+        <S.Menus>
+          {MenusDetails.map((item) => (
+            <S.Menu
+              key={item.id}
+              $isActive={location.pathname === item.navigate}
+              onClick={() => headerItemClick(item.navigate, item.id)}
+            >
+              {item.name}
+            </S.Menu>
+          ))}
+        </S.Menus>
+        <S.Details>
+          <S.DetailText onClick={onNameClick}>
+            {accessToken && refreshToken
+              ? localStorage.getItem("name")
+              : "로그인"}
+          </S.DetailText>
+          |
+          <S.DetailText onClick={() => navigate("/setting")}>설정</S.DetailText>
+        </S.Details>
+      </S.Layout>
+      {isModalOpen && (
+        <Modal
+          status="나쁨"
+          mode="알림"
+          title="로그인이 필요한 서비스입니다."
+          subtitle="게임하기는 로그인을 필요로 합니다!"
+          onClose={handleModalClose}
+          animation
+        />
+      )}
+    </>
   );
 };
 
