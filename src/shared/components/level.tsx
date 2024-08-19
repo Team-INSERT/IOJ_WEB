@@ -66,7 +66,7 @@ const CustomDropdown = ({
   onSelect,
 }: {
   options: number[];
-  selectedOption: number;
+  selectedOption: number | null;
   onSelect: (option: number) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -83,11 +83,11 @@ const CustomDropdown = ({
   return (
     <DropdownContainer>
       <DropdownButton onClick={toggleDropdown}>
-        Lv.{selectedOption}
+        {selectedOption !== null ? `Lv.${selectedOption}` : "Level"}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
       </DropdownButton>
       <DropdownContent open={isOpen}>
-        {options.map((option: number) => (
+        {options.map((option) => (
           <DropdownItem key={option} onClick={() => handleOptionClick(option)}>
             Lv.{option}
           </DropdownItem>

@@ -29,7 +29,7 @@ export const Question = () => {
   const [inputExplain, setInputExplain] = useState("");
   const [memoryLimit, setMemoryLimit] = useState("");
   const [timeLimit, setTimeLimit] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState(0);
+  const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [testCases, setTestCases] = useState<TestCase[]>([
     { input: "", output: "", selected: false },
   ]);
@@ -120,7 +120,7 @@ export const Question = () => {
           </S.Box>
           <S.Box>
             <S.Text>
-              테스트 케이스 (좌: 입력, 우: 출력) 토글 버튼으로 등록가능
+              테스트 케이스 (좌: 입력, 우: 출력) 토글 버튼으로 등록 가능
             </S.Text>
             {testCases.map((testCase, index) => (
               <S.TestBox>
@@ -168,7 +168,7 @@ export const Question = () => {
             <S.NameBox>
               <S.ProblemName>{contestName}</S.ProblemName>
               <S.Star>
-                <Stars value={selectedLevel} />
+                <Stars value={selectedLevel ?? 0} />
               </S.Star>
             </S.NameBox>
           </S.ProblemTitleBox>
