@@ -1,7 +1,8 @@
+import { getCookie } from "@/shared/utils/cookie/cookie";
 import { customAxios } from "@/shared/utils/customAxios";
 
 export const checkLoginStatus = async () => {
-  const token = localStorage.getItem("access");
+  const token = getCookie("accessToken");
 
   if (!token) {
     return false;

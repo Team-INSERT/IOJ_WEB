@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import IojLogo from "@/assets/IojLogo";
 import { useEffect, useState } from "react";
 import { checkLoginStatus } from "@/pages/main/api/checkLogin";
+import { getCookie } from "@/shared/utils/cookie/cookie";
 import * as S from "./style";
 
 const MainHeader = () => {
@@ -19,7 +20,8 @@ const MainHeader = () => {
 
   const [isLogin, setIsLogin] = useState(false);
 
-  const userName = localStorage.getItem("name")
+  const accessToken = getCookie("accessToken")
+  const refreshToken = getCookie("refreshToken")
 
   useEffect(() => {
     const verifyLogin = async () => {
@@ -68,7 +70,7 @@ const MainHeader = () => {
         ))}
       </S.Menus>
       <S.Details>
-        <S.DetailText onClick={onNameClick}>{userName || "로그인"}</S.DetailText>|
+        <S.DetailText onClick={onNameClick}>{(accessToken && refreshToken) ? localStorage.getItem("name") : "로그인"}</S.DetailText>|
         <S.DetailText onClick={() => navigate("/setting")}>설정</S.DetailText>
       </S.Details>
     </S.Layout>

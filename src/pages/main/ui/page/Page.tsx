@@ -5,8 +5,8 @@ import Button from "@/shared/components/Button";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/Footer";
 import { GameCard, MainHeader } from "@/shared/components";
+import { checkLoginStatus } from "@/pages/main/api/checkLogin";
 import * as S from "./style";
-import { checkLoginStatus } from "../../api/checkLogin";
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -28,8 +28,8 @@ export const Main = () => {
     if (isLogin) {
       window.open("/game", "_blank", "noopener");
     } else {
-      alert("게임을 시작하려면 로그인이 필요합니다.");
-      window.location.replace("/login"); // 로그인 페이지로 리다이렉트
+      alert("로그인이 필요한 서비스입니다.");
+      window.location.replace("/login");
     }
   };
 
