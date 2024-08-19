@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { getCookie, setCookie } from "./cookie/cookie";
+import { deleteCookie, getCookie, setCookie } from "./cookie/cookie";
 
 export const customAxios: AxiosInstance = axios.create({
   baseURL: "http://182.218.148.184:8888",
@@ -8,6 +8,7 @@ export const customAxios: AxiosInstance = axios.create({
 customAxios.interceptors.request.use((data) => {
   const token = getCookie("accessToken");
   const config = data;
+  console.log(token)
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -37,6 +38,8 @@ customAxios.interceptors.response.use(
     } catch (refreshErr) {
       alert("토큰이 만료되거나 존재하지 않습니다! 다시 로그인 해주세요.")
       localStorage.clear()
+      deleteCookie("accessToken")
+      deleteCookie("refreshToken")
       window.location.replace("/login")
       return Promise.reject(refreshErr);
     }
