@@ -83,6 +83,20 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     cursor: pointer;
   }
+
+  .swiper-wrapper {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .swiper-slide {
+    height: 100% !important;
+  }
+
+  .swiper {
+    margin: 0;
+    height: 100%;
+  }
 `;
 
 export default GlobalStyle;

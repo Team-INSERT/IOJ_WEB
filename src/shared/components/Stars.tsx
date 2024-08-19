@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Star from "@/assets/Star";
 import BlueStar from "@/assets/BlueStar";
 
@@ -9,11 +9,15 @@ interface StarsProps {
 }
 
 const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
-  const [currentStarsValue, setCurrentStartsValue] = useState(value);
+  const [currentStarsValue, setCurrentStarsValue] = useState(value);
+
+  useEffect(() => {
+    setCurrentStarsValue(value);
+  }, [value]);
 
   const handleClick = (index: number) => {
     if (setting) {
-      setCurrentStartsValue(index + 1);
+      setCurrentStarsValue(index + 1);
     }
   };
 
