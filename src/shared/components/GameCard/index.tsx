@@ -80,7 +80,7 @@ const GameCard = ({ mode }: Modetype) => {
       <S.ImgContainer>
         <img src={detail.markup} alt={`${detail.mode} 이미지`} />
       </S.ImgContainer>
-      <S.Details bgImage={background}>
+      <S.Details $bgImage={background}>
         {mode === "대회 모드" && <ContestLogo />}
         {mode === "커스텀 모드" || mode === "베이직 모드" ? (
           <CustomLogo />

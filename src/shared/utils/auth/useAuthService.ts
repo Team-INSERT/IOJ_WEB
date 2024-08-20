@@ -3,9 +3,11 @@ import { authorizeAccess } from "./authService";
 
 export const useAuthService = () => {
   useEffect(() => {
+
     const { hash } = window.location;
     const params = new URLSearchParams(hash.substring(1));
     const accessToken = params.get("access_token");
+    const denied = params.get("error")
 
     if (accessToken) {
       (async () => {
@@ -15,6 +17,8 @@ export const useAuthService = () => {
           console.error(error);
         }
       })();
+    } else if (denied) {
+      window.location.replace("/login")
     }
   }, []);
 };

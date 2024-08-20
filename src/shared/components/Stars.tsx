@@ -23,10 +23,11 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
 
   return (
     <>
-      {Array.from({ length: 5 }).map((_, index) => (
+      {[0,1,2,3,4].map((_, index) => (
         <span
           onClick={() => handleClick(index)}
           style={{ cursor: setting ? "pointer" : "default" }}
+          key={_}
         >
           {index < currentStarsValue ? <BlueStar /> : <Star />}
         </span>

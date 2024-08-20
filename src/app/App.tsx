@@ -5,7 +5,7 @@ import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
 import { Setting } from "@/pages/setting";
 import { GameHome, ContestList, ContestQuestion } from "@/pages/room";
-import { Contest, Start, Question } from "@/pages/admin";
+import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 
 const App = () => {
   useAuthService();
@@ -24,8 +24,8 @@ const App = () => {
         /> */}
         <Route path="/game/contest/code" element={<Game />} />
         <Route path="/admin" element={<Start />} />
-        <Route path="/admin/Main" element={<Contest />} />
-        <Route path="/admin/Question" element={<Question />} />
+        <Route path="/admin/Main" element={<CreateContest />} />
+        <Route path="/admin/Question" element={<CreateQuestion />} />
       </Routes>
     </Router>
   );

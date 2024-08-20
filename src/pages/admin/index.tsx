@@ -1,3 +1,3 @@
-export { Contest } from "./ui/main/index";
 export { Start } from "./ui/start/index";
-export { Question } from "./ui/createQ/index";
+export { CreateQuestion } from "./ui/createQ/index";
+export { CreateContest } from "./ui/createC/index"
