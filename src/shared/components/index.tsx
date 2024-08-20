@@ -11,3 +11,4 @@ export { default as WaitingRoom } from "./WaitingRoom";
 export { default as Stars } from "./Stars";
 export { default as Dropdown } from "./DropDown";
 export { default as GameHeader } from "./GameHeader/index";
+export { default as Level } from "./level";
