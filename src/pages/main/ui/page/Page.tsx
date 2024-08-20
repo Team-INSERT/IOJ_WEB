@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GameCard, MainHeader } from "@/shared/components";
+import { getCookie } from "@/shared/utils/cookie/cookie";
 import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/Footer";
-import { GameCard, MainHeader } from "@/shared/components";
 import Modal from "@/shared/components/Modal";
 import * as S from "./style";
 
@@ -13,11 +14,8 @@ export const Main = () => {
   const questionCount = "00000";
   const solvedQuestions = "00000";
   const langCount = "6";
-  const [userName, setUserName] = useState("");
-
-  const stolenName = localStorage.getItem("name");
-
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태관리
+  const [isLogin, setIsLogin] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalClose = (value: number) => {
     if (value === 0) {
@@ -25,14 +23,17 @@ export const Main = () => {
       navigate("/login");
     }
   };
+
   useEffect(() => {
-    if (stolenName) {
-      setUserName(stolenName);
+    if (getCookie("accessToken") && getCookie("refreshToken")) {
+      setIsLogin(true)
+    } else {
+      setIsLogin(false)
     }
-  }, [stolenName]);
+  },[])
 
   const gameStartClick = () => {
-    if (!stolenName) {
+    if (!isLogin) {
       setIsModalOpen(true);
     } else {
       window.open("/game", "_blank", "noopener");
@@ -98,11 +99,11 @@ export const Main = () => {
         <S.RecordTextLayout>
           <S.RecordTitle>나의 기록</S.RecordTitle>
           <S.RecordSubTitle>
-            보이지 않는다면 로그인을 해주세요.
+            공개되지 않은 기능입니다
           </S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
-          {userName ? null : <S.Blind />}
+          {true && <S.Blind />}
           <S.CardLayout>
             <GameCard mode="문제 모아보기" />
             <GameCard mode="역대 전적" />

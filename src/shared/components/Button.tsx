@@ -82,7 +82,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
       case "white":
         return css`
           background-color: ${theme.white};
-          color: ${theme.grey600};
+          color: ${theme.grey900};
           border: 1px solid ${theme.grey200};
           &:hover {
             background-color: ${theme.grey100};

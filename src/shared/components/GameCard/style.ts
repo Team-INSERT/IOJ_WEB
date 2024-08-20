@@ -3,7 +3,7 @@ import { NexonFont, flex, theme } from "@/shared/style";
 import GameCardHover from "@/assets/GameCardHover.svg";
 
 interface DetailsProps {
-  bgImage: string;
+  $bgImage: string;
 }
 
 interface LayoutProps {
@@ -52,7 +52,7 @@ export const ImgContainer = styled.div`
 
 export const Details = styled.div<DetailsProps>`
   ${flex.COLUMN_CENTER}
-  background-image: url(${(props) => props.bgImage});
+  background-image: url(${(props) => props.$bgImage});
   height: 168px;
   position: relative;
   z-index: 1;
