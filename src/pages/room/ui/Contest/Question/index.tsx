@@ -2,6 +2,7 @@ import { Button, Question } from "@/shared/components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { contestProblem } from "@/pages/room/api/roomApi";
+import ErrorModal from "@/shared/components/ErrorModal";
 import * as S from "./style";
 
 interface Problem {
@@ -21,6 +22,7 @@ export const ContestQuestion = () => {
   const navigate = useNavigate();
   const [contestDetail, setContestDetail] = useState<Contest | null>(null);
   const [remainingTime, setRemainingTime] = useState<string>("");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const { contestId } = useParams<{ contestId: string }>();
 
   useEffect(() => {
@@ -33,8 +35,12 @@ export const ContestQuestion = () => {
         const res: Contest = await contestProblem(parseInt(contestId, 10));
         setContestDetail(res);
         console.log(res);
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        if (err.response) {
+          setErrorCode(err.response.data.code);
+        } else {
+          setErrorCode("UNKNOWN");
+        }
       }
     };
     list();
@@ -68,6 +74,15 @@ export const ContestQuestion = () => {
   }, [contestDetail]);
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
+
+  if (errorCode) {
+    return (
+      <ErrorModal
+        errorCode={errorCode}
+        onClose={() => navigate("/game/contest")}
+      />
+    );
+  }
 
   if (!contestDetail) {
     return <div>Loading...</div>;

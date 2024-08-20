@@ -4,7 +4,12 @@ import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
 import { Setting } from "@/pages/setting";
-import { GameHome, ContestList, ContestQuestion } from "@/pages/room";
+import {
+  GameHome,
+  ContestList,
+  ContestQuestion,
+  ContestRanking,
+} from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 
 const App = () => {
@@ -18,10 +23,10 @@ const App = () => {
         <Route path="/setting" element={<Setting />} />
         <Route path="/game/contest" element={<ContestList />} />
         <Route path="/game/contest/:contestId" element={<ContestQuestion />} />
-        {/* <Route
+        <Route
           path="/game/contest/ranking/:contestId"
           element={<ContestRanking />}
-        /> */}
+        />
         <Route path="/game/contest/code" element={<Game />} />
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/Main" element={<CreateContest />} />
