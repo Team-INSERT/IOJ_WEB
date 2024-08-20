@@ -8,8 +8,8 @@ export const Setting = () => {
   const stolenName = localStorage.getItem("name")
 
   const onLogoutClick = async () => {
-    const refreshToken = getCookie("refreshToken");
     try {
+      const refreshToken = getCookie("refreshToken");
       await customAxios.delete("/auth", {
         data: { refreshToken },
       });

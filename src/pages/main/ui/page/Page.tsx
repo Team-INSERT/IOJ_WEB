@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GameCard, MainHeader } from "@/shared/components";
+import { getCookie } from "@/shared/utils/cookie/cookie";
 import IojLogo from "@/assets/IojLogo";
 import Button from "@/shared/components/Button";
 import Person from "@/assets/Person";
 import Footer from "@/shared/components/Footer";
-import { GameCard, MainHeader } from "@/shared/components";
 import Modal from "@/shared/components/Modal";
-import { checkLoginStatus } from "@/pages/main/api/checkLogin";
 import * as S from "./style";
 
 export const Main = () => {
@@ -23,14 +23,14 @@ export const Main = () => {
       navigate("/login");
     }
   };
-  useEffect(() => {
-    const verifyLogin = async () => {
-      const loggedIn = await checkLoginStatus();
-      setIsLogin(loggedIn);
-    };
 
-    verifyLogin();
-  }, []);
+  useEffect(() => {
+    if (getCookie("accessToken") && getCookie("refreshToken")) {
+      setIsLogin(true)
+    } else {
+      setIsLogin(false)
+    }
+  },[])
 
   const gameStartClick = () => {
     if (!isLogin) {

@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import IojLogo from "@/assets/IojLogo";
 import { useEffect, useState } from "react";
-import { checkLoginStatus } from "@/pages/main/api/checkLogin";
 import { getCookie } from "@/shared/utils/cookie/cookie";
 import * as S from "./style";
 import Modal from "../Modal";
@@ -24,15 +23,6 @@ const MainHeader = () => {
 
   const accessToken = getCookie("accessToken");
   const refreshToken = getCookie("refreshToken");
-
-  useEffect(() => {
-    const verifyLogin = async () => {
-      const loggedIn = await checkLoginStatus();
-      setIsLogin(loggedIn);
-    };
-
-    verifyLogin();
-  }, []);
 
   const headerItemClick = (url: string, id: number) => {
     if (id === 2) {
@@ -60,6 +50,14 @@ const MainHeader = () => {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      setIsLogin(true)
+    } else {
+      setIsLogin(false)
+    }
+  },[])
 
   return (
     <>

@@ -28,12 +28,8 @@ customAxios.interceptors.response.use(
           refreshToken,
         },
       );
-      setCookie("accessToken",data.access_token)
-      const { config } = err;
-      if (config.headers) {
-        config.headers.Authorization = `Bearer ${data.accessToken}`;
-      }
-      return customAxios(config);
+      setCookie("accessToken",data.accessToken)
+      return undefined;
     } catch (refreshErr) {
       alert("토큰이 만료되거나 존재하지 않습니다! 다시 로그인 해주세요.")
       deleteCookie("accessToken")
