@@ -1,5 +1,4 @@
 export { default as Button } from "./Button";
-export { default as GameHeader } from "./GameHeader/index";
 export { default as MainHeader } from "./MainHeader/index";
 export { default as ContestTitle } from "./InGame/ContestTitle/index";
 export { default as Result } from "./InGame/Result/index";
@@ -11,4 +10,5 @@ export { default as Room } from "./Room/index";
 export { default as WaitingRoom } from "./WaitingRoom";
 export { default as Stars } from "./Stars";
 export { default as Dropdown } from "./DropDown";
+export { default as GameHeader } from "./GameHeader/index";
 export { default as Level } from "./level";

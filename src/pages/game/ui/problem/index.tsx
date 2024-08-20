@@ -12,6 +12,14 @@ export const Problem = () => (
         </S.Star>
       </S.NameBox>
     </S.ProblemTitleBox>
+    <S.MiniBox>
+      <S.TimeBox>
+        시간 제한 <S.span>: 1 Sec</S.span>
+      </S.TimeBox>
+      <S.Memory>
+        메모리 제한 <S.span>: 2014 MB</S.span>
+      </S.Memory>
+    </S.MiniBox>
     <S.ProblemContentBox>
       <S.Problem>문제</S.Problem>
       <S.ProblemContent>

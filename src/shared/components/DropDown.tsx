@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { NexonFont, theme } from "../style";
@@ -36,17 +36,31 @@ const ArrowIcon = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease;
 `;
 
-const Dropdown = () => {
+interface DropdownProps {
+  onSelectLanguage: (language: string, file: string) => void;
+}
+
+const extensions: { [key: string]: string } = {
+  python: "py",
+  java: "java",
+  c: "c",
+  "c++": "cpp",
+};
+
+const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("C");
+  const [selectedItem, setSelectedItem] = useState("Python");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleItemClick = (item: string) => {
+    const extension = extensions[item.toLowerCase()];
+    const file = `Main.${extension}`;
     setSelectedItem(item);
     setIsOpen(false);
+    onSelectLanguage(item.toLowerCase(), file);
   };
 
   return (
@@ -63,7 +77,7 @@ const Dropdown = () => {
           Python
         </DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C++")}>C++</DropdownItem>
-        <DropdownItem onClick={() => handleItemClick("C#")}>C#</DropdownItem>
+        <DropdownItem onClick={() => handleItemClick("C")}>C</DropdownItem>
       </DropdownContent>
     </DropdownContainer>
   );
