@@ -14,16 +14,17 @@ const slideDown = keyframes`
   }
 `;
 
-export const Overlay = styled.div`
+export const Overlay = styled.div<{ overlay?: boolean}>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.27);
+  background: ${({overlay}) => overlay ? "rgba(0, 0, 0, 0.27)" : "transparent"};
   z-index: 9999;
 `;
 export const ModalContainer = styled.div<{ animation?: boolean }>`
+  margin-top: 20px;
   width: 440px;
   height: 170px;
   border-radius: 8px;
@@ -85,4 +86,6 @@ export const BtnContainer = styled.footer`
   gap: 8px;
   margin-top: auto;
   border-top: 1px solid ${theme.grey200};
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 `;

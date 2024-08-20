@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   subtitle?: string;
   animation?: boolean;
+  overlay?: boolean;
   onClose: (value: number) => void;
 }
 
@@ -17,6 +18,7 @@ const Modal = ({
   subtitle,
   animation,
   onClose,
+  overlay,
 }: ModalProps) => {
   const renderFooterButtons = () => {
     if (status === "좋음") {
@@ -49,7 +51,7 @@ const Modal = ({
   };
 
   return (
-    <S.Overlay>
+    <S.Overlay overlay={overlay}>
       <S.ModalContainer animation={animation ?? false}>
         <S.Detail>
           <S.Image status={status} />

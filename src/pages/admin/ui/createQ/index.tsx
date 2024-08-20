@@ -21,7 +21,7 @@ const formatTextWithLineBreaks = (text: string) =>
     </>
   ));
 
-export const Question = () => {
+export const CreateQuestion = () => {
   const navigate = useNavigate();
 
   const [contestName, setContestName] = useState("");
