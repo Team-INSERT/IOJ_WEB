@@ -44,7 +44,7 @@ const extensions: { [key: string]: string } = {
   python: "py",
   java: "java",
   c: "c",
-  "c++": "cpp",
+  cpp: "cpp", // cpp로 변경
 };
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
@@ -56,11 +56,18 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   };
 
   const handleItemClick = (item: string) => {
-    const extension = extensions[item.toLowerCase()];
+    let language = item.toLowerCase();
+
+    if (language === "c++") {
+      language = "cpp";
+    }
+
+    const extension = extensions[language];
     const file = `Main.${extension}`;
+    
     setSelectedItem(item);
     setIsOpen(false);
-    onSelectLanguage(item.toLowerCase(), file);
+    onSelectLanguage(language, file);
   };
 
   return (

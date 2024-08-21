@@ -6,6 +6,7 @@ export const ProblemLayout = styled.div`
   background-color: ${theme.white};
   width: 50%;
   padding: 76px 45px 0 55px;
+  
 `;
 
 export const ProblemTitleBox = styled.div`
