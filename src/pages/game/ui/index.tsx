@@ -6,7 +6,8 @@ import { Problem } from "./problem";
 
 export const GameLayout = styled.div`
   width: 100%;
-  height: 80%;
+  height: 100vh;
+  overflow: hidden;
 `;
 export const GameBox = styled.div`
   ${flex.HORIZONTAL}

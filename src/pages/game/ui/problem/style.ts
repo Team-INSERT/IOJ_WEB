@@ -6,6 +6,7 @@ export const ProblemLayout = styled.div`
   background-color: ${theme.white};
   width: 50%;
   padding: 76px 45px 0 55px;
+  overflow: auto;
 `;
 
 export const ProblemTitleBox = styled.div`
@@ -51,12 +52,14 @@ export const ProblemContentBox = styled.div`
   ${flex.COLUMN_FLEX};
   padding-top: 8%;
 `;
+
 export const Problem = styled.p`
   width: 2.5rem;
   ${Pretendard.Text};
   font-weight: 500;
   border-bottom: 3px solid ${theme.blueNormal};
 `;
+
 export const ProblemContent = styled.p`
   ${Pretendard.SmallText};
   color: ${theme.grey900};
