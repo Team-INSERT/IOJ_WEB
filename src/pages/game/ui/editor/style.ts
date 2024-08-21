@@ -6,6 +6,7 @@ export const EditorLayout = styled.div`
   ${flex.COLUMN_FLEX};
   width: 50%;
   height: 100%;
+  overflow: hidden;
 `;
 
 export const FileName = styled.div`

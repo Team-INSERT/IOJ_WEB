@@ -5,14 +5,17 @@ import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 
 export const GameLayout = styled.div`
+  position: fixed;
   width: 100%;
   height: 100vh;
   overflow: hidden;
 `;
+
 export const GameBox = styled.div`
-  ${flex.HORIZONTAL}
+  ${flex.HORIZONTAL};
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 76px);
+  overflow: hidden;
 `;
 
 export const Game = () => (
