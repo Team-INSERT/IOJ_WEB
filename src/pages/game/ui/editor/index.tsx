@@ -49,17 +49,17 @@ export const CodeEditor = () => {
             <Dropdown onSelectLanguage={handleLanguageChange} />
           </S.Button>
           <S.Button>
-            <Button mode="small" color="blue">
+            <Button mode="small" color="blue" font="nexon">
               테스트케이스
             </Button>
           </S.Button>
           <S.Button onClick={handleExecution}>
-            <Button mode="small" color="blue">
+            <Button mode="small" color="blue" font="nexon">
               실행
             </Button>
           </S.Button>
           <S.Button onClick={handleSubmit}>
-            <Button mode="small" color="green">
+            <Button mode="small" color="green" font="nexon">
               제출
             </Button>
           </S.Button>
@@ -67,7 +67,7 @@ export const CodeEditor = () => {
       </S.HeaderBox>
       <Editor
         theme="vs-dark"
-        height="30rem"
+        height="18rem"
         width="100%"
         defaultLanguage={languages.toLowerCase()}
         value={code}

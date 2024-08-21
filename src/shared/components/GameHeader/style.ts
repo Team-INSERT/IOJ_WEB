@@ -26,7 +26,7 @@ export const ClockContainer = styled.div`
 `;
 
 export const Clock = styled.div`
-  ${flex.FLEX}
+  ${flex.CENTER}
   padding: 6px 28px;
   border: 2px solid ${theme.grey300};
   gap: 12px;
@@ -34,6 +34,7 @@ export const Clock = styled.div`
 `;
 
 export const Time = styled.div`
+  ${flex.FLEX}
   color: ${theme.grey300};
   ${Pretendard.Text}
 `;

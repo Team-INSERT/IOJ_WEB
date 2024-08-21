@@ -65,7 +65,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
 
   return (
     <DropdownContainer>
-      <Button mode="small" color="blue" onClick={toggleDropdown}>
+      <Button mode="small" color="blue" font="nexon" onClick={toggleDropdown}>
         {selectedItem}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
       </Button>
