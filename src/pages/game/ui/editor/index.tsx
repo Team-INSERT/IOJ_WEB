@@ -6,11 +6,26 @@ import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 import * as S from "./style";
+import { getTestcase } from "../../api/testcase";
+
+interface TestCase {
+  index: number;
+  input: number;
+  output: string;
+  expectOutput: string;
+  verdict: string;
+}
 
 export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
+
+  const [activeTab, setActiveTab] = useState<
+    "execution" | "testCases" | "results"
+  >("execution");
+  const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<TestCase[]>([]);
 
   const handleExecution = async () => {
     try {
@@ -40,6 +55,24 @@ export const CodeEditor = () => {
     setFileName(file);
   };
 
+  const onTestcaseClick = async () => {
+    setActiveTab("testCases");
+    try {
+      setIsTestLoading(true);
+      const res = await getTestcase({
+        id: 1,
+        sourcecode: code,
+        language: languages,
+      });
+      setTestResult([...res]);
+      setIsTestLoading(false);
+      console.log(res);
+    } catch (err) {
+      setIsTestLoading(false);
+      console.log(err);
+    }
+  };
+
   return (
     <S.EditorLayout>
       <S.HeaderBox>
@@ -49,7 +82,7 @@ export const CodeEditor = () => {
             <Dropdown onSelectLanguage={handleLanguageChange} />
           </S.Button>
           <S.Button>
-            <Button mode="small" color="blue">
+            <Button mode="small" color="blue" onClick={onTestcaseClick}>
               테스트케이스
             </Button>
           </S.Button>
@@ -77,7 +110,12 @@ export const CodeEditor = () => {
         }}
       />
       <S.TestBoxLayout>
-        <TestBox />
+        <TestBox
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          testResult={testResult}
+          isTestLoading={isTestLoading}
+        />
       </S.TestBoxLayout>
     </S.EditorLayout>
   );

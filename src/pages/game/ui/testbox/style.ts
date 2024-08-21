@@ -11,11 +11,15 @@ export const Container = styled.div`
   height: 100%;
   background-color: #222;
   color: white;
+  overflow-x: hidden;
+  background-color: ${theme.black};
 `;
 
 export const TabContainer = styled.div`
   ${flex.FLEX}
   background-color: ${theme.grey900};
+  position: fixed;
+  width: 100%;
 `;
 
 export const Tab = styled.div<TabProps>`
@@ -27,9 +31,8 @@ export const Tab = styled.div<TabProps>`
 `;
 
 export const Content = styled.div`
-  padding: 20px;
+  padding: 60px 20px 20px 20px;
   flex-grow: 1;
-  overflow: auto;
 `;
 
 export const Text = styled.p`
@@ -59,12 +62,16 @@ export const Button = styled.div`
   ${flex.END}
 `;
 
+export const ScrollLayout = styled.div`
+  overflow-x: auto;
+`
 export const Table = styled.table`
-  width: 100%;
+  width: auto;
+  min-width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
   background-color: ${theme.grey900};
-  border: 1px solid #555;
+  overflow: auto;
 `;
 
 export const TableHead = styled.thead`
