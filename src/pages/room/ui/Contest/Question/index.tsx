@@ -122,7 +122,7 @@ export const ContestQuestion = () => {
       <S.QuestionTitle>문제</S.QuestionTitle>
       <S.Question>
         {contestDetail.problems.map((problem, index) => (
-          <div key={problem.id} onClick={() => navigate("/game/contest/code")}>
+          <div key={problem.id} onClick={() => navigate("/game/contest/2/code/1")}>
             <Question
               mode={problem.status}
               qustionNumebr={getQuestionNumber(index)}

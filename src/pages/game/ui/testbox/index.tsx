@@ -63,7 +63,6 @@ export const TestBox = ({
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log(activeTab);
   }, [activeTab,testResult]);
 
   return (
