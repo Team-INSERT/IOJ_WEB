@@ -10,6 +10,15 @@ import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 
 import * as S from "./style";
+import { getTestcase } from "../../api/testcase";
+
+interface TestCase {
+  index: number;
+  input: number;
+  output: string;
+  expectOutput: string;
+  verdict: string;
+}
 
 export const CodeEditor = () => {
   const navigate = useNavigate();
@@ -24,6 +33,12 @@ export const CodeEditor = () => {
     setErrorCode(null);
     navigate("/game/contest");
   };
+
+  const [activeTab, setActiveTab] = useState<
+    "execution" | "testCases" | "results"
+  >("execution");
+  const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<TestCase[]>([]);
 
   const handleExecution = async () => {
     try {
@@ -59,6 +74,24 @@ export const CodeEditor = () => {
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage.toUpperCase());
     setFileName(file);
+  };
+
+  const onTestcaseClick = async () => {
+    setActiveTab("testCases");
+    try {
+      setIsTestLoading(true);
+      const res = await getTestcase({
+        id: 1,
+        sourcecode: code,
+        language: languages,
+      });
+      setTestResult([...res]);
+      setIsTestLoading(false);
+      console.log(res);
+    } catch (err) {
+      setIsTestLoading(false);
+      console.log(err);
+    }
   };
 
   return (
@@ -98,7 +131,12 @@ export const CodeEditor = () => {
         }}
       />
       <S.TestBoxLayout>
-        <TestBox />
+        <TestBox
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          testResult={testResult}
+          isTestLoading={isTestLoading}
+        />
       </S.TestBoxLayout>
       {errorCode && (
         <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
