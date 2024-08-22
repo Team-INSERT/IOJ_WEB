@@ -2,13 +2,20 @@ import Clock from "@/assets/Clock";
 import Button from "../Button";
 import * as S from "./style";
 
-const GameHeader = () => (
+interface gameHeaderProps {
+  problemsCount: number;
+  problemIndex: number;
+}
+
+const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => (
   <S.Layout>
     <S.GameDetails>
       <Button mode="small" color="gray">
         이전
       </Button>
-      <S.QuestionNumber>6/6</S.QuestionNumber>
+      <S.QuestionNumber>
+        {problemIndex}/{problemsCount}
+      </S.QuestionNumber>
       <Button mode="small" color="gray">
         다음
       </Button>

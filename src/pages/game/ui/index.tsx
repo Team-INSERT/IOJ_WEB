@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
+import { contestProblems } from "../api/contestDetail";
+import { problemDetailType, problemType } from "../interfaces/gameInterfaces";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -16,27 +18,13 @@ export const GameBox = styled.div`
   height: 100%;
 `;
 
-interface testcaseType {
-  input: string;
-  output: string;
-}
-
-interface problemValue {
-  title: string;
-  level: number;
-  content: string;
-  inputContent: string;
-  memoryLimit: number;
-  testcases: testcaseType[];
-  timeLimit: number;
-}
-
 export const Game = () => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = segments[segments.length - 1];
+  const contestNum = parseInt(segments[segments.length - 3], 10);
   const formattedProblemNum = problemNum.padStart(4, "0");
-  const [problem, setProblem] = useState<problemValue>({
+  const [problem, setProblem] = useState<problemDetailType>({
     title: "",
     level: 0,
     content: "",
@@ -45,7 +33,15 @@ export const Game = () => {
     testcases: [],
     timeLimit: 0,
   });
-  console.log(problem.testcases)
+  const [problemsCount, setProblemsCount] = useState(0);
+  const [allProblems, setAllProblems] = useState<problemType[]>([]);
+
+  const findProblemIndexById = (problems: problemType[], id: number) =>
+    problems.findIndex((item) => item.id === id);
+
+  const problemIndex =
+    findProblemIndexById(allProblems, parseInt(problemNum, 10)) + 1;
+
   useEffect(() => {
     const getProblemInfo = async () => {
       try {
@@ -58,9 +54,22 @@ export const Game = () => {
     getProblemInfo();
   }, [problemNum]);
 
+  useEffect(() => {
+    const getProblems = async () => {
+      try {
+        const res = await contestProblems(contestNum);
+        setAllProblems(res.problems);
+        setProblemsCount(res.problems.length);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProblems();
+  }, []);
+
   return (
     <GameLayout>
-      <GameHeader />
+      <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
       <GameBox>
         <Problem
           id={formattedProblemNum}

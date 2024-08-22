@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Editor from "@monaco-editor/react";
+import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
@@ -7,28 +8,21 @@ import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 import * as S from "./style";
 import { getTestcase } from "../../api/testcase";
-
-interface TestCase {
-  index: number;
-  input: number;
-  output: string;
-  expectOutput: string;
-  verdict: string;
-}
+import { TestCaseType } from "../../interfaces/gameInterfaces";
 
 export const CodeEditor = () => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
-  const problemNum =  parseInt(segments[segments.length - 1],10);
+  const problemNum = parseInt(segments[segments.length - 1], 10);
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
-
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<TestCase[]>([]);
+  const [testResult, setTestResult] = useState<TestCaseType[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleExecution = async () => {
     try {
@@ -59,25 +53,44 @@ export const CodeEditor = () => {
   };
 
   const onTestcaseClick = async () => {
+    if (isTestLoading) {
+      setIsModalOpen(true);
+      return;
+    }
+
     setActiveTab("testCases");
+    setIsTestLoading(true);
     try {
-      setIsTestLoading(true);
       const res = await getTestcase({
         id: problemNum,
         sourcecode: code,
         language: languages,
       });
       setTestResult([...res]);
-      setIsTestLoading(false);
-      console.log(res);
     } catch (err) {
+      console.error(err);
+    } finally {
       setIsTestLoading(false);
-      console.log(err);
+    }
+  };
+
+  const handleModalClose = (value: number) => {
+    if (value === 0) {
+      setIsModalOpen(false);
     }
   };
 
   return (
     <S.EditorLayout>
+      {isModalOpen && (
+        <Modal
+          status="나쁨"
+          mode="알림"
+          title="이미 요청중입니다!"
+          animation
+          onClose={handleModalClose}
+        />
+      )}
       <S.HeaderBox>
         <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
