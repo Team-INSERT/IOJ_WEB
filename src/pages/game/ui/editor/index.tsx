@@ -17,6 +17,9 @@ interface TestCase {
 }
 
 export const CodeEditor = () => {
+  const { pathname } = window.location;
+  const segments = pathname.split("/");
+  const problemNum =  parseInt(segments[segments.length - 1],10);
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
@@ -29,7 +32,7 @@ export const CodeEditor = () => {
 
   const handleExecution = async () => {
     try {
-      const response = await execution({ id: 1, sourcecode: code });
+      const response = await execution({ id: problemNum, sourcecode: code });
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -40,7 +43,7 @@ export const CodeEditor = () => {
     try {
       const res = await contestSubmit({
         contestId: 1,
-        problemId: 2,
+        problemId: problemNum,
         sourcecode: code,
         language: languages,
       });
@@ -60,7 +63,7 @@ export const CodeEditor = () => {
     try {
       setIsTestLoading(true);
       const res = await getTestcase({
-        id: 1,
+        id: problemNum,
         sourcecode: code,
         language: languages,
       });
