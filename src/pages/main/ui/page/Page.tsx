@@ -26,11 +26,11 @@ export const Main = () => {
 
   useEffect(() => {
     if (getCookie("accessToken") && getCookie("refreshToken")) {
-      setIsLogin(true)
+      setIsLogin(true);
     } else {
-      setIsLogin(false)
+      setIsLogin(false);
     }
-  },[])
+  }, []);
 
   const gameStartClick = () => {
     if (!isLogin) {
@@ -98,9 +98,7 @@ export const Main = () => {
       <S.RecordLayout>
         <S.RecordTextLayout>
           <S.RecordTitle>나의 기록</S.RecordTitle>
-          <S.RecordSubTitle>
-            공개되지 않은 기능입니다
-          </S.RecordSubTitle>
+          <S.RecordSubTitle>공개되지 않은 기능입니다</S.RecordSubTitle>
         </S.RecordTextLayout>
         <S.RecordContent>
           {true && <S.Blind />}

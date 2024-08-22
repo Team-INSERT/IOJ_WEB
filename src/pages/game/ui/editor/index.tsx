@@ -1,37 +1,58 @@
 import { useState } from "react";
+import ErrorModal from "@/shared/components/ErrorModal";
+import Modal from "@/shared/components/Modal";
+import { useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
+
 import * as S from "./style";
 
 export const CodeEditor = () => {
+  const navigate = useNavigate();
+
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalClose = () => {
+    setErrorCode(null);
+    navigate("/game/contest");
+  };
 
   const handleExecution = async () => {
     try {
       const response = await execution({ id: 1, sourcecode: code });
       console.log(response);
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      if (err.response) {
+        setErrorCode(err.response.data.code);
+      } else {
+        setErrorCode("UNKNOWN");
+      }
     }
   };
 
   const handleSubmit = async () => {
     try {
       const res = await contestSubmit({
-        contestId: 1,
+        contestId: 2,
         problemId: 2,
         sourcecode: code,
         language: languages,
       });
       console.log(res);
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      if (err.response) {
+        setErrorCode(err.response.data.code);
+      } else {
+        setErrorCode("UNKNOWN");
+      }
     }
   };
 
@@ -79,6 +100,19 @@ export const CodeEditor = () => {
       <S.TestBoxLayout>
         <TestBox />
       </S.TestBoxLayout>
+      {errorCode && (
+        <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
+      )}
+      {isModalOpen && (
+        <Modal
+          status="나쁨"
+          mode="알림"
+          title="로그인이 필요한 서비스입니다."
+          subtitle="게임하기는 로그인을 필요로 합니다!"
+          onClose={handleModalClose}
+          animation
+        />
+      )}
     </S.EditorLayout>
   );
 };
