@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
-import { useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
+import { getTestcase } from "../../api/testcase";
 
 import * as S from "./style";
-import { getTestcase } from "../../api/testcase";
 
 interface TestCase {
   index: number;
@@ -20,25 +20,56 @@ interface TestCase {
   verdict: string;
 }
 
+interface SubmitResult {
+  status: "ACCEPTED" | "WRONG_ANSWER";
+  message: string;
+}
+
 export const CodeEditor = () => {
   const navigate = useNavigate();
+  const { contestId, problemId } = useParams<{
+    contestId: string;
+    problemId: string;
+  }>();
 
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<
+    "execution" | "testCases" | "results"
+  >("execution");
+
+  const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<TestCase[]>([]);
+  const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
+
+  useEffect(() => {
+    if (problemId) {
+      const savedCode = localStorage.getItem(`code_${problemId}`);
+      const savedLanguage = localStorage.getItem(`language_${problemId}`);
+
+      if (savedCode) {
+        setCode(savedCode);
+      }
+      if (savedLanguage) {
+        setLanguage(savedLanguage);
+      }
+    }
+  }, [problemId]);
+
+  useEffect(() => {
+    if (problemId) {
+      localStorage.setItem(`code_${problemId}`, code);
+      localStorage.setItem(`language_${problemId}`, languages);
+    }
+  }, [code, languages, problemId]);
 
   const handleModalClose = () => {
     setErrorCode(null);
     navigate("/game/contest");
   };
-
-  const [activeTab, setActiveTab] = useState<
-    "execution" | "testCases" | "results"
-  >("execution");
-  const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<TestCase[]>([]);
 
   const handleExecution = async () => {
     try {
@@ -54,20 +85,27 @@ export const CodeEditor = () => {
   };
 
   const handleSubmit = async () => {
+    setActiveTab("results");
     try {
       const res = await contestSubmit({
-        contestId: 2,
-        problemId: 2,
+        contestId: Number(contestId),
+        problemId: Number(problemId),
         sourcecode: code,
         language: languages,
       });
-      console.log(res);
+
+      setSubmitResults((prevResults) => [
+        ...prevResults,
+        { status: res.status, message: res.message },
+      ]);
     } catch (err: any) {
-      if (err.response) {
-        setErrorCode(err.response.data.code);
-      } else {
-        setErrorCode("UNKNOWN");
-      }
+      const errorMessage =
+        err.response?.data?.message || "알 수 없는 오류 발생";
+
+      setSubmitResults((prevResults) => [
+        ...prevResults,
+        { status: "WRONG_ANSWER", message: errorMessage },
+      ]);
     }
   };
 
@@ -100,9 +138,17 @@ export const CodeEditor = () => {
         <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
           <S.Button>
-            <Dropdown onSelectLanguage={handleLanguageChange} />
+            <Dropdown
+              onSelectLanguage={(selectedLanguage, file) => {
+                handleLanguageChange(selectedLanguage, file);
+                localStorage.setItem(
+                  `language_${problemId}`,
+                  selectedLanguage.toUpperCase(),
+                );
+              }}
+            />
           </S.Button>
-          <S.Button>
+          <S.Button onClick={onTestcaseClick}>
             <Button mode="small" color="blue" font="nexon">
               테스트케이스
             </Button>
@@ -136,6 +182,7 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
+          submitResults={submitResults}
         />
       </S.TestBoxLayout>
       {errorCode && (

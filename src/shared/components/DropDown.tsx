@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { NexonFont, theme } from "../style";
@@ -44,16 +44,12 @@ const extensions: { [key: string]: string } = {
   python: "py",
   java: "java",
   c: "c",
-  cpp: "cpp", // cpp로 변경
+  cpp: "cpp",
 };
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("Python");
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const [selectedItem, setSelectedItem] = useState<string>("Python");
 
   const handleItemClick = (item: string) => {
     let language = item.toLowerCase();
@@ -64,10 +60,24 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
 
     const extension = extensions[language];
     const file = `Main.${extension}`;
-    
+
     setSelectedItem(item);
     setIsOpen(false);
+
+    localStorage.setItem("selectedLanguage", item);
     onSelectLanguage(language, file);
+  };
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("selectedLanguage");
+    if (savedLanguage) {
+      setSelectedItem(savedLanguage);
+      handleItemClick(savedLanguage);
+    }
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
 
   return (

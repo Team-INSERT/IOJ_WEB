@@ -26,6 +26,7 @@ export const RemainingTimeContainer = styled.div`
   background: white;
   background-clip: padding-box;
   box-sizing: border-box;
+  width: auto;
   ${flex.COLUMN_CENTER}
 
   &:before {

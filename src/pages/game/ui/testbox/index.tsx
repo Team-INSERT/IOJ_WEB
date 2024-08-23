@@ -11,11 +11,17 @@ interface TestCase {
   verdict: string;
 }
 
+interface SubmitResult {
+  status: "ACCEPTED" | "WRONG_ANSWER";
+  message: string;
+}
+
 interface TestBoxProps {
   activeTab: "execution" | "testCases" | "results";
   setActiveTab: (tab: "execution" | "testCases" | "results") => void;
   testResult: TestCase[];
   isTestLoading: boolean;
+  submitResults: SubmitResult[];
 }
 
 export const TestBox = ({
@@ -23,8 +29,10 @@ export const TestBox = ({
   setActiveTab,
   testResult,
   isTestLoading,
+  submitResults,
 }: TestBoxProps) => {
   const [acceptCount, setAcceptCount] = useState(0);
+  const [results, setResults] = useState<SubmitResult[]>(submitResults);
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -32,6 +40,10 @@ export const TestBox = ({
     ).length;
     setAcceptCount(countAcceptedTestCases);
   }, [testResult]);
+
+  useEffect(() => {
+    setResults(submitResults);
+  }, [submitResults]);
 
   const translateVerdict = (verdict: string) => {
     const verdictMapping: Record<string, React.ReactNode> = {
@@ -64,7 +76,7 @@ export const TestBox = ({
   useEffect(() => {
     window.scrollTo(0, 0);
     console.log(activeTab);
-  }, [activeTab,testResult]);
+  }, [activeTab, testResult]);
 
   return (
     <S.Container>
@@ -143,32 +155,16 @@ export const TestBox = ({
                       <S.TableRow key={testCase.index}>
                         <S.TableCell>{testCase.index + 1}</S.TableCell>
                         <S.TableCell>
-                          {isTestLoading ? (
-                            `로딩중...`
-                          ) : (
-                            <pre>{testCase.input}</pre>
-                          )}
+                          <pre>{testCase.input}</pre>
                         </S.TableCell>
                         <S.TableCell>
-                          {isTestLoading ? (
-                            `로딩중...`
-                          ) : (
-                            <pre>{testCase.output}</pre>
-                          )}
+                          <pre>{testCase.output}</pre>
                         </S.TableCell>
                         <S.TableCell>
-                          {isTestLoading ? (
-                            `로딩중...`
-                          ) : (
-                            <pre>{testCase.expectOutput}</pre>
-                          )}
+                          <pre>{testCase.expectOutput}</pre>
                         </S.TableCell>
                         <S.TableCell>
-                          {isTestLoading ? (
-                            `로딩중...`
-                          ) : (
-                            <pre>{translateVerdict(testCase.verdict)}</pre>
-                          )}
+                          <pre>{translateVerdict(testCase.verdict)}</pre>
                         </S.TableCell>
                       </S.TableRow>
                     ))}
@@ -179,10 +175,19 @@ export const TestBox = ({
           ))}
         {activeTab === "results" && (
           <S.ResultBoxContainer>
-            <S.ResultBox>처리중...</S.ResultBox>
-            <S.ResultBox>정답입니다.</S.ResultBox>
-            <S.ResultBox>오답입니다.</S.ResultBox>
-            <S.ResultBox>런타임 에러</S.ResultBox>
+            {results.length > 0 ? (
+              results.map((result) => (
+                <S.ResultBox>
+                  {result.status === "ACCEPTED" ? (
+                    <span>정답입니다.</span>
+                  ) : (
+                    <span>오답입니다.</span>
+                  )}
+                </S.ResultBox>
+              ))
+            ) : (
+              <S.ResultBox>로딩 중...</S.ResultBox>
+            )}
           </S.ResultBoxContainer>
         )}
       </S.Content>
