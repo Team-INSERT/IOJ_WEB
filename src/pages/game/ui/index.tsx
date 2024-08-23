@@ -40,7 +40,7 @@ export const Game = () => {
     problems.findIndex((item) => item.id === id);
 
   const problemIndex =
-    findProblemIndexById(allProblems, parseInt(problemNum, 10)) + 1;
+    findProblemIndexById(allProblems, parseInt(problemNum, 10));
 
   useEffect(() => {
     const getProblemInfo = async () => {

@@ -61,7 +61,6 @@ export const TestBox = ({
       try {
         const res = await gameDetail(problemNum);
         setProblemDetail(res)
-        console.log(res)
       } catch (err) {
         console.log(err)
       }
