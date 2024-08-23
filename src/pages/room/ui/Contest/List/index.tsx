@@ -54,11 +54,7 @@ export const ContestList = () => {
           {contestDetail.map((detail) => (
             <div
               key={detail.id}
-              onClick={() =>
-                navigate(
-                  `/game/contest/${detail.id}`,
-                )
-              }
+              onClick={() => navigate(`/game/contest/${detail.id}`)}
             >
               <ContestTitle
                 title={detail.title}

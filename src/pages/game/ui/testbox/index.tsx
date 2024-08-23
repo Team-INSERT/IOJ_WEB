@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import Button from "@/shared/components/Button";
 import { theme } from "@/shared/style";
 import * as S from "./style";
+import { gameDetail } from "../../api/gameDetail";
+import {
+  TestBoxProps,
+  problemDetailType,
+} from "../../interfaces/gameInterfaces";
 
 interface TestCase {
   index: number;
@@ -16,22 +21,18 @@ interface SubmitResult {
   message: string;
 }
 
-interface TestBoxProps {
-  activeTab: "execution" | "testCases" | "results";
-  setActiveTab: (tab: "execution" | "testCases" | "results") => void;
-  testResult: TestCase[];
-  isTestLoading: boolean;
-  submitResults: SubmitResult[];
-}
-
 export const TestBox = ({
   activeTab,
   setActiveTab,
   testResult,
   isTestLoading,
   submitResults,
-}: TestBoxProps) => {
+}: TestBoxProps & { submitResults: SubmitResult[] }) => {
+  const { pathname } = window.location;
+  const segments = pathname.split("/");
+  const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
+  const [problemDetail, setProblemDetail] = useState<problemDetailType>();
   const [results, setResults] = useState<SubmitResult[]>(submitResults);
 
   useEffect(() => {
@@ -44,6 +45,22 @@ export const TestBox = ({
   useEffect(() => {
     setResults(submitResults);
   }, [submitResults]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab, testResult]);
+
+  useEffect(() => {
+    const getProblemInfo = async () => {
+      try {
+        const res = await gameDetail(problemNum);
+        setProblemDetail(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProblemInfo();
+  }, [problemNum]);
 
   const translateVerdict = (verdict: string) => {
     const verdictMapping: Record<string, React.ReactNode> = {
@@ -72,11 +89,6 @@ export const TestBox = ({
       (testCase) => `${translateVerdict(testCase.verdict)}\n${testCase.output}`,
     )
     .join("\n");
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    console.log(activeTab);
-  }, [activeTab, testResult]);
 
   return (
     <S.Container>
@@ -117,7 +129,8 @@ export const TestBox = ({
             <>
               <S.TestCasesHeader>
                 테스트케이스 일치 비율 :{" "}
-                <S.StyledSpan>{acceptCount}</S.StyledSpan> / 2
+                <S.StyledSpan>{acceptCount}</S.StyledSpan> /{" "}
+                {problemDetail?.testcases.length}
               </S.TestCasesHeader>
               <S.TestCasesNote>
                 각 입력 케이스의 값이 실제 채점 방식과 동일한 방식으로
@@ -131,7 +144,8 @@ export const TestBox = ({
             <>
               <S.TestCasesHeader>
                 테스트케이스 일치 비율 :{" "}
-                <S.StyledSpan>{acceptCount}</S.StyledSpan> / 2
+                <S.StyledSpan>{acceptCount}</S.StyledSpan> /{" "}
+                {problemDetail?.testcases.length}
               </S.TestCasesHeader>
               <S.TestCasesNote>
                 각 입력 케이스의 값이 실제 채점 방식과 동일한 방식으로
@@ -155,16 +169,32 @@ export const TestBox = ({
                       <S.TableRow key={testCase.index}>
                         <S.TableCell>{testCase.index + 1}</S.TableCell>
                         <S.TableCell>
-                          <pre>{testCase.input}</pre>
+                          {isTestLoading ? (
+                            `로딩중...`
+                          ) : (
+                            <pre>{testCase.input}</pre>
+                          )}
                         </S.TableCell>
                         <S.TableCell>
-                          <pre>{testCase.output}</pre>
+                          {isTestLoading ? (
+                            `로딩중...`
+                          ) : (
+                            <pre>{testCase.output}</pre>
+                          )}
                         </S.TableCell>
                         <S.TableCell>
-                          <pre>{testCase.expectOutput}</pre>
+                          {isTestLoading ? (
+                            `로딩중...`
+                          ) : (
+                            <pre>{testCase.expectOutput}</pre>
+                          )}
                         </S.TableCell>
                         <S.TableCell>
-                          <pre>{translateVerdict(testCase.verdict)}</pre>
+                          {isTestLoading ? (
+                            `로딩중...`
+                          ) : (
+                            <pre>{translateVerdict(testCase.verdict)}</pre>
+                          )}
                         </S.TableCell>
                       </S.TableRow>
                     ))}

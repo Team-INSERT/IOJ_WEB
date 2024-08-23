@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Pretendard, theme, flex } from "@/shared/style";
+import { Pretendard, theme, flex, RobotoMono } from "@/shared/style";
 
 export const ProblemLayout = styled.div`
   ${flex.COLUMN_FLEX};
@@ -55,17 +55,16 @@ export const ProblemContentBox = styled.div`
 `;
 
 export const Problem = styled.p`
-  width: 2.5rem;
-  ${Pretendard.Text};
+  width: 2.7rem;
+  ${Pretendard.BigText};
   font-weight: 500;
   border-bottom: 3px solid ${theme.blueNormal};
 `;
 
 export const ProblemContent = styled.p`
-  ${Pretendard.SmallText};
+  ${Pretendard.Text};
   color: ${theme.grey900};
-  font-weight: 500;
-  margin: 2% 0 4% 1%;
+  margin: 2% 0 4% 0;
 `;
 
 export const TestBox = styled.div`
@@ -75,29 +74,72 @@ export const TestBox = styled.div`
 
 export const TestInputBox = styled.div`
   ${flex.COLUMN_FLEX};
+  gap: 20px;
 `;
 
 export const TestOutputBox = styled.div`
   ${flex.COLUMN_FLEX};
   margin-left: 10%;
+  gap: 20px;
 `;
 
 export const TestInput = styled.p`
-  width: 5rem;
-  ${Pretendard.Text};
+  width: 6.5rem;
+  ${Pretendard.BigText};
   font-weight: 500;
   border-bottom: 3px solid ${theme.blueNormal};
 `;
-
-export const BoxLayout = styled.div`
-  ${flex.COLUMN_FLEX};
-  margin-top: 4%;
+export const Case = styled.div`
+  ${flex.COLUMN_VERTICAL}
+  gap: 20px;
+  padding-bottom: 40px;
 `;
-export const Box = styled.div`
-  width: 278px;
-  height: 72px;
-  border-radius: 4px;
-  border: 0.8px solid ${theme.grey600};
-  background: ${theme.grey100};
-  margin-top: 3%;
+export const ExampleLayout = styled.div`
+  width: 100%;
+  ${flex.CENTER}
+  align-items: flex-start;
+`;
+export const ExampleContent = styled.div`
+  width: 50%;
+  ${flex.COLUMN_VERTICAL}
+  gap: 20px;
+
+  &:first-child {
+    padding-right: 32px;
+  }
+  &:nth-child(2) {
+    padding-left: 32px;
+  }
+`;
+export const ExampleList = styled.div`
+  ${flex.COLUMN_VERTICAL}
+  gap: 20px;
+`;
+export const InputText = styled.pre<{ isScrolling: boolean }>`
+  ${RobotoMono.Text}
+  width: 100%;
+  border: 0.8px solid ${theme.grey400};
+  overflow-x: scroll;
+  white-space: pre;
+  padding: 12px;
+  ::-webkit-scrollbar {
+    height: ${({ isScrolling }) => (isScrolling ? "12px" : "0px")};
+  }
+`;
+export const SubTitleLayout = styled.div`
+  width: 100%;
+  ${flex.FLEX}
+  position: relative;
+`;
+export const GreyLine = styled.div`
+  width: 100%;
+  border-bottom: 2px solid ${theme.grey200};
+  position: absolute;
+  bottom: 0;
+`;
+export const inoutText = styled.p`
+  ${Pretendard.BigText}
+  font-weight: 5;
+  border-bottom: 2px solid ${theme.insertBlue};
+  z-index: 1;
 `;

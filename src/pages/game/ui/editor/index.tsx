@@ -73,7 +73,10 @@ export const CodeEditor = () => {
 
   const handleExecution = async () => {
     try {
-      const response = await execution({ id: 1, sourcecode: code });
+      const response = await execution({
+        id: Number(problemId),
+        sourcecode: code,
+      });
       console.log(response);
     } catch (err: any) {
       if (err.response) {
@@ -115,25 +118,38 @@ export const CodeEditor = () => {
   };
 
   const onTestcaseClick = async () => {
+    if (isTestLoading) {
+      setIsModalOpen(true);
+      return;
+    }
+
     setActiveTab("testCases");
+    setIsTestLoading(true);
     try {
-      setIsTestLoading(true);
       const res = await getTestcase({
-        id: 1,
+        id: Number(problemId),
         sourcecode: code,
         language: languages,
       });
       setTestResult([...res]);
-      setIsTestLoading(false);
-      console.log(res);
     } catch (err) {
+      console.error(err);
+    } finally {
       setIsTestLoading(false);
-      console.log(err);
     }
   };
 
   return (
     <S.EditorLayout>
+      {isModalOpen && (
+        <Modal
+          status="나쁨"
+          mode="알림"
+          title="이미 요청중입니다!"
+          animation
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
       <S.HeaderBox>
         <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
@@ -187,16 +203,6 @@ export const CodeEditor = () => {
       </S.TestBoxLayout>
       {errorCode && (
         <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
-      )}
-      {isModalOpen && (
-        <Modal
-          status="나쁨"
-          mode="알림"
-          title="로그인이 필요한 서비스입니다."
-          subtitle="게임하기는 로그인을 필요로 합니다!"
-          onClose={handleModalClose}
-          animation
-        />
       )}
     </S.EditorLayout>
   );

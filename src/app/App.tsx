@@ -11,6 +11,7 @@ import {
   ContestRanking,
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
+import { ProblemDetail } from "@/pages/problem";
 
 const App = () => {
   useAuthService();
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/Main" element={<CreateContest />} />
         <Route path="/admin/Question" element={<CreateQuestion />} />
+        <Route path="/problem/1" element={<ProblemDetail />} />
       </Routes>
     </Router>
   );
