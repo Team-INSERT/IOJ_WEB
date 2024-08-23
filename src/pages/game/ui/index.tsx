@@ -10,7 +10,8 @@ import { problemDetailType, problemType } from "../interfaces/gameInterfaces";
 
 export const GameLayout = styled.div`
   width: 100%;
-  height: 80%;
+  height: 100vh;
+  overflow: hidden;
 `;
 export const GameBox = styled.div`
   ${flex.HORIZONTAL}
@@ -39,8 +40,10 @@ export const Game = () => {
   const findProblemIndexById = (problems: problemType[], id: number) =>
     problems.findIndex((item) => item.id === id);
 
-  const problemIndex =
-    findProblemIndexById(allProblems, parseInt(problemNum, 10));
+  const problemIndex = findProblemIndexById(
+    allProblems,
+    parseInt(problemNum, 10),
+  );
 
   useEffect(() => {
     const getProblemInfo = async () => {

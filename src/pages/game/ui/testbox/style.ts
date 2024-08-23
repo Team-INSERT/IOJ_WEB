@@ -64,7 +64,8 @@ export const Button = styled.div`
 
 export const ScrollLayout = styled.div`
   overflow-x: auto;
-`
+`;
+
 export const Table = styled.table`
   width: auto;
   min-width: 100%;

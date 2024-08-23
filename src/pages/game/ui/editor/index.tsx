@@ -1,49 +1,114 @@
-import { useState } from "react";
-import Editor from "@monaco-editor/react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
+import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
-import * as S from "./style";
 import { getTestcase } from "../../api/testcase";
-import { TestCaseType } from "../../interfaces/gameInterfaces";
+
+import * as S from "./style";
+
+interface TestCase {
+  index: number;
+  input: number;
+  output: string;
+  expectOutput: string;
+  verdict: string;
+}
+
+interface SubmitResult {
+  status: "ACCEPTED" | "WRONG_ANSWER";
+  message: string;
+}
 
 export const CodeEditor = () => {
-  const { pathname } = window.location;
-  const segments = pathname.split("/");
-  const problemNum = parseInt(segments[segments.length - 1], 10);
+  const navigate = useNavigate();
+  const { contestId, problemId } = useParams<{
+    contestId: string;
+    problemId: string;
+  }>();
+
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
+
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<TestCaseType[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<TestCase[]>([]);
+  const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
+
+  useEffect(() => {
+    if (problemId) {
+      const savedCode = localStorage.getItem(`code_${problemId}`);
+      const savedLanguage = localStorage.getItem(`language_${problemId}`);
+
+      if (savedCode) {
+        setCode(savedCode);
+      }
+      if (savedLanguage) {
+        setLanguage(savedLanguage);
+      }
+    }
+  }, [problemId]);
+
+  useEffect(() => {
+    if (problemId) {
+      localStorage.setItem(`code_${problemId}`, code);
+      localStorage.setItem(`language_${problemId}`, languages);
+    }
+  }, [code, languages, problemId]);
+
+  const handleModalClose = () => {
+    setErrorCode(null);
+    navigate("/game/contest");
+  };
 
   const handleExecution = async () => {
     try {
-      const response = await execution({ id: problemNum, sourcecode: code });
+      const response = await execution({
+        id: Number(problemId),
+        sourcecode: code,
+      });
       console.log(response);
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      if (err.response) {
+        setErrorCode(err.response.data.code);
+      } else {
+        setErrorCode("UNKNOWN");
+      }
     }
   };
 
   const handleSubmit = async () => {
+    setActiveTab("results");
     try {
       const res = await contestSubmit({
-        contestId: 1,
-        problemId: problemNum,
+        contestId: Number(contestId),
+        problemId: Number(problemId),
         sourcecode: code,
         language: languages,
       });
-      console.log(res);
-    } catch (error) {
-      console.error(error);
+
+      setSubmitResults((prevResults) => [
+        ...prevResults,
+        { status: res.status, message: res.message },
+      ]);
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || "알 수 없는 오류 발생";
+
+      setSubmitResults((prevResults) => [
+        ...prevResults,
+        { status: "WRONG_ANSWER", message: errorMessage },
+      ]);
     }
   };
 
@@ -62,7 +127,7 @@ export const CodeEditor = () => {
     setIsTestLoading(true);
     try {
       const res = await getTestcase({
-        id: problemNum,
+        id: Number(problemId),
         sourcecode: code,
         language: languages,
       });
@@ -74,12 +139,6 @@ export const CodeEditor = () => {
     }
   };
 
-  const handleModalClose = (value: number) => {
-    if (value === 0) {
-      setIsModalOpen(false);
-    }
-  };
-
   return (
     <S.EditorLayout>
       {isModalOpen && (
@@ -88,27 +147,35 @@ export const CodeEditor = () => {
           mode="알림"
           title="이미 요청중입니다!"
           animation
-          onClose={handleModalClose}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
       <S.HeaderBox>
         <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
           <S.Button>
-            <Dropdown onSelectLanguage={handleLanguageChange} />
+            <Dropdown
+              onSelectLanguage={(selectedLanguage, file) => {
+                handleLanguageChange(selectedLanguage, file);
+                localStorage.setItem(
+                  `language_${problemId}`,
+                  selectedLanguage.toUpperCase(),
+                );
+              }}
+            />
           </S.Button>
-          <S.Button>
-            <Button mode="small" color="blue" onClick={onTestcaseClick}>
+          <S.Button onClick={onTestcaseClick}>
+            <Button mode="small" color="blue" font="nexon">
               테스트케이스
             </Button>
           </S.Button>
           <S.Button onClick={handleExecution}>
-            <Button mode="small" color="blue">
+            <Button mode="small" color="blue" font="nexon">
               실행
             </Button>
           </S.Button>
           <S.Button onClick={handleSubmit}>
-            <Button mode="small" color="green">
+            <Button mode="small" color="green" font="nexon">
               제출
             </Button>
           </S.Button>
@@ -116,7 +183,7 @@ export const CodeEditor = () => {
       </S.HeaderBox>
       <Editor
         theme="vs-dark"
-        height="30rem"
+        height="18rem"
         width="100%"
         defaultLanguage={languages.toLowerCase()}
         value={code}
@@ -131,8 +198,12 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
+          submitResults={submitResults}
         />
       </S.TestBoxLayout>
+      {errorCode && (
+        <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
+      )}
     </S.EditorLayout>
   );
 };
