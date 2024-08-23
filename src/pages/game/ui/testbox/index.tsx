@@ -2,21 +2,8 @@ import React, { useEffect, useState } from "react";
 import Button from "@/shared/components/Button";
 import { theme } from "@/shared/style";
 import * as S from "./style";
-
-interface TestCase {
-  index: number;
-  input: number;
-  output: string;
-  expectOutput: string;
-  verdict: string;
-}
-
-interface TestBoxProps {
-  activeTab: "execution" | "testCases" | "results";
-  setActiveTab: (tab: "execution" | "testCases" | "results") => void;
-  testResult: TestCase[];
-  isTestLoading: boolean;
-}
+import { gameDetail } from "../../api/gameDetail";
+import { TestBoxProps, problemDetailType } from "../../interfaces/gameInterfaces";
 
 export const TestBox = ({
   activeTab,
@@ -24,7 +11,11 @@ export const TestBox = ({
   testResult,
   isTestLoading,
 }: TestBoxProps) => {
+  const { pathname } = window.location;
+  const segments = pathname.split("/");
+  const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
+  const [problemDetail, setProblemDetail] = useState<problemDetailType>();
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -63,8 +54,19 @@ export const TestBox = ({
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log(activeTab);
-  }, [activeTab,testResult]);
+  }, [activeTab, testResult]);
+
+  useEffect(() => {
+    const getProblemInfo = async () => {
+      try {
+        const res = await gameDetail(problemNum);
+        setProblemDetail(res)
+      } catch (err) {
+        console.log(err)
+      }
+    };
+    getProblemInfo();
+  }, [problemNum]);
 
   return (
     <S.Container>
@@ -105,7 +107,7 @@ export const TestBox = ({
             <>
               <S.TestCasesHeader>
                 테스트케이스 일치 비율 :{" "}
-                <S.StyledSpan>{acceptCount}</S.StyledSpan> / 2
+                <S.StyledSpan>{acceptCount}</S.StyledSpan> / {problemDetail?.testcases.length}
               </S.TestCasesHeader>
               <S.TestCasesNote>
                 각 입력 케이스의 값이 실제 채점 방식과 동일한 방식으로
@@ -119,7 +121,7 @@ export const TestBox = ({
             <>
               <S.TestCasesHeader>
                 테스트케이스 일치 비율 :{" "}
-                <S.StyledSpan>{acceptCount}</S.StyledSpan> / 2
+                <S.StyledSpan>{acceptCount}</S.StyledSpan> / {problemDetail?.testcases.length}
               </S.TestCasesHeader>
               <S.TestCasesNote>
                 각 입력 케이스의 값이 실제 채점 방식과 동일한 방식으로
