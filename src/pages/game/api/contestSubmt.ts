@@ -12,9 +12,7 @@ interface SubmitResponse {
   message: string;
 }
 
-export const contestSubmit = async (
-  requestBody: SubmitRequest,
-): Promise<SubmitResponse> => {
+export const contestSubmit = async (requestBody: SubmitRequest) => {
   const response = await customAxios.post<SubmitResponse>(
     "/contest/execution",
     requestBody,
