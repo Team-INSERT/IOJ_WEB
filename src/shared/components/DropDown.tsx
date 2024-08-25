@@ -38,6 +38,7 @@ const ArrowIcon = styled.div<{ open: boolean }>`
 
 interface DropdownProps {
   onSelectLanguage: (language: string, file: string) => void;
+  problemId: string;
 }
 
 const extensions: { [key: string]: string } = {
@@ -47,7 +48,7 @@ const extensions: { [key: string]: string } = {
   cpp: "cpp",
 };
 
-const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
+const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("Python");
 
@@ -64,17 +65,17 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
     setSelectedItem(item);
     setIsOpen(false);
 
-    localStorage.setItem("selectedLanguage", item);
+    localStorage.setItem(`language_${problemId}`, item);
     onSelectLanguage(language, file);
   };
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
+    const savedLanguage = localStorage.getItem(`language_${problemId}`);
     if (savedLanguage) {
       setSelectedItem(savedLanguage);
       handleItemClick(savedLanguage);
     }
-  }, []);
+  }, [problemId]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

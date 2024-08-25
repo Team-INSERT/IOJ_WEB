@@ -24,7 +24,6 @@ interface SubmitResult {
   status: "ACCEPTED" | "WRONG_ANSWER";
   message: string;
 }
-
 export const CodeEditor = () => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
@@ -115,6 +114,13 @@ export const CodeEditor = () => {
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage.toUpperCase());
     setFileName(file);
+
+    if (problemId) {
+      localStorage.setItem(
+        `language_${problemId}`,
+        selectedLanguage.toUpperCase(),
+      );
+    }
   };
 
   const onTestcaseClick = async () => {
@@ -157,11 +163,8 @@ export const CodeEditor = () => {
             <Dropdown
               onSelectLanguage={(selectedLanguage, file) => {
                 handleLanguageChange(selectedLanguage, file);
-                localStorage.setItem(
-                  `language_${problemId}`,
-                  selectedLanguage.toUpperCase(),
-                );
               }}
+              problemId={problemId!}
             />
           </S.Button>
           <S.Button onClick={onTestcaseClick}>
