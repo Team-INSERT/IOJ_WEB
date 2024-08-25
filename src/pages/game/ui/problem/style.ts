@@ -55,7 +55,7 @@ export const ProblemContentBox = styled.div`
 `;
 
 export const Problem = styled.p`
-  width: 2.7rem;
+  width: 3rem;
   ${Pretendard.BigText};
   font-weight: 500;
   border-bottom: 3px solid ${theme.blueNormal};
