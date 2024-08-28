@@ -34,7 +34,6 @@ export const ContestQuestion = () => {
       try {
         const res: Contest = await contestProblem(parseInt(contestId, 10));
         setContestDetail(res);
-        console.log(res);
       } catch (err: any) {
         if (err.response) {
           setErrorCode(err.response.data.code);
