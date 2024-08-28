@@ -42,7 +42,6 @@ export const CodeEditor = () => {
 
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
-  const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
 
   useEffect(() => {
     if (problemId) {
@@ -95,19 +94,9 @@ export const CodeEditor = () => {
         sourcecode: code,
         language: languages,
       });
-
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: res.status, message: res.message },
-      ]);
+      console.log(res);
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "알 수 없는 오류 발생";
-
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: "WRONG_ANSWER", message: errorMessage },
-      ]);
+      console.log(err);
     }
   };
 
@@ -201,7 +190,6 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
-          submitResults={submitResults}
         />
       </S.TestBoxLayout>
       {errorCode && (

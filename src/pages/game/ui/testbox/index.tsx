@@ -16,24 +16,17 @@ interface TestCase {
   verdict: string;
 }
 
-interface SubmitResult {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
-
 export const TestBox = ({
   activeTab,
   setActiveTab,
   testResult,
   isTestLoading,
-  submitResults,
-}: TestBoxProps & { submitResults: SubmitResult[] }) => {
+}: TestBoxProps) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
   const [problemDetail, setProblemDetail] = useState<problemDetailType>();
-  const [results, setResults] = useState<SubmitResult[]>(submitResults);
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -41,10 +34,6 @@ export const TestBox = ({
     ).length;
     setAcceptCount(countAcceptedTestCases);
   }, [testResult]);
-
-  useEffect(() => {
-    setResults(submitResults);
-  }, [submitResults]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -205,19 +194,8 @@ export const TestBox = ({
           ))}
         {activeTab === "results" && (
           <S.ResultBoxContainer>
-            {results.length > 0 ? (
-              results.map((result) => (
-                <S.ResultBox>
-                  {result.status === "ACCEPTED" ? (
-                    <span>정답입니다.</span>
-                  ) : (
-                    <span>오답입니다.</span>
-                  )}
-                </S.ResultBox>
-              ))
-            ) : (
-              <S.ResultBox>로딩 중...</S.ResultBox>
-            )}
+            <S.ResultBox>sd</S.ResultBox>
+            <S.ResultBox>로딩 중...</S.ResultBox>
           </S.ResultBoxContainer>
         )}
       </S.Content>
