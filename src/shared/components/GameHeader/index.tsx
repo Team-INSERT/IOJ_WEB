@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import Clock from "@/assets/Clock";
@@ -24,33 +23,18 @@ interface ContestDetails {
 }
 
 const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
-  const navigate = useNavigate();
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const contestId = parseInt(segments[segments.length - 3], 10);
 
   const [problemList, setProblemList] = useState<problemsType[]>([]);
-  const [remainingTime, setRemainingTime] = useState("00:00:00");
+  const [remainingTime, setRemainingTime] = useState("00 : 00 : 00");
 
   const handleExit = () => {
-    const contestPath = pathname.replace(/\/code\/\d+$/, "");
-    window.location.href = contestPath;
+    window.location.href = pathname.replace(/\/code\/\d+$/, "");
   };
 
   useEffect(() => {
-    const getContestDetail = async () => {
-      try {
-        const res: ContestDetails = await contestProblem(contestId);
-        setProblemList(res.problems);
-
-        // 남은 시간 계산
-        // eslint-disable-next-line no-use-before-define
-        calculateRemainingTime(res.endTime);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     const calculateRemainingTime = (endTime: string) => {
       const endDate = new Date(endTime);
       const interval = setInterval(() => {
@@ -71,28 +55,34 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
         }
       }, 1000);
     };
-
-    getContestDetail();
+    (async () => {
+      try {
+        const res: ContestDetails = await contestProblem(contestId);
+        setProblemList(res.problems);
+        // 남은 시간 계산
+        calculateRemainingTime(res.endTime);
+      } catch (err) {
+        /**/
+      }
+    })();
   }, [contestId]);
 
   const onNextClick = (mode: string) => {
     if (mode === "next") {
       if (problemIndex < problemsCount - 1) {
         const nextProblemId = problemList[problemIndex + 1]?.id;
-        const newUrl = pathname.replace(
+        window.location.href = pathname.replace(
           /\/code\/\d+/,
           `/code/${nextProblemId}`,
         );
-        window.location.href = newUrl;
       }
     } else if (mode === "previous") {
       if (problemIndex > 0) {
         const previousProblemId = problemList[problemIndex - 1]?.id;
-        const newUrl = pathname.replace(
+        window.location.href = pathname.replace(
           /\/code\/\d+/,
           `/code/${previousProblemId}`,
         );
-        window.location.href = newUrl;
       }
     }
   };
