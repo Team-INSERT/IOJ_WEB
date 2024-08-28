@@ -28,10 +28,13 @@ const App = () => {
           path="/game/contest/ranking/:contestId"
           element={<ContestRanking />}
         />
-        <Route path="/game/contest/:contestId/code/:problemId" element={<Game />} />
+        <Route
+          path="/game/contest/:contestId/code/:problemId"
+          element={<Game />}
+        />
         <Route path="/admin" element={<Start />} />
-        <Route path="/admin/Main" element={<CreateContest />} />
-        <Route path="/admin/Question" element={<CreateQuestion />} />
+        <Route path="/admin/contest" element={<CreateContest />} />
+        <Route path="/admin/question" element={<CreateQuestion />} />
         <Route path="/problem/1" element={<ProblemDetail />} />
       </Routes>
     </Router>
