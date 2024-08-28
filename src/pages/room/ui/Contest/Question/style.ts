@@ -19,7 +19,6 @@ export const Button = styled.div`
   right: 0;
 `;
 export const RemainingTimeContainer = styled.div`
-  padding: 56px 370px 103px 370px;
   position: relative;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -28,6 +27,8 @@ export const RemainingTimeContainer = styled.div`
   box-sizing: border-box;
   width: auto;
   ${flex.COLUMN_CENTER}
+  padding-bottom: 40px;
+  padding-top: 56px;
 
   &:before {
     content: "";
@@ -50,7 +51,7 @@ export const Time = styled.div`
 `;
 export const Line = styled.div`
   border-top: 1px solid ${theme.grey300};
-  width: 100%;
+  width: 60%;
 `;
 export const ButtonRank = styled.div`
   padding-top: 31px;
