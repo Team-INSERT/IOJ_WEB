@@ -23,6 +23,19 @@ export interface contestTypes {
   title: string;
 }
 
+export interface contestInfoType {
+  label: string;
+  value: string;
+}
+
+const ContestInfo = ({ label, value }: contestInfoType) => (
+  <S.TextLayout>
+    <S.ContestText>{label}</S.ContestText>
+    <S.TextDeviceLine />
+    <S.ContestText>{value}</S.ContestText>
+  </S.TextLayout>
+);
+
 export const CreateContest = () => {
   const today = new Date();
   const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
@@ -68,6 +81,7 @@ export const CreateContest = () => {
       .filter((question) => question !== null) as number[];
     setQuestions(questionArray);
   };
+
   const onCreateClick = async () => {
     const startDateTime = `${startDay.date}T${startDay.time}`;
     const endDateTime = `${endDay.date}T${endDay.time}`;
@@ -181,7 +195,7 @@ export const CreateContest = () => {
       <MainHeader />
       <S.Layout>
         <S.Title>CONTEST CREATE</S.Title>
-        <S.DevideLine />
+        <S.DeviceLine />
         <S.FormLayout>
           <S.NameLayout>
             <S.InputLayout>
@@ -262,7 +276,7 @@ export const CreateContest = () => {
             CREATE
           </Button>
         </S.ListLayout>
-        <S.DevideLine />
+        <S.DeviceLine />
         <S.ContestLayout>
           {contests.map((contest, index) => {
             let authority = "";
@@ -273,32 +287,20 @@ export const CreateContest = () => {
             return (
               <S.HalfLayout index={index}>
                 <S.ContestBox>
-                  <S.TextLayout>
-                    <S.ContestText>대회명</S.ContestText>
-                    <S.TextDeviceLine />
-                    <S.ContestText>{contest.title}</S.ContestText>
-                  </S.TextLayout>
-                  <S.TextLayout>
-                    <S.ContestText>대회기간</S.ContestText>
-                    <S.TextDeviceLine />
-                    <S.ContestText>
-                      {contest.startTime} ~ {contest.endTime}
-                    </S.ContestText>
-                  </S.TextLayout>
-                  <S.TextLayout>
-                    <S.ContestText>문제</S.ContestText>
-                    <S.TextDeviceLine />
-                    <S.ContestText>
-                      {contest.problemIds && contest.problemIds.length > 0
+                  <ContestInfo label="대회명" value={contest.title} />
+                  <ContestInfo
+                    label="대회기간"
+                    value={`${contest.startTime} ~ ${contest.endTime}`}
+                  />
+                  <ContestInfo
+                    label="문제"
+                    value={
+                      contest.problemIds && contest.problemIds.length > 0
                         ? contest.problemIds.join(", ")
-                        : "문제가 없습니다."}
-                    </S.ContestText>
-                  </S.TextLayout>
-                  <S.TextLayout>
-                    <S.ContestText>참여권한</S.ContestText>
-                    <S.TextDeviceLine />
-                    <S.ContestText>{authority}</S.ContestText>
-                  </S.TextLayout>
+                        : "문제가 없습니다."
+                    }
+                  />
+                  <ContestInfo label="참여권한" value={authority} />
                 </S.ContestBox>
               </S.HalfLayout>
             );

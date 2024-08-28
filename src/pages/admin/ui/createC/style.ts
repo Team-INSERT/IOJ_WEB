@@ -2,14 +2,13 @@ import { Pretendard, flex, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 0 5.5rem 0 5.5rem;
   margin-top: 28px;
-  padding-bottom: 180px;
+  padding: 0 5.5rem 180px;
 `;
 export const Title = styled.p`
   ${Pretendard.SmallTitle}
 `;
-export const DevideLine = styled.div`
+export const DeviceLine = styled.div`
   height: 2px;
   width: 100%;
   background: linear-gradient(90deg, #007cff 0%, rgba(0, 124, 255, 0.2) 100%);
