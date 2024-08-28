@@ -37,7 +37,7 @@ export const Input = styled.input`
   width: 400px;
   padding: 0 12px 0 12px;
   border: none;
-  border-bottom: 1px solid ${theme.grey400};
+  border-bottom: 1px solid ${theme.grey400} !important;
 
   ${flex.VERTICAL}
   ${Pretendard.Text}
