@@ -19,7 +19,6 @@ export const GameHome = () => {
           <GameCard mode="커스텀 모드" />
         </S.ChooseGameMode>
       </S.Layout>
-      <Footer />
     </>
   );
 };
