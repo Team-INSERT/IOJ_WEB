@@ -14,7 +14,8 @@ export const TestBox = ({
   testResult,
   isTestLoading,
   submissionResults,
-}: TestBoxProps) => {
+  isSubmitting,
+}: TestBoxProps & { isSubmitting: boolean }) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
@@ -65,7 +66,9 @@ export const TestBox = ({
       OUT_OF_MEMORY: "메모리 초과",
       TIME_LIMIT_EXCEEDED: "시간초과",
       RUNTIME_ERROR: "런타임 에러",
+      "처리중...": "처리 중...",
     };
+
     return resultMapping[result] || "알 수 없는 결과";
   };
 

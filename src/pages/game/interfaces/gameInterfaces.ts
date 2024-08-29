@@ -39,4 +39,5 @@ export interface TestBoxProps {
   testResult: TestCaseType[];
   isTestLoading: boolean;
   submissionResults: string[];
+  isSubmitting: boolean;
 }

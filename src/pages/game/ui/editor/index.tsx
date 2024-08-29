@@ -40,6 +40,7 @@ export const CodeEditor = () => {
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResult, setSubmissionResult] = useState<string>("");
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (problemId) {
@@ -84,7 +85,10 @@ export const CodeEditor = () => {
   };
 
   const handleSubmit = async () => {
+    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
+    setIsSubmitting(true);
     setActiveTab("results");
+
     try {
       const res = await contestSubmit({
         contestId: Number(contestId),
@@ -93,11 +97,20 @@ export const CodeEditor = () => {
         language: languages,
       });
 
-      setSubmissionResult(res);
-      setSubmissionResults((prevResults) => [...prevResults, res]); // 수정된 부분
-      console.log(res);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = res;
+        return updatedResults;
+      });
     } catch (err: any) {
       console.error(err);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = "런타임 에러";
+        return updatedResults;
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -191,7 +204,8 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
-          submissionResults={submissionResults} // 수정된 부분
+          submissionResults={submissionResults}
+          isSubmitting={isSubmitting}
         />
       </S.TestBoxLayout>
       {errorCode && (
