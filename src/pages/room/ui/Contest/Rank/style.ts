@@ -11,7 +11,6 @@ interface RankColorProps {
 export const Layout = styled.div`
   width: 100%;
   ${flex.HORIZONTAL}
-  position: relative;
 `;
 export const Content = styled.div`
   ${flex.COLUMN_CENTER}
