@@ -17,9 +17,11 @@ interface Player {
 
 export const ContestRanking = () => {
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
+  const [rankedPlayers, setRankedPlayers] = useState<Player[][]>([]);
   const { contestId } = useParams<{ contestId: string }>();
   const location = useLocation();
-  const title = location.state?.title || "대회 제목이 제공되지 않았습니다.";
+  const params = new URLSearchParams(location.search);
+  const title = params.get("title") || "대회 제목이 제공되지 않았습니다.";
 
   useEffect(() => {
     const playerList = async () => {
@@ -30,6 +32,32 @@ export const ContestRanking = () => {
       try {
         const res = await gameRakingList(parseInt(contestId, 10));
         setPlayerDetail(res);
+
+        const numProblems = res[0].problemStatuses.length;
+        const rankings: Player[][] = Array.from(
+          { length: numProblems },
+          () => [],
+        );
+
+        for (let i = 0; i < numProblems; i += 1) {
+          const solvedPlayers = res.filter(
+            (player: { problemStatuses: { status: string }[] }) =>
+              player.problemStatuses[i].status === "solved",
+          );
+          const sortedPlayers = solvedPlayers.sort(
+            (
+              a: { problemStatuses: { penalty: number }[] },
+              b: { problemStatuses: { penalty: number }[] },
+            ) => {
+              const penaltyA = a.problemStatuses[i].penalty ?? Infinity;
+              const penaltyB = b.problemStatuses[i].penalty ?? Infinity;
+              return penaltyA - penaltyB;
+            },
+          );
+
+          rankings[i] = sortedPlayers;
+        }
+        setRankedPlayers(rankings);
       } catch (err) {
         /**/
       }
@@ -71,7 +99,7 @@ export const ContestRanking = () => {
                   <S.Ranking rank={rank}>{rank}</S.Ranking>
                   <S.Name>{player.nickname}</S.Name>
                   <S.Questions>
-                    {player.problemStatuses.map((result) => {
+                    {player.problemStatuses.map((result, problemIndex) => {
                       if (result.status === "unsolved") {
                         return (
                           <S.NotSolved
@@ -86,12 +114,16 @@ export const ContestRanking = () => {
                           />
                         );
                       }
+                      const problemRank =
+                        rankedPlayers[problemIndex].findIndex(
+                          (p) => p.nickname === player.nickname,
+                        ) + 1;
                       return (
                         <S.Question
                           questionSum={playerDetail[0].problemStatuses.length}
                         >
                           <S.QuestionSolveRank>
-                            {result.penalty}
+                            {problemRank}
                           </S.QuestionSolveRank>
                         </S.Question>
                       );

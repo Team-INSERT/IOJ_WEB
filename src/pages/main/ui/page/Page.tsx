@@ -36,7 +36,7 @@ export const Main = () => {
     if (!isLogin) {
       setIsModalOpen(true);
     } else {
-      window.open("/game", "_blank", "noopener");
+      navigate("/game");
     }
   };
 
