@@ -2,6 +2,7 @@ import { Button, Footer, MainHeader } from "@/shared/components";
 import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
 import Modal from "@/shared/components/Modal";
+import { adminContestList } from "@/pages/admin/api/adminContestList";
 import * as S from "./style";
 import { createContestApi } from "../../api/contestCreate";
 
@@ -12,6 +13,28 @@ export interface postBodyProps {
   authority: string;
   problems: number[];
 }
+
+export interface contestTypes {
+  authority: string;
+  endTime: string;
+  id: number;
+  problemIds: number[];
+  startTime: string;
+  title: string;
+}
+
+export interface contestInfoType {
+  label: string;
+  value: string;
+}
+
+const ContestInfo = ({ label, value }: contestInfoType) => (
+  <S.TextLayout>
+    <S.ContestText>{label}</S.ContestText>
+    <S.TextDeviceLine />
+    <S.ContestText>{value}</S.ContestText>
+  </S.TextLayout>
+);
 
 export const CreateContest = () => {
   const today = new Date();
@@ -24,10 +47,11 @@ export const CreateContest = () => {
   const [minEndDate, setMinEndDate] = useState(formattedDate);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
-  const [modalSubtitle, setModalSubitle] = useState("");
+  const [modalSubtitle, setModalSubtitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  const [contests, setContests] = useState<contestTypes[]>([]);
 
-  const nameLenghtRef = useRef<HTMLParagraphElement>(null);
+  const nameLengthRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
   const questionsString = questions.join(", ");
@@ -42,7 +66,7 @@ export const CreateContest = () => {
   ) => {
     setModalStatus(status);
     setModalTitle(title);
-    setModalSubitle(subtitle);
+    setModalSubtitle(subtitle);
     setIsModalOpen(true);
   };
 
@@ -57,6 +81,7 @@ export const CreateContest = () => {
       .filter((question) => question !== null) as number[];
     setQuestions(questionArray);
   };
+
   const onCreateClick = async () => {
     const startDateTime = `${startDay.date}T${startDay.time}`;
     const endDateTime = `${endDay.date}T${endDay.time}`;
@@ -125,7 +150,6 @@ export const CreateContest = () => {
         setQuestions([]);
         setJoinAuthority("");
       } catch (err) {
-        console.error(err);
         showModal(
           "나쁨",
           "대회 생성에 실패하였습니다.",
@@ -134,6 +158,7 @@ export const CreateContest = () => {
       }
     }
   };
+
   useEffect(() => {
     if (startDay.date) {
       setMinEndDate(startDay.date);
@@ -141,7 +166,7 @@ export const CreateContest = () => {
   }, [startDay.date]);
 
   useEffect(() => {
-    if (nameLenghtRef.current && contestNameInputRef.current) {
+    if (nameLengthRef.current && contestNameInputRef.current) {
       const lengthColor =
         contestName.length === 0
           ? theme.black
@@ -149,16 +174,28 @@ export const CreateContest = () => {
             ? theme.correctGreen
             : theme.warningRed;
       const borderColor = lengthColor;
-      nameLenghtRef.current.style.color = lengthColor;
+      nameLengthRef.current.style.color = lengthColor;
       contestNameInputRef.current.style.borderBottom = `1px solid ${borderColor}`;
     }
   }, [contestName]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await adminContestList();
+        setContests(res);
+      } catch (err) {
+        /**/
+      }
+    })();
+  }, []);
+
   return (
     <>
       <MainHeader />
       <S.Layout>
         <S.Title>CONTEST CREATE</S.Title>
-        <S.DevideLine />
+        <S.DeviceLine />
         <S.FormLayout>
           <S.NameLayout>
             <S.InputLayout>
@@ -170,7 +207,7 @@ export const CreateContest = () => {
                 onChange={(e) => setContestName(e.target.value)}
               />
             </S.InputLayout>
-            <p ref={nameLenghtRef}>글자 수 : {contestName.length} </p>
+            <p ref={nameLengthRef}>글자 수 : {contestName.length} </p>
           </S.NameLayout>
           <S.PeriodLayout>
             <S.Subject>대회기간</S.Subject>
@@ -239,7 +276,36 @@ export const CreateContest = () => {
             CREATE
           </Button>
         </S.ListLayout>
-        <S.DevideLine />
+        <S.DeviceLine />
+        <S.ContestLayout>
+          {contests.map((contest, index) => {
+            let authority = "";
+            if (contest.authority === "FIRST_YEAR") authority = "1학년";
+            if (contest.authority === "SECOND_YEAR") authority = "1학년";
+            if (contest.authority === "THIRD_YEAR") authority = "1학년";
+            if (contest.authority === "USER") authority = "모든 사용자";
+            return (
+              <S.HalfLayout index={index}>
+                <S.ContestBox>
+                  <ContestInfo label="대회명" value={contest.title} />
+                  <ContestInfo
+                    label="대회기간"
+                    value={`${contest.startTime} ~ ${contest.endTime}`}
+                  />
+                  <ContestInfo
+                    label="문제"
+                    value={
+                      contest.problemIds && contest.problemIds.length > 0
+                        ? contest.problemIds.join(", ")
+                        : "문제가 없습니다."
+                    }
+                  />
+                  <ContestInfo label="참여권한" value={authority} />
+                </S.ContestBox>
+              </S.HalfLayout>
+            );
+          })}
+        </S.ContestLayout>
       </S.Layout>
       <Footer />
       {isModalOpen && (
