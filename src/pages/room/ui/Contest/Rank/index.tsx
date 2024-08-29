@@ -17,10 +17,10 @@ interface Player {
 
 export const ContestRanking = () => {
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
-  const questions = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const { contestId } = useParams<{ contestId: string }>();
   const location = useLocation();
   const title = location.state?.title || "대회 제목이 제공되지 않았습니다.";
+
   useEffect(() => {
     const playerList = async () => {
       if (!contestId) {
@@ -30,9 +30,8 @@ export const ContestRanking = () => {
       try {
         const res = await gameRakingList(parseInt(contestId, 10));
         setPlayerDetail(res);
-        console.log(res);
       } catch (err) {
-        console.log(err);
+        /**/
       }
     };
     playerList();
@@ -56,7 +55,9 @@ export const ContestRanking = () => {
                 <S.QuestionLayout
                   questionSum={playerDetail[0].problemStatuses.length}
                 >
-                  <S.QuestionName>{questions[index]}</S.QuestionName>
+                  <S.QuestionName>
+                    {String.fromCharCode("A".charCodeAt(0) + index)}
+                  </S.QuestionName>
                 </S.QuestionLayout>
               ))}
             </S.QuestionsNames>
