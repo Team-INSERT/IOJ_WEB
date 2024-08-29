@@ -20,10 +20,6 @@ interface TestCase {
   verdict: string;
 }
 
-interface SubmitResult {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
 export const CodeEditor = () => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
@@ -42,6 +38,8 @@ export const CodeEditor = () => {
 
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
+  const [submissionResult, setSubmissionResult] = useState<string>("");
+  const [submissionResults, setSubmissionResults] = useState<string[]>([]);
 
   useEffect(() => {
     if (problemId) {
@@ -94,9 +92,12 @@ export const CodeEditor = () => {
         sourcecode: code,
         language: languages,
       });
+
+      setSubmissionResult(res);
+      setSubmissionResults((prevResults) => [...prevResults, res]); // 수정된 부분
       console.log(res);
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -190,6 +191,7 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
+          submissionResults={submissionResults} // 수정된 부분
         />
       </S.TestBoxLayout>
       {errorCode && (

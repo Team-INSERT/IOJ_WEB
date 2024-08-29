@@ -8,19 +8,12 @@ import {
   problemDetailType,
 } from "../../interfaces/gameInterfaces";
 
-interface TestCase {
-  index: number;
-  input: number;
-  output: string;
-  expectOutput: string;
-  verdict: string;
-}
-
 export const TestBox = ({
   activeTab,
   setActiveTab,
   testResult,
   isTestLoading,
+  submissionResults,
 }: TestBoxProps) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
@@ -62,6 +55,18 @@ export const TestBox = ({
     };
 
     return verdictMapping[verdict] || "알 수 없는 결과";
+  };
+
+  const translateSubmissionResult = (result: string) => {
+    const resultMapping: Record<string, string> = {
+      WRONG_ANSWER: "오답입니다.",
+      ACCEPTED: "정답입니다.",
+      COMPILATION_ERROR: "컴파일 에러",
+      OUT_OF_MEMORY: "메모리 초과",
+      TIME_LIMIT_EXCEEDED: "시간초과",
+      RUNTIME_ERROR: "런타임 에러",
+    };
+    return resultMapping[result] || "알 수 없는 결과";
   };
 
   const isErrorOutput = (verdict: string) =>
@@ -194,8 +199,11 @@ export const TestBox = ({
           ))}
         {activeTab === "results" && (
           <S.ResultBoxContainer>
-            <S.ResultBox>sd</S.ResultBox>
-            <S.ResultBox>로딩 중...</S.ResultBox>
+            {submissionResults.map((result) => (
+              <S.ResultBox>
+                <p>{translateSubmissionResult(result)}</p>
+              </S.ResultBox>
+            ))}
           </S.ResultBoxContainer>
         )}
       </S.Content>
