@@ -205,7 +205,7 @@ export const TestBox = ({
           ))}
         {activeTab === "results" && (
           <S.ResultBoxContainer>
-            {results.length > 0 ? (
+            {results.length > 0 &&
               results.map((result) => (
                 <S.ResultBox>
                   {result.status === "ACCEPTED" ? (
@@ -214,10 +214,7 @@ export const TestBox = ({
                     <span>오답입니다.</span>
                   )}
                 </S.ResultBox>
-              ))
-            ) : (
-              <S.ResultBox>로딩 중...</S.ResultBox>
-            )}
+              ))}
           </S.ResultBoxContainer>
         )}
       </S.Content>

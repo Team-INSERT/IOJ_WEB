@@ -35,12 +35,14 @@ export const CodeEditor = () => {
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
 
@@ -76,7 +78,6 @@ export const CodeEditor = () => {
         id: Number(problemId),
         sourcecode: code,
       });
-      console.log(response);
     } catch (err: any) {
       if (err.response) {
         setErrorCode(err.response.data.code);
@@ -87,7 +88,13 @@ export const CodeEditor = () => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) {
+      setIsModalOpen(true);
+      return;
+    }
+
     setActiveTab("results");
+    setIsSubmitting(true);
     try {
       const res = await contestSubmit({
         contestId: Number(contestId),
@@ -108,6 +115,8 @@ export const CodeEditor = () => {
         ...prevResults,
         { status: "WRONG_ANSWER", message: errorMessage },
       ]);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
