@@ -7,7 +7,5 @@ interface SubmitRequest {
   language: string;
 }
 
-export const contestSubmit = async (requestBody: SubmitRequest) => {
-  const response = await customAxios.post("/contest/execution", requestBody);
-  return response.data;
-};
+export const contestSubmit = async (requestBody: SubmitRequest) =>
+  (await customAxios.post("/contest/execution", requestBody)).data;
