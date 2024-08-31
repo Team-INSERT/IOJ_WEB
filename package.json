@@ -14,6 +14,7 @@
     "axios": "^1.7.2",
     "craco-alias": "^3.0.1",
     "install": "^0.13.0",
+    "monaco-editor": "^0.51.0",
     "npm": "^10.8.1",
     "pnpm": "^9.4.0",
     "prettier": "^3.3.2",
