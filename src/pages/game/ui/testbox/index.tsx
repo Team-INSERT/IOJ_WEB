@@ -8,32 +8,19 @@ import {
   problemDetailType,
 } from "../../interfaces/gameInterfaces";
 
-interface TestCase {
-  index: number;
-  input: number;
-  output: string;
-  expectOutput: string;
-  verdict: string;
-}
-
-interface SubmitResult {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
-
 export const TestBox = ({
   activeTab,
   setActiveTab,
   testResult,
   isTestLoading,
-  submitResults,
-}: TestBoxProps & { submitResults: SubmitResult[] }) => {
+  submissionResults,
+  isSubmitting,
+}: TestBoxProps & { isSubmitting: boolean }) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
   const [problemDetail, setProblemDetail] = useState<problemDetailType>();
-  const [results, setResults] = useState<SubmitResult[]>(submitResults);
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -41,10 +28,6 @@ export const TestBox = ({
     ).length;
     setAcceptCount(countAcceptedTestCases);
   }, [testResult]);
-
-  useEffect(() => {
-    setResults(submitResults);
-  }, [submitResults]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -73,6 +56,20 @@ export const TestBox = ({
     };
 
     return verdictMapping[verdict] || "알 수 없는 결과";
+  };
+
+  const translateSubmissionResult = (result: string) => {
+    const resultMapping: Record<string, string> = {
+      WRONG_ANSWER: "오답입니다.",
+      ACCEPTED: "정답입니다.",
+      COMPILATION_ERROR: "컴파일 에러",
+      OUT_OF_MEMORY: "메모리 초과",
+      TIME_LIMIT_EXCEEDED: "시간초과",
+      RUNTIME_ERROR: "런타임 에러",
+      "처리중...": "처리 중...",
+    };
+
+    return resultMapping[result] || "알 수 없는 결과";
   };
 
   const isErrorOutput = (verdict: string) =>
@@ -205,19 +202,11 @@ export const TestBox = ({
           ))}
         {activeTab === "results" && (
           <S.ResultBoxContainer>
-            {results.length > 0 ? (
-              results.map((result) => (
-                <S.ResultBox>
-                  {result.status === "ACCEPTED" ? (
-                    <span>정답입니다.</span>
-                  ) : (
-                    <span>오답입니다.</span>
-                  )}
-                </S.ResultBox>
-              ))
-            ) : (
-              <S.ResultBox>로딩 중...</S.ResultBox>
-            )}
+            {submissionResults.map((result) => (
+              <S.ResultBox>
+                <p>{translateSubmissionResult(result)}</p>
+              </S.ResultBox>
+            ))}
           </S.ResultBoxContainer>
         )}
       </S.Content>
