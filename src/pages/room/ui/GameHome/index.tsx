@@ -1,4 +1,4 @@
-import { Footer, GameCard, MainHeader } from "@/shared/components";
+import { GameCard, MainHeader } from "@/shared/components";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 
