@@ -33,4 +33,8 @@ export interface TestBoxProps {
   setActiveTab: (tab: "execution" | "testCases" | "results") => void;
   testResult: TestCaseType[];
   isTestLoading: boolean;
+  onInputChange: (input: string) => void;
+  isExecutionActive: boolean;
+  consoleOutput: string;
+  onSubmit: (userInput: string) => void;
 }

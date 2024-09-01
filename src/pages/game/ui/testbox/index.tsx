@@ -32,9 +32,6 @@ export const TestBox = ({
   isExecutionActive,
 }: TestBoxProps & {
   submitResults: SubmitResult[];
-  onSubmit: (userInput: string) => void;
-  consoleOutput: string;
-  isExecutionActive: boolean;
 }) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
