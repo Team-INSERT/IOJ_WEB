@@ -5,8 +5,8 @@ import Modal from "@/shared/components/Modal";
 import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
+import { useWebSocket } from "@/shared/hooks/useWebSocket";
 import { TestBox } from "../testbox";
-import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
 
@@ -45,6 +45,22 @@ export const CodeEditor = () => {
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
 
+  const [input, setInput] = useState<string>("");
+
+  // WebSocket 관련 상태 및 함수 가져오기
+  const {
+    client,
+    userSessionId,
+    consoleOutput,
+    isExecutionActive,
+    setConsoleOutput,
+    setIsExecutionActive,
+  } = useWebSocket();
+
+  useEffect(() => {
+    setIsExecutionActive(false);
+  }, [setIsExecutionActive]);
+
   useEffect(() => {
     if (problemId) {
       const savedCode = localStorage.getItem(`code_${problemId}`);
@@ -66,25 +82,28 @@ export const CodeEditor = () => {
     }
   }, [code, languages, problemId]);
 
+  const handleExecution = () => {
+    if (client && userSessionId) {
+      setConsoleOutput("");
+      setIsExecutionActive(true);
+      client.publish({
+        destination: "/app/execute",
+        body: JSON.stringify({
+          sessionId: userSessionId,
+          sourcecode: code,
+          language: languages,
+        }),
+      });
+    }
+  };
+
+  const handleInputChange = (userInput: string) => {
+    setInput(userInput);
+  };
+
   const handleModalClose = () => {
     setErrorCode(null);
     navigate("/game/contest");
-  };
-
-  const handleExecution = async () => {
-    try {
-      const response = await execution({
-        id: Number(problemId),
-        sourcecode: code,
-      });
-      console.log(response);
-    } catch (err: any) {
-      if (err.response) {
-        setErrorCode(err.response.data.code);
-      } else {
-        setErrorCode("UNKNOWN");
-      }
-    }
   };
 
   const handleSubmit = async () => {
@@ -199,6 +218,10 @@ export const CodeEditor = () => {
           testResult={testResult}
           isTestLoading={isTestLoading}
           submitResults={submitResults}
+          onInputChange={handleInputChange}
+          onSubmit={handleInputSubmit}
+          consoleOutput={consoleOutput} // 서버 응답 값을 TestBox에 전달
+          isExecutionActive={isExecutionActive} // 추가된 prop
         />
       </S.TestBoxLayout>
       {errorCode && (
