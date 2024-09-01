@@ -6,7 +6,7 @@ import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
-import { problemDetailType, problemType } from "../interfaces/gameInterfaces";
+import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -25,7 +25,7 @@ export const Game = () => {
   const problemNum = segments[segments.length - 1];
   const contestNum = parseInt(segments[segments.length - 3], 10);
   const formattedProblemNum = problemNum.padStart(4, "0");
-  const [problem, setProblem] = useState<problemDetailType>({
+  const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
     level: 0,
     content: "",
@@ -46,29 +46,27 @@ export const Game = () => {
   );
 
   useEffect(() => {
-    const getProblemInfo = async () => {
+    (async () => {
       try {
         const res = await gameDetail(parseInt(problemNum, 10));
         setProblem(res);
       } catch (err) {
-        console.log(err);
+        /**/
       }
-    };
-    getProblemInfo();
+    })();
   }, [problemNum]);
 
   useEffect(() => {
-    const getProblems = async () => {
+    (async () => {
       try {
         const res = await contestProblems(contestNum);
         setAllProblems(res.problems);
         setProblemsCount(res.problems.length);
       } catch (err) {
-        console.log(err);
+        /**/
       }
-    };
-    getProblems();
-  }, []);
+    })();
+  }, [contestNum]);
 
   return (
     <GameLayout>
@@ -78,9 +76,9 @@ export const Game = () => {
           id={formattedProblemNum}
           title={problem.title}
           timeLimit={problem.timeLimit}
-          memory={problem.memoryLimit}
-          problemInfo={problem.content}
-          inputInfo={problem.inputContent}
+          memoryLimit={problem.memoryLimit}
+          content={problem.content}
+          inputContent={problem.inputContent}
           level={problem.level}
           testcases={problem.testcases}
         />

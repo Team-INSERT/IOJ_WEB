@@ -5,7 +5,7 @@ import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
 import {
   TestBoxProps,
-  problemDetailType,
+  problemInfoProps,
 } from "../../interfaces/gameInterfaces";
 
 export const TestBox = ({
@@ -14,13 +14,12 @@ export const TestBox = ({
   testResult,
   isTestLoading,
   submissionResults,
-  isSubmitting,
-}: TestBoxProps & { isSubmitting: boolean }) => {
+}: TestBoxProps) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
-  const [problemDetail, setProblemDetail] = useState<problemDetailType>();
+  const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -34,15 +33,14 @@ export const TestBox = ({
   }, [activeTab, testResult]);
 
   useEffect(() => {
-    const getProblemInfo = async () => {
+    (async () => {
       try {
         const res = await gameDetail(problemNum);
         setProblemDetail(res);
       } catch (err) {
-        console.log(err);
+        /**/
       }
-    };
-    getProblemInfo();
+    })();
   }, [problemNum]);
 
   const translateVerdict = (verdict: string) => {
