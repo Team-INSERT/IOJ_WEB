@@ -97,6 +97,21 @@ export const CodeEditor = () => {
     }
   };
 
+  const handleInputSubmit = (userResultInput: string) => {
+    if (client && userSessionId) {
+      client.publish({
+        destination: "/app/input",
+        body: JSON.stringify({
+          sessionId: userSessionId,
+          input: userResultInput,
+        }),
+      });
+      setInput("");
+    } else {
+      console.log("Execution is not active or session is invalid.");
+    }
+  };
+
   const handleInputChange = (userInput: string) => {
     setInput(userInput);
   };
