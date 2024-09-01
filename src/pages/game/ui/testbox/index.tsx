@@ -27,13 +27,22 @@ export const TestBox = ({
   testResult,
   isTestLoading,
   submitResults,
-}: TestBoxProps & { submitResults: SubmitResult[] }) => {
+  consoleOutput,
+  onSubmit,
+  isExecutionActive,
+}: TestBoxProps & {
+  submitResults: SubmitResult[];
+  onSubmit: (userInput: string) => void;
+  consoleOutput: string;
+  isExecutionActive: boolean;
+}) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
   const [problemDetail, setProblemDetail] = useState<problemDetailType>();
   const [results, setResults] = useState<SubmitResult[]>(submitResults);
+  const [executeInput, setExecuteInput] = useState("");
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -90,6 +99,15 @@ export const TestBox = ({
     )
     .join("\n");
 
+  const handleInputSubmit = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      console.log(`Input submitted: ${executeInput}`);
+      onSubmit(executeInput);
+      setExecuteInput("");
+    }
+  };
+
   return (
     <S.Container>
       <S.TabContainer>
@@ -120,8 +138,18 @@ export const TestBox = ({
                 </Button>
               </S.Button>
             </S.TestBox>
-            <S.Text>{">"}</S.Text>
-            <S.Text>프로세스가 종료되었습니다.</S.Text>
+            <S.Text>
+              {">"}
+              <S.ExecuteInput
+                placeholder="입력하세요."
+                type="text"
+                value={executeInput}
+                onChange={(e) => setExecuteInput(e.target.value)}
+                onKeyDown={handleInputSubmit}
+                disabled={!isExecutionActive}
+              />
+            </S.Text>
+            <S.ExecuteResult>{consoleOutput}</S.ExecuteResult>
           </>
         )}
         {activeTab === "testCases" &&
