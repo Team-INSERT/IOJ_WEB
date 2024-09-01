@@ -47,7 +47,6 @@ export const CodeEditor = () => {
 
   const [input, setInput] = useState<string>("");
 
-  // WebSocket 관련 상태 및 함수 가져오기
   const {
     client,
     userSessionId,
@@ -235,8 +234,8 @@ export const CodeEditor = () => {
           submitResults={submitResults}
           onInputChange={handleInputChange}
           onSubmit={handleInputSubmit}
-          consoleOutput={consoleOutput} // 서버 응답 값을 TestBox에 전달
-          isExecutionActive={isExecutionActive} // 추가된 prop
+          consoleOutput={consoleOutput}
+          isExecutionActive={isExecutionActive}
         />
       </S.TestBoxLayout>
       {errorCode && (
