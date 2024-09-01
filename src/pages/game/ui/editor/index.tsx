@@ -20,10 +20,6 @@ interface TestCase {
   verdict: string;
 }
 
-interface SubmitResult {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
 export const CodeEditor = () => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
@@ -35,16 +31,15 @@ export const CodeEditor = () => {
   const [languages, setLanguage] = useState<string>("PYTHON");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
-  const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
+  const [submissionResults, setSubmissionResults] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (problemId) {
@@ -93,8 +88,10 @@ export const CodeEditor = () => {
       return;
     }
 
-    setActiveTab("results");
+    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
     setIsSubmitting(true);
+    setActiveTab("results");
+
     try {
       const res = await contestSubmit({
         contestId: Number(contestId),
@@ -103,18 +100,18 @@ export const CodeEditor = () => {
         language: languages,
       });
 
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: res.status, message: res.message },
-      ]);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = res;
+        return updatedResults;
+      });
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "알 수 없는 오류 발생";
-
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: "WRONG_ANSWER", message: errorMessage },
-      ]);
+      console.error(err);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = "런타임 에러";
+        return updatedResults;
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -210,7 +207,7 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
-          submitResults={submitResults}
+          submissionResults={submissionResults}
         />
       </S.TestBoxLayout>
       {errorCode && (
