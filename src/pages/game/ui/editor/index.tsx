@@ -2,13 +2,20 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
-import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
+import AceEditor from "react-ace";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
+
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as S from "./style";
 
@@ -28,7 +35,7 @@ export const CodeEditor = () => {
   }>();
 
   const [code, setCode] = useState<string>("");
-  const [languages, setLanguage] = useState<string>("PYTHON");
+  const [language, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +45,6 @@ export const CodeEditor = () => {
 
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
-  const [submissionResult, setSubmissionResult] = useState<string>("");
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -59,9 +65,9 @@ export const CodeEditor = () => {
   useEffect(() => {
     if (problemId) {
       localStorage.setItem(`code_${problemId}`, code);
-      localStorage.setItem(`language_${problemId}`, languages);
+      localStorage.setItem(`language_${problemId}`, language);
     }
-  }, [code, languages, problemId]);
+  }, [code, language, problemId]);
 
   const handleModalClose = () => {
     setErrorCode(null);
@@ -94,7 +100,7 @@ export const CodeEditor = () => {
         contestId: Number(contestId),
         problemId: Number(problemId),
         sourcecode: code,
-        language: languages,
+        language: language.toUpperCase(),
       });
 
       setSubmissionResults((prevResults) => {
@@ -115,13 +121,13 @@ export const CodeEditor = () => {
   };
 
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage.toUpperCase());
+    setLanguage(selectedLanguage.toLowerCase());
     setFileName(file);
 
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
-        selectedLanguage.toUpperCase(),
+        selectedLanguage.toLowerCase(),
       );
     }
   };
@@ -138,7 +144,7 @@ export const CodeEditor = () => {
       const res = await getTestcase({
         id: Number(problemId),
         sourcecode: code,
-        language: languages,
+        language: language.toUpperCase(),
       });
       setTestResult([...res]);
     } catch (err) {
@@ -187,16 +193,20 @@ export const CodeEditor = () => {
           </S.Button>
         </S.ButtonBox>
       </S.HeaderBox>
-      <Editor
-        theme="vs-dark"
-        height="18rem"
+      <AceEditor
+        mode={language === "c" ? "c_cpp" : language}
+        theme="monokai"
+        height="20rem"
         width="100%"
-        defaultLanguage={languages.toLowerCase()}
+        fontSize={16}
         value={code}
         onChange={(value) => setCode(value || "")}
-        options={{
-          fontSize: 16,
+        setOptions={{
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: true,
         }}
+        editorProps={{ $blockScrolling: true }}
       />
       <S.TestBoxLayout>
         <TestBox
