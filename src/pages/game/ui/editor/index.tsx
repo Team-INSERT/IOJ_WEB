@@ -208,7 +208,6 @@ export const CodeEditor = () => {
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
-          enableSnippets: true,
         }}
         editorProps={{ $blockScrolling: true }}
       />
