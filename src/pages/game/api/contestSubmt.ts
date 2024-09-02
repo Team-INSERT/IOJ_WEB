@@ -7,15 +7,5 @@ interface SubmitRequest {
   language: string;
 }
 
-interface SubmitResponse {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
-
-export const contestSubmit = async (requestBody: SubmitRequest) => {
-  const response = await customAxios.post<SubmitResponse>(
-    "/contest/execution",
-    requestBody,
-  );
-  return response.data;
-};
+export const contestSubmit = async (requestBody: SubmitRequest) =>
+  (await customAxios.post("/contest/execution", requestBody)).data;

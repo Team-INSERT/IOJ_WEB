@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Layout = styled.div`
   ${flex.COLUMN_VERTICAL}
-  padding: 5rem 21rem 0 21rem;
+  padding: 4rem 0 4rem 0;
 `;
 export const Title = styled.div`
   ${NexonFont.NexonBigTitle}

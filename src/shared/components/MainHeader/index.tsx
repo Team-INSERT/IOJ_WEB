@@ -27,10 +27,10 @@ const MainHeader = () => {
   const headerItemClick = (url: string, id: number) => {
     if (id === 2) {
       if (!isLogin) {
-        setIsModalOpen(true)
+        setIsModalOpen(true);
         return;
       }
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.location.replace(url);
     } else {
       navigate(url);
     }
@@ -53,11 +53,11 @@ const MainHeader = () => {
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      setIsLogin(true)
+      setIsLogin(true);
     } else {
-      setIsLogin(false)
+      setIsLogin(false);
     }
-  },[])
+  }, []);
 
   return (
     <>
