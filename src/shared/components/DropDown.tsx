@@ -36,6 +36,20 @@ const ArrowIcon = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease;
 `;
 
+const BaseButton = styled.button`
+  background-color: ${theme.insertBlue};
+  color: ${theme.white};
+  border: none;
+  &:hover {
+    background-color: ${theme.blueNormalHover};
+  }
+  padding: 7px 10px;
+  ${NexonFont.NexonSmallText}
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  min-width: 75px;
+`;
 interface DropdownProps {
   // eslint-disable-next-line no-unused-vars
   onSelectLanguage: (language: string, file: string) => void;
@@ -87,10 +101,10 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
 
   return (
     <DropdownContainer>
-      <Button mode="small" color="blue" font="nexon" onClick={toggleDropdown}>
+      <BaseButton onClick={toggleDropdown}>
         {selectedItem}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
-      </Button>
+      </BaseButton>
       <DropdownContent open={isOpen}>
         <DropdownItem onClick={() => handleItemClick("JAVA")}>
           JAVA
