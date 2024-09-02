@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { deleteCookie, getCookie, setCookie } from "./cookie/cookie";
 
 export const customAxios: AxiosInstance = axios.create({
-  baseURL: "http://182.218.148.184:8888",
+  baseURL: "",
 });
 
 customAxios.interceptors.request.use((data) => {
@@ -21,21 +21,19 @@ customAxios.interceptors.response.use(
       return Promise.reject(err);
     }
     try {
+      const BASE_URL = process.env.REACT_APP_BASE_URL;
       const refreshToken = getCookie("refreshToken");
-      const { data } = await axios.post(
-        "http://182.218.148.184:8888/auth/refresh",
-        {
-          refreshToken,
-        },
-      );
-      setCookie("accessToken",data.accessToken)
+      const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {
+        refreshToken,
+      });
+      setCookie("accessToken", data.accessToken);
       return undefined;
     } catch (refreshErr) {
-      alert("토큰이 만료되거나 존재하지 않습니다! 다시 로그인 해주세요.")
-      deleteCookie("accessToken")
-      deleteCookie("refreshToken")
-      localStorage.clear()
-      window.location.replace("/login")
+      alert("토큰이 만료되거나 존재하지 않습니다! 다시 로그인 해주세요.");
+      deleteCookie("accessToken");
+      deleteCookie("refreshToken");
+      localStorage.clear();
+      window.location.replace("/login");
       return Promise.reject(refreshErr);
     }
   },
