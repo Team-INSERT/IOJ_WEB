@@ -80,7 +80,6 @@ export const CodeEditor = () => {
         id: Number(problemId),
         sourcecode: code,
       });
-      console.log(response);
     } catch (err: any) {
       if (err.response) {
         setErrorCode(err.response.data.code);
@@ -91,6 +90,11 @@ export const CodeEditor = () => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) {
+      setIsModalOpen(true);
+      return;
+    }
+
     setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
     setIsSubmitting(true);
     setActiveTab("results");
@@ -215,7 +219,6 @@ export const CodeEditor = () => {
           testResult={testResult}
           isTestLoading={isTestLoading}
           submissionResults={submissionResults}
-          isSubmitting={isSubmitting}
         />
       </S.TestBoxLayout>
       {errorCode && (
