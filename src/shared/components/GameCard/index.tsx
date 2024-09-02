@@ -22,23 +22,23 @@ const GameCard = ({ mode }: Modetype) => {
     {
       id: 1,
       markup: BasicMarkUp,
-      mode: "베이직 모드",
-      subtitle1: "다양한 아이템으로",
-      subtitle2: "여러가지 반전을 즐겨보세요!",
+      mode: "경쟁전",
+      subtitle1: "여러 플레이어와",
+      subtitle2: "치열한 경쟁을 즐겨보세요!",
     },
     {
       id: 2,
       markup: ContestMarkUp,
-      mode: "대회 모드",
-      subtitle1: "많은 사람들과 대회를 해서",
-      subtitle2: "랭킹을 높혀봐요!",
+      mode: "대회",
+      subtitle1: "지금까지 갈고닦았던",
+      subtitle2: "실력으로 모두를 이겨봐요!",
     },
     {
       id: 3,
       markup: CustomMarkUp,
-      mode: "커스텀 모드",
-      subtitle1: "자유롭게 게임을 만들어서",
-      subtitle2: "다양한 경험을 할 수 있어요!",
+      mode: "사용자 지정",
+      subtitle1: "게임을 만들어서",
+      subtitle2: "여러가지 게임을 즐겨봐요",
     },
     {
       id: 4,
@@ -81,10 +81,8 @@ const GameCard = ({ mode }: Modetype) => {
         <img src={detail.markup} alt={`${detail.mode} 이미지`} />
       </S.ImgContainer>
       <S.Details $bgImage={background}>
-        {mode === "대회 모드" && <ContestLogo />}
-        {mode === "커스텀 모드" || mode === "베이직 모드" ? (
-          <CustomLogo />
-        ) : null}
+        {mode === "대회" && <ContestLogo />}
+        {mode === "사용자 지정" || mode === "경쟁전" ? <CustomLogo /> : null}
         {mode === "문제 모아보기" && <AllQuestionsLogo />}
         {mode === "역대 전적" && <HistoryLogo />}
         <S.Title>{detail.mode}</S.Title>
