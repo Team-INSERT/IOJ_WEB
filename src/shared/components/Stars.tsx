@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Star from "@/assets/Star";
-import BlueStar from "@/assets/BlueStar";
+import { theme } from "../style";
 
 interface StarsProps {
   read?: boolean;
@@ -20,16 +20,29 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
       setCurrentStarsValue(index + 1);
     }
   };
+  // 숫자 인덱스를 명시적으로 사용하도록 인덱스 시그니처 정의
+  const colorMap: { [key: number]: string } = {
+    1: `${theme.blueNormal}`,
+    2: `${theme.blueNormalHover}`,
+    3: `${theme.blueNormalActive}`,
+    4: `${theme.blueDark}`,
+    5: `${theme.blueDarkHover}`,
+  };
+  const getColor = (index: number) => colorMap[currentStarsValue] || "grey";
 
   return (
     <>
-      {[0,1,2,3,4].map((_, index) => (
+      {[0, 1, 2, 3, 4].map((_, index) => (
         <span
           onClick={() => handleClick(index)}
           style={{ cursor: setting ? "pointer" : "default" }}
           key={_}
         >
-          {index < currentStarsValue ? <BlueStar /> : <Star />}
+          {index < currentStarsValue ? (
+            <Star color={getColor(index)} />
+          ) : (
+            <Star color="grey" />
+          )}
         </span>
       ))}
     </>
