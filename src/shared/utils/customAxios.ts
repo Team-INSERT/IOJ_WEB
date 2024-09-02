@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { deleteCookie, getCookie, setCookie } from "./cookie/cookie";
 
 export const customAxios: AxiosInstance = axios.create({
-  baseURL: "",
+  baseURL: process.env.REACT_APP_BASE_URL,
 });
 
 customAxios.interceptors.request.use((data) => {
