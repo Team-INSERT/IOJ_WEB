@@ -3,7 +3,8 @@ export interface testcaseType {
   output: string;
 }
 
-export interface problemDetailType {
+export interface problemInfoProps {
+  id?: string;
   title: string;
   level: number;
   content: string;
@@ -39,5 +40,4 @@ export interface TestBoxProps {
   testResult: TestCaseType[];
   isTestLoading: boolean;
   submissionResults: string[];
-  isSubmitting: boolean;
 }

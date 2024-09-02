@@ -1,30 +1,15 @@
 import { Stars } from "@/shared/components";
 import { useEffect, useRef, useState } from "react";
+import { problemInfoProps } from "@/pages/game/interfaces/gameInterfaces";
 import * as S from "./style";
-
-interface testcaseType {
-  input: string;
-  output: string;
-}
-
-interface problemInfoProps {
-  id: string;
-  title: string;
-  timeLimit: number;
-  memory: number;
-  problemInfo: string;
-  inputInfo: string;
-  level: number;
-  testcases: testcaseType[];
-}
 
 export const Problem = ({
   id,
   title,
   timeLimit,
-  memory,
-  problemInfo,
-  inputInfo,
+  memoryLimit,
+  content,
+  inputContent,
   level,
   testcases,
 }: problemInfoProps) => {
@@ -82,14 +67,14 @@ export const Problem = ({
           시간 제한 <S.span>: {timeLimit} Sec</S.span>
         </S.TimeBox>
         <S.Memory>
-          메모리 제한 <S.span>: {memory} MB</S.span>
+          메모리 제한 <S.span>: {memoryLimit} MB</S.span>
         </S.Memory>
       </S.MiniBox>
       <S.ProblemContentBox>
         <S.Problem>문제</S.Problem>
-        <S.ProblemContent>{problemInfo}</S.ProblemContent>
+        <S.ProblemContent>{inputContent}</S.ProblemContent>
         <S.Problem>입력</S.Problem>
-        <S.ProblemContent>{inputInfo}</S.ProblemContent>
+        <S.ProblemContent>{content}</S.ProblemContent>
       </S.ProblemContentBox>
       <S.Case>
         {testcases.map((example, index) => (
