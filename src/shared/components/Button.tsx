@@ -97,6 +97,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
     switch (mode) {
       case "big":
         return css`
+          width: auto;
           padding: 12px 60px;
           font-weight: 700 !important;
           ${Pretendard.Text}
@@ -109,20 +110,24 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
       case "small":
         return font === "nexon"
           ? css`
+              width: auto;
               padding: 7px 16px;
               ${NexonFont.NexonSmallText}
             `
           : css`
+              width: auto;
               padding: 7px 16px;
               ${Pretendard.SmallText}
             `;
       case "choose":
         return css`
+          width: auto;
           padding: 6px 14px;
           ${Pretendard.SmallText}
         `;
       case "warn":
         return css`
+          width: auto;
           padding: 5px 10px;
           ${Pretendard.SmallText}
         `;
@@ -132,6 +137,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
   })();
 
   return css`
+    white-space: nowrap;
     ${colorStyles}
     ${modeStyles}
   `;

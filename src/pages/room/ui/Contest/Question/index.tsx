@@ -34,7 +34,6 @@ export const ContestQuestion = () => {
       try {
         const res: Contest = await contestProblem(parseInt(contestId, 10));
         setContestDetail(res);
-        console.log(res);
       } catch (err: any) {
         if (err.response) {
           setErrorCode(err.response.data.code);
@@ -110,9 +109,8 @@ export const ContestQuestion = () => {
             mode="small"
             color="blue"
             onClick={() => {
-              navigate(`/game/contest/ranking/${contestId}`, {
-                state: { title: contestDetail.title },
-              });
+              const url = `/game/contest/ranking/${contestId}?title=${encodeURIComponent(contestDetail.title)}`;
+              window.open(url, "_blank");
             }}
           >
             순위보러가기

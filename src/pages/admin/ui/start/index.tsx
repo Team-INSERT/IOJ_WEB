@@ -7,9 +7,9 @@ export const Start = () => {
 
   const handleClick = (type: string) => {
     if (type === "contest") {
-      navigate("/admin/main");
+      navigate("/admin/contest");
     } else if (type === "question") {
-      navigate("/admin/Question");
+      navigate("/admin/question");
     }
   };
 

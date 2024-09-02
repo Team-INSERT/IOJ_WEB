@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { NexonFont, theme } from "../style";
@@ -36,8 +36,24 @@ const ArrowIcon = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease;
 `;
 
+const BaseButton = styled.button`
+  background-color: ${theme.insertBlue};
+  color: ${theme.white};
+  border: none;
+  &:hover {
+    background-color: ${theme.blueNormalHover};
+  }
+  padding: 7px 10px;
+  ${NexonFont.NexonSmallText}
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  min-width: 75px;
+`;
 interface DropdownProps {
+  // eslint-disable-next-line no-unused-vars
   onSelectLanguage: (language: string, file: string) => void;
+  problemId: string;
 }
 
 const extensions: { [key: string]: string } = {
@@ -47,34 +63,37 @@ const extensions: { [key: string]: string } = {
   cpp: "cpp",
 };
 
-const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
+const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string>("Python");
+  const [selectedItem, setSelectedItem] = useState<string>("PYTHON");
 
-  const handleItemClick = (item: string) => {
-    let language = item.toLowerCase();
+  const handleItemClick = useCallback(
+    (item: string) => {
+      let language = item.toLowerCase();
 
-    if (language === "c++") {
-      language = "cpp";
-    }
+      if (language === "c++") {
+        language = "cpp";
+      }
 
-    const extension = extensions[language];
-    const file = `Main.${extension}`;
+      const extension = extensions[language];
+      const file = `Main.${extension}`;
 
-    setSelectedItem(item);
-    setIsOpen(false);
+      setSelectedItem(item);
+      setIsOpen(false);
 
-    localStorage.setItem("selectedLanguage", item);
-    onSelectLanguage(language, file);
-  };
+      localStorage.setItem(`language_${problemId}`, item);
+      onSelectLanguage(language, file);
+    },
+    [problemId, onSelectLanguage],
+  );
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
+    const savedLanguage = localStorage.getItem(`language_${problemId}`);
     if (savedLanguage) {
       setSelectedItem(savedLanguage);
       handleItemClick(savedLanguage);
     }
-  }, []);
+  }, [handleItemClick, problemId]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -82,16 +101,16 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage }) => {
 
   return (
     <DropdownContainer>
-      <Button mode="small" color="blue" font="nexon" onClick={toggleDropdown}>
+      <BaseButton onClick={toggleDropdown}>
         {selectedItem}
         <ArrowIcon open={isOpen}>▲</ArrowIcon>
-      </Button>
+      </BaseButton>
       <DropdownContent open={isOpen}>
         <DropdownItem onClick={() => handleItemClick("JAVA")}>
           JAVA
         </DropdownItem>
-        <DropdownItem onClick={() => handleItemClick("Python")}>
-          Python
+        <DropdownItem onClick={() => handleItemClick("PYTHON")}>
+          PYTHON
         </DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C++")}>C++</DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C")}>C</DropdownItem>

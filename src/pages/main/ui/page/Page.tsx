@@ -30,13 +30,15 @@ export const Main = () => {
     } else {
       setIsLogin(false);
     }
+    const BASEURL = process.env.REACT_APP_BASE_URL;
+    console.log(BASEURL);
   }, []);
 
   const gameStartClick = () => {
     if (!isLogin) {
       setIsModalOpen(true);
     } else {
-      window.open("/game", "_blank", "noopener");
+      navigate("/game");
     }
   };
 

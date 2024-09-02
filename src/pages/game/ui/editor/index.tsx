@@ -2,13 +2,20 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
-import Editor from "@monaco-editor/react";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
+import AceEditor from "react-ace";
 import { TestBox } from "../testbox";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
+
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as S from "./style";
 
@@ -20,11 +27,6 @@ interface TestCase {
   verdict: string;
 }
 
-interface SubmitResult {
-  status: "ACCEPTED" | "WRONG_ANSWER";
-  message: string;
-}
-
 export const CodeEditor = () => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
@@ -33,7 +35,7 @@ export const CodeEditor = () => {
   }>();
 
   const [code, setCode] = useState<string>("");
-  const [languages, setLanguage] = useState<string>("PYTHON");
+  const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +45,8 @@ export const CodeEditor = () => {
 
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
-  const [submitResults, setSubmitResults] = useState<SubmitResult[]>([]);
+  const [submissionResults, setSubmissionResults] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [input, setInput] = useState<string>("");
 
@@ -121,33 +124,50 @@ export const CodeEditor = () => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
+    setIsSubmitting(true);
     setActiveTab("results");
+
     try {
       const res = await contestSubmit({
         contestId: Number(contestId),
         problemId: Number(problemId),
         sourcecode: code,
-        language: languages,
+        language: languages.toUpperCase(),
       });
 
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: res.status, message: res.message },
-      ]);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = res;
+        return updatedResults;
+      });
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "알 수 없는 오류 발생";
-
-      setSubmitResults((prevResults) => [
-        ...prevResults,
-        { status: "WRONG_ANSWER", message: errorMessage },
-      ]);
+      console.error(err);
+      setSubmissionResults((prevResults) => {
+        const updatedResults = [...prevResults];
+        updatedResults[0] = "런타임 에러";
+        return updatedResults;
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage.toUpperCase());
+    setLanguage(selectedLanguage.toLowerCase());
     setFileName(file);
+
+    if (problemId) {
+      localStorage.setItem(
+        `language_${problemId}`,
+        selectedLanguage.toLowerCase(),
+      );
+    }
   };
 
   const onTestcaseClick = async () => {
@@ -162,7 +182,7 @@ export const CodeEditor = () => {
       const res = await getTestcase({
         id: Number(problemId),
         sourcecode: code,
-        language: languages,
+        language: languages.toUpperCase(),
       });
       setTestResult([...res]);
     } catch (err) {
@@ -190,11 +210,8 @@ export const CodeEditor = () => {
             <Dropdown
               onSelectLanguage={(selectedLanguage, file) => {
                 handleLanguageChange(selectedLanguage, file);
-                localStorage.setItem(
-                  `language_${problemId}`,
-                  selectedLanguage.toUpperCase(),
-                );
               }}
+              problemId={problemId!}
             />
           </S.Button>
           <S.Button onClick={onTestcaseClick}>
@@ -214,16 +231,19 @@ export const CodeEditor = () => {
           </S.Button>
         </S.ButtonBox>
       </S.HeaderBox>
-      <Editor
-        theme="vs-dark"
-        height="18rem"
+      <AceEditor
+        mode={languages === "c" ? "c_cpp" : languages}
+        theme="monokai"
+        height="20rem"
         width="100%"
-        defaultLanguage={languages.toLowerCase()}
+        fontSize={16}
         value={code}
-        onChange={(value) => setCode(value || "")}
-        options={{
-          fontSize: 16,
+        onChange={(value: any) => setCode(value || "")}
+        setOptions={{
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
         }}
+        editorProps={{ $blockScrolling: true }}
       />
       <S.TestBoxLayout>
         <TestBox
@@ -231,11 +251,12 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
-          submitResults={submitResults}
+          submitResults={submissionResults}
           onInputChange={handleInputChange}
           onSubmit={handleInputSubmit}
           consoleOutput={consoleOutput}
           isExecutionActive={isExecutionActive}
+          submissionResults={submissionResults}
         />
       </S.TestBoxLayout>
       {errorCode && (
