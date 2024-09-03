@@ -71,11 +71,11 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
     const savedLanguage = localStorage.getItem(`language_${problemId}`);
     if (savedLanguage) {
       const uppercaseLanguage = savedLanguage.toUpperCase();
-      setSelectedItem(uppercaseLanguage); // 대문자로 표시
+      setSelectedItem(uppercaseLanguage);
       const language = uppercaseLanguage.toLowerCase();
       const extension = extensions[language === "cpp" ? "cpp" : language];
       const file = `Main.${extension}`;
-      onSelectLanguage(language, file); // 소문자로 콜백 호출
+      onSelectLanguage(language, file);
     }
   }, [problemId, onSelectLanguage]);
 
