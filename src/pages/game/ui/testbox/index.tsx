@@ -24,6 +24,9 @@ export const TestBox = ({
   const [acceptCount, setAcceptCount] = useState(0);
   const [executeInput, setExecuteInput] = useState("");
   const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
+  const [executionActive, setExecutionActive] = useState(isExecutionActive);
+  const [readonly, setReadonly] = useState(isExecutionActive);
+  const [shouldStopExecution, setShouldStopExecution] = useState(true);
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -90,11 +93,12 @@ export const TestBox = ({
     .join("\n");
 
   const handleInputSubmit = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && executeInput.trim() !== "") {
       event.preventDefault();
       console.log(`Input submitted: ${executeInput}`);
+      setExecutionActive(true);
+      setReadonly(true);
       onSubmit(executeInput);
-      setExecuteInput("");
     }
   };
 
@@ -118,30 +122,42 @@ export const TestBox = ({
       <S.Content>
         {activeTab === "execution" && (
           <>
-            <S.TestBox>
-              <S.Text>
-                프로세스가 시작되었습니다. (입력값을 직접 입력해주세요.)
-              </S.Text>
-              <S.Button>
-                <Button mode="small" color="red">
-                  정지
-                </Button>
-              </S.Button>
-            </S.TestBox>
-            <S.Text>
-              {">"}
-              <S.ExecuteInput
-                placeholder="입력하세요."
-                type="text"
-                value={executeInput}
-                onChange={(e) => setExecuteInput(e.target.value)}
-                onKeyDown={handleInputSubmit}
-                disabled={!isExecutionActive}
-              />
-            </S.Text>
-            <S.ExecuteResult>{consoleOutput}</S.ExecuteResult>
+            {!isExecutionActive && (
+              <>
+                <S.TestBox>
+                  <S.Text>
+                    프로세스가 시작되었습니다. (입력값을 직접 입력해주세요.)
+                  </S.Text>
+                  <S.Button>
+                    <Button mode="small" color="red">
+                      정지
+                    </Button>
+                  </S.Button>
+                </S.TestBox>
+                <S.Text>
+                  {">"}
+                  <S.ExecuteInput
+                    placeholder="입력하세요."
+                    type="text"
+                    value={executeInput}
+                    onChange={(e) => setExecuteInput(e.target.value)}
+                    onKeyDown={handleInputSubmit}
+                    disabled={isExecutionActive}
+                    readOnly={readonly}
+                  />
+                </S.Text>
+              </>
+            )}
+            <S.ExecuteResult>
+              {consoleOutput.split("\n").map((line, index) => (
+                <div key={line.length}>
+                  {index === 0 ? <S.Text>{line}</S.Text> : line}
+                </div>
+              ))}
+            </S.ExecuteResult>
           </>
         )}
+
         {activeTab === "testCases" &&
           (isErrorOutput(testResult[0]?.verdict) && !isTestLoading ? (
             <>
