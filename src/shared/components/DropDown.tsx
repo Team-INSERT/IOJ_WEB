@@ -50,8 +50,8 @@ const BaseButton = styled.button`
   text-align: left;
   min-width: 75px;
 `;
+
 interface DropdownProps {
-  // eslint-disable-next-line no-unused-vars
   onSelectLanguage: (language: string, file: string) => void;
   problemId: string;
 }
@@ -70,17 +70,19 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
   useEffect(() => {
     const savedLanguage = localStorage.getItem(`language_${problemId}`);
     if (savedLanguage) {
-      setSelectedItem(savedLanguage);
-      const language = savedLanguage.toLowerCase();
-      const extension = extensions[language === "c++" ? "cpp" : language];
+      const uppercaseLanguage = savedLanguage.toUpperCase();
+      setSelectedItem(uppercaseLanguage); // 대문자로 표시
+      const language = uppercaseLanguage.toLowerCase();
+      const extension = extensions[language === "cpp" ? "cpp" : language];
       const file = `Main.${extension}`;
-      onSelectLanguage(language, file);
+      onSelectLanguage(language, file); // 소문자로 콜백 호출
     }
   }, [problemId, onSelectLanguage]);
 
   const handleItemClick = useCallback(
     (item: string) => {
-      let language = item.toLowerCase();
+      const uppercaseItem = item.toUpperCase();
+      let language = uppercaseItem.toLowerCase();
 
       if (language === "c++") {
         language = "cpp";
@@ -89,10 +91,10 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
       const extension = extensions[language];
       const file = `Main.${extension}`;
 
-      setSelectedItem(item);
+      setSelectedItem(uppercaseItem);
       setIsOpen(false);
 
-      localStorage.setItem(`language_${problemId}`, item);
+      localStorage.setItem(`language_${problemId}`, uppercaseItem);
       onSelectLanguage(language, file);
     },
     [problemId, onSelectLanguage],
