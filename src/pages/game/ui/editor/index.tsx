@@ -87,13 +87,13 @@ export const CodeEditor = () => {
   const handleExecution = () => {
     if (client && userSessionId) {
       setConsoleOutput("");
-      setIsExecutionActive(true);
+      setIsExecutionActive(false);
       client.publish({
         destination: "/app/execute",
         body: JSON.stringify({
           sessionId: userSessionId,
           sourcecode: code,
-          language: languages,
+          language: languages.toUpperCase(),
         }),
       });
     }
@@ -102,7 +102,7 @@ export const CodeEditor = () => {
   const handleInputSubmit = (userResultInput: string) => {
     if (client && userSessionId) {
       client.publish({
-        destination: "/app/input",
+        destination: `/app/input`,
         body: JSON.stringify({
           sessionId: userSessionId,
           input: userResultInput,
@@ -251,7 +251,6 @@ export const CodeEditor = () => {
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
-          submitResults={submissionResults}
           onInputChange={handleInputChange}
           onSubmit={handleInputSubmit}
           consoleOutput={consoleOutput}
