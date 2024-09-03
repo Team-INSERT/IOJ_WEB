@@ -67,6 +67,17 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("PYTHON");
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem(`language_${problemId}`);
+    if (savedLanguage) {
+      setSelectedItem(savedLanguage);
+      const language = savedLanguage.toLowerCase();
+      const extension = extensions[language === "c++" ? "cpp" : language];
+      const file = `Main.${extension}`;
+      onSelectLanguage(language, file);
+    }
+  }, [problemId, onSelectLanguage]);
+
   const handleItemClick = useCallback(
     (item: string) => {
       let language = item.toLowerCase();
@@ -86,14 +97,6 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
     },
     [problemId, onSelectLanguage],
   );
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem(`language_${problemId}`);
-    if (savedLanguage) {
-      setSelectedItem(savedLanguage);
-      handleItemClick(savedLanguage);
-    }
-  }, [handleItemClick, problemId]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
