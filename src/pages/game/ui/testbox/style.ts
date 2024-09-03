@@ -40,6 +40,21 @@ export const Text = styled.p`
   margin-bottom: 2%;
 `;
 
+export const ExecuteInput = styled.input`
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  padding: 5px;
+  width: 80%;
+  ${Pretendard.SmallText}
+  background-color: ${theme.black};
+  color: ${theme.white};
+`;
+
+export const ExecuteResult = styled.div`
+  ${Pretendard.SmallText}
+`;
+
 export const TestCasesHeader = styled.h2`
   ${Pretendard.SmallText}
   margin-bottom: 10px;
