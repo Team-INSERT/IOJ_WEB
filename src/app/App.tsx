@@ -3,7 +3,6 @@ import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
-import { Setting } from "@/pages/setting";
 import {
   GameHome,
   ContestList,
@@ -12,6 +11,7 @@ import {
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail } from "@/pages/problem";
+import { Ai } from "@/pages/game/ai/ui/page/page";
 
 const App = () => {
   useAuthService();
@@ -21,7 +21,7 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route path="/game" element={<GameHome />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/setting" element={<Setting />} />
+        <Route path="/setting" element={<Ai />} />
         <Route path="/game/contest" element={<ContestList />} />
         <Route path="/game/contest/:contestId" element={<ContestQuestion />} />
         <Route
