@@ -3,6 +3,7 @@ import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
+import { NotFound } from "@/pages/not-found/Not-found";
 import {
   GameHome,
   ContestList,
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />
         <Route path="/problem/1" element={<ProblemDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
