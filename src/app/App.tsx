@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />
         <Route path="/problem/1" element={<ProblemDetail />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </Router>
   );
