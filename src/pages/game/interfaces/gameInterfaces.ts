@@ -44,4 +44,5 @@ export interface TestBoxProps {
   consoleOutput: string;
   onSubmit: (userInput: string) => void;
   submissionResults: string[];
+  disconnectWebSocket: () => void; // 새로 추가된 속성
 }
