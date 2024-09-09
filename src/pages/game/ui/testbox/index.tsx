@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Button from "@/shared/components/Button";
+import React, { useEffect, useState, useRef } from "react";
 import { theme } from "@/shared/style";
+import Button from "@/shared/components/Button";
+import { Terminal } from "xterm";
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
 import {
   TestBoxProps,
   problemInfoProps,
 } from "../../interfaces/gameInterfaces";
+import "xterm/css/xterm.css";
 
 export const TestBox = ({
   activeTab,
@@ -14,19 +16,21 @@ export const TestBox = ({
   testResult,
   isTestLoading,
   consoleOutput,
-  onSubmit,
+  onSubmit, // CodeEditor로 입력 값을 전달하는 함수
   isExecutionActive,
   submissionResults,
+  disconnectWebSocket,
 }: TestBoxProps) => {
   const { pathname } = window.location;
   const segments = pathname.split("/");
   const problemNum = parseInt(segments[segments.length - 1], 10);
   const [acceptCount, setAcceptCount] = useState(0);
-  const [executeInput, setExecuteInput] = useState("");
   const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
-  const [executionActive, setExecutionActive] = useState(isExecutionActive);
-  const [readonly, setReadonly] = useState(isExecutionActive);
-  const [shouldStopExecution, setShouldStopExecution] = useState(true);
+  const terminalRef = useRef<HTMLDivElement | null>(null); // 터미널 DOM 참조
+  const terminalInstance = useRef<Terminal | null>(null); // 터미널 인스턴스
+  const inputBuffer = useRef<string>(""); // 입력 버퍼 관리
+  const [isInputDisabled, setIsInputDisabled] = useState(false); // 입력 차단 상태
+  const [isProcessFinished, setIsProcessFinished] = useState(false); // 프로세스 종료 상태
 
   useEffect(() => {
     const countAcceptedTestCases = testResult.filter(
@@ -92,15 +96,68 @@ export const TestBox = ({
     )
     .join("\n");
 
-  const handleInputSubmit = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" && executeInput.trim() !== "") {
-      event.preventDefault();
-      console.log(`Input submitted: ${executeInput}`);
-      setExecutionActive(true);
-      setReadonly(true);
-      onSubmit(executeInput);
+  // 터미널 초기화 함수
+  const initializeTerminal = () => {
+    if (terminalRef.current && !terminalInstance.current) {
+      terminalInstance.current = new Terminal({
+        cursorBlink: true,
+        scrollback: 1000,
+        tabStopWidth: 4,
+      });
+      terminalInstance.current.open(terminalRef.current);
     }
   };
+
+  // 터미널 초기화 및 재설정
+  const resetTerminal = () => {
+    if (terminalInstance.current) {
+      terminalInstance.current.clear(); // 터미널 화면 초기화
+      terminalInstance.current.write("> "); // 프롬프트 표시
+      setIsProcessFinished(false); // 프로세스 종료 상태 리셋
+    }
+  };
+
+  useEffect(() => {
+    initializeTerminal();
+  }, [onSubmit]);
+
+  useEffect(() => {
+    if (consoleOutput && terminalInstance.current) {
+      if (!consoleOutput.includes("Process finished with exit code 0")) {
+        terminalInstance.current.writeln(consoleOutput);
+      } else {
+        terminalInstance.current.writeln("Process finished with exit code 0");
+        disconnectWebSocket();
+        setIsProcessFinished(true); // 종료 상태 설정
+      }
+    }
+  }, [consoleOutput]);
+
+  // 터미널 입력 처리
+  useEffect(() => {
+    if (terminalInstance.current) {
+      terminalInstance.current.onData((data) => {
+        if (!isProcessFinished) {
+          if (data === "\r" || data === "\n") {
+            if (inputBuffer.current.trim() !== "") {
+              terminalInstance.current?.writeln("");
+              onSubmit(inputBuffer.current); // 서버로 입력값 전달
+              inputBuffer.current = "";
+            }
+          } else if (data === "\u007F") {
+            // 백스페이스 처리
+            if (inputBuffer.current.length > 0) {
+              inputBuffer.current = inputBuffer.current.slice(0, -1);
+              terminalInstance.current?.write("\b \b");
+            }
+          } else {
+            inputBuffer.current += data;
+            terminalInstance.current?.write(data);
+          }
+        }
+      });
+    }
+  }, [onSubmit, isProcessFinished]);
 
   return (
     <S.Container>
@@ -121,41 +178,17 @@ export const TestBox = ({
       </S.TabContainer>
       <S.Content>
         {activeTab === "execution" && (
-          <>
-            {!isExecutionActive && (
-              <>
-                <S.TestBox>
-                  <S.Text>
-                    프로세스가 시작되었습니다. (입력값을 직접 입력해주세요.)
-                  </S.Text>
-                  <S.Button>
-                    <Button mode="small" color="red">
-                      정지
-                    </Button>
-                  </S.Button>
-                </S.TestBox>
-                <S.Text>
-                  {">"}
-                  <S.ExecuteInput
-                    placeholder="입력하세요."
-                    type="text"
-                    value={executeInput}
-                    onChange={(e) => setExecuteInput(e.target.value)}
-                    onKeyDown={handleInputSubmit}
-                    disabled={isExecutionActive}
-                    readOnly={readonly}
-                  />
-                </S.Text>
-              </>
-            )}
-            <S.ExecuteResult>
-              {consoleOutput.split("\n").map((line, index) => (
-                <div key={line.length}>
-                  {index === 0 ? <S.Text>{line}</S.Text> : line}
-                </div>
-              ))}
-            </S.ExecuteResult>
-          </>
+          <S.ExecuteResult>
+            <div
+              ref={terminalRef}
+              style={{
+                width: "100%",
+                height: "fit-content",
+                backgroundColor: "#000",
+                marginTop: "10px",
+              }}
+            />
+          </S.ExecuteResult>
         )}
 
         {activeTab === "testCases" &&

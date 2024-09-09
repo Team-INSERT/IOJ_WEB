@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
@@ -51,17 +51,15 @@ export const CodeEditor = () => {
   const [input, setInput] = useState<string>("");
 
   const {
-    client,
-    userSessionId,
+    clientRef, // useRef로 반환
+    sessionIdRef,
     consoleOutput,
     isExecutionActive,
     setConsoleOutput,
     setIsExecutionActive,
+    connectWebSocket,
+    disconnectWebSocket,
   } = useWebSocket();
-
-  useEffect(() => {
-    setIsExecutionActive(false);
-  }, [setIsExecutionActive]);
 
   useEffect(() => {
     if (problemId) {
@@ -84,10 +82,14 @@ export const CodeEditor = () => {
     }
   }, [code, languages, problemId]);
 
-  const handleExecution = () => {
+  const handleExecution = useCallback(async () => {
+    await connectWebSocket(); // 웹소켓 새로 연결
+
+    const client = clientRef.current;
+    const userSessionId = sessionIdRef.current;
+
     if (client && userSessionId) {
-      setConsoleOutput("");
-      setIsExecutionActive(false);
+      setConsoleOutput(""); // 터미널 초기화
       client.publish({
         destination: "/app/execute",
         body: JSON.stringify({
@@ -96,23 +98,42 @@ export const CodeEditor = () => {
           language: languages.toUpperCase(),
         }),
       });
-    }
-  };
-
-  const handleInputSubmit = (userResultInput: string) => {
-    if (client && userSessionId) {
-      client.publish({
-        destination: `/app/input`,
-        body: JSON.stringify({
-          sessionId: userSessionId,
-          input: userResultInput,
-        }),
-      });
-      setInput("");
     } else {
-      console.log("Execution is not active or session is invalid.");
+      console.log("WebSocket client or session ID is not ready.");
     }
-  };
+  }, [
+    clientRef,
+    sessionIdRef,
+    code,
+    languages,
+    connectWebSocket,
+    setConsoleOutput,
+  ]);
+
+  const handleInputSubmit = useCallback(
+    (userResultInput: string) => {
+      const client = clientRef.current; // 최신 client 참조
+      const userSessionId = sessionIdRef.current;
+
+      if (client && userSessionId) {
+        client.publish({
+          destination: "/app/input",
+          body: JSON.stringify({
+            sessionId: userSessionId,
+            input: userResultInput,
+          }),
+        });
+        setInput("");
+      } else {
+        console.log(
+          "WebSocket client or session ID is not ready.",
+          client,
+          userSessionId,
+        );
+      }
+    },
+    [clientRef, sessionIdRef],
+  );
 
   const handleInputChange = (userInput: string) => {
     setInput(userInput);
@@ -256,6 +277,7 @@ export const CodeEditor = () => {
           consoleOutput={consoleOutput}
           isExecutionActive={isExecutionActive}
           submissionResults={submissionResults}
+          disconnectWebSocket={disconnectWebSocket}
         />
       </S.TestBoxLayout>
       {errorCode && (
