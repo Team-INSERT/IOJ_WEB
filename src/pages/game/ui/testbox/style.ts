@@ -138,3 +138,7 @@ export const ResultBox = styled.div`
   color: ${theme.white};
   border-radius: 4px;
 `;
+
+export const Trmt = styled.div`
+  text-align: left !important; /* 터미널 텍스트를 좌측 정렬 */
+`;
