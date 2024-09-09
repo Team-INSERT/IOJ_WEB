@@ -11,11 +11,11 @@ import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
 
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as S from "./style";
 
@@ -178,16 +178,15 @@ export const CodeEditor = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage.toLowerCase());
+    setLanguage(selectedLanguage); // 소문자 형태로 저장
     setFileName(file);
 
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
-        selectedLanguage.toLowerCase(),
-      );
+        selectedLanguage.toUpperCase(),
+      ); // 로컬 스토리지에 대문자로 저장
     }
   };
 
@@ -253,7 +252,11 @@ export const CodeEditor = () => {
         </S.ButtonBox>
       </S.HeaderBox>
       <AceEditor
-        mode={languages === "c" ? "c_cpp" : languages}
+        mode={
+          ["c", "cpp"].includes(languages.toLowerCase())
+            ? "c_cpp"
+            : languages.toLowerCase()
+        }
         theme="monokai"
         height="20rem"
         width="100%"
