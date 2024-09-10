@@ -114,6 +114,7 @@ export const CodeEditor = () => {
       });
     } catch (err: any) {
       console.error(err);
+      setErrorCode(err.response.data.code);
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = "런타임 에러";
@@ -124,14 +125,14 @@ export const CodeEditor = () => {
     }
   };
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage); // 소문자 형태로 저장
+    setLanguage(selectedLanguage);
     setFileName(file);
 
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
         selectedLanguage.toUpperCase(),
-      ); // 로컬 스토리지에 대문자로 저장
+      );
     }
   };
 
@@ -224,7 +225,10 @@ export const CodeEditor = () => {
         />
       </S.TestBoxLayout>
       {errorCode && (
-        <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
+        <ErrorModal
+          errorCode={errorCode}
+          onClose={() => navigate(`/game/contest/${contestId}`)}
+        />
       )}
     </S.EditorLayout>
   );

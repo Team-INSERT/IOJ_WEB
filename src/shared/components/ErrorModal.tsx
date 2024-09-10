@@ -12,6 +12,7 @@ const errorMessages: Record<string, string> = {
   "USER-403-3": "요청한 사용자의 2학년 권한이 존재하지 않습니다.",
   "USER-403-4": "요청한 사용자의 1학년 권한이 존재하지 않습니다.",
   "USER-404-1": "요청한 사용자가 존재하지 않습니다.",
+  "PROBLEM-409-1": "이미 해결된 문제입니다.",
 };
 
 const ErrorModal = ({ errorCode, onClose }: ErrorModalProps) => {
