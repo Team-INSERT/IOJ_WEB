@@ -48,7 +48,7 @@ export const useWebSocket = () => {
                 `/topic/error/${sessionId}`,
                 (message: IMessage) => {
                   console.log("Received error:", message.body);
-                  setConsoleOutput((prev) => `${prev}\nERROR: ${message.body}`);
+                  setConsoleOutput(() => `${message.body}`);
                 },
               );
             }
