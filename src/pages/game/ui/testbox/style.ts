@@ -20,6 +20,7 @@ export const TabContainer = styled.div`
   background-color: ${theme.grey900};
   position: fixed;
   width: 100%;
+  z-index: 1;
 `;
 
 export const Tab = styled.div<TabProps>`
@@ -38,17 +39,6 @@ export const Content = styled.div`
 export const Text = styled.p`
   ${Pretendard.SmallText}
   margin-bottom: 2%;
-`;
-
-export const ExecuteInput = styled.input`
-  border: none;
-  outline: none;
-  margin-left: 10px;
-  padding: 5px;
-  width: 80%;
-  ${Pretendard.SmallText}
-  background-color: ${theme.black};
-  color: ${theme.white};
 `;
 
 export const ExecuteResult = styled.div`
