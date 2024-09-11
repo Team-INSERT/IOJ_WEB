@@ -5,6 +5,7 @@ import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import AceEditor from "react-ace";
+import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
 import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
@@ -48,6 +49,10 @@ export const CodeEditor = () => {
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  const [submitStatus, setSubmitStatus] = useState<
+    "Correct" | "RunTime" | "InCorrect" | null
+  >(null);
+
   useEffect(() => {
     if (problemId) {
       const savedCode = localStorage.getItem(`code_${problemId}`);
@@ -88,7 +93,6 @@ export const CodeEditor = () => {
       }
     }
   };
-
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
@@ -112,6 +116,17 @@ export const CodeEditor = () => {
         updatedResults[0] = res;
         return updatedResults;
       });
+
+      // 응답 값에 따라 submitStatus를 설정
+      if (res === "ACCEPTED") {
+        setSubmitStatus("Correct");
+      } else if (res === "WRONG_ANSWER") {
+        setSubmitStatus("InCorrect");
+      } else if (res === "RUNTIME_ERROR") {
+        setSubmitStatus("RunTime");
+      } else {
+        setSubmitStatus("InCorrect");
+      }
     } catch (err: any) {
       console.error(err);
       setSubmissionResults((prevResults) => {
@@ -119,19 +134,22 @@ export const CodeEditor = () => {
         updatedResults[0] = "런타임 에러";
         return updatedResults;
       });
+
+      setSubmitStatus("RunTime");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage); // 소문자 형태로 저장
+    setLanguage(selectedLanguage);
     setFileName(file);
 
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
         selectedLanguage.toUpperCase(),
-      ); // 로컬 스토리지에 대문자로 저장
+      );
     }
   };
 
@@ -196,6 +214,7 @@ export const CodeEditor = () => {
           </S.Button>
         </S.ButtonBox>
       </S.HeaderBox>
+      {submitStatus && <Submit mode={submitStatus} />}
       <AceEditor
         mode={
           ["c", "cpp"].includes(language.toLowerCase())

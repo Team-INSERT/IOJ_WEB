@@ -20,7 +20,6 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
       setCurrentStarsValue(index + 1);
     }
   };
-  // 숫자 인덱스를 명시적으로 사용하도록 인덱스 시그니처 정의
   const colorMap: { [key: number]: string } = {
     1: `${theme.blueNormal}`,
     2: `${theme.blueNormalHover}`,
