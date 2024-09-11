@@ -87,15 +87,21 @@ export const CodeEditor = () => {
   }, [code, languages, problemId]);
 
   const handleExecution = useCallback(async () => {
+    if (isTestLoading) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    setActiveTab("execution");
     testBoxRef.current?.resetAndEnableTerminal();
-    setInputDisabled(false); 
-    await connectWebSocket(); // 웹소켓 새로 연결
+    setInputDisabled(false);
+    await connectWebSocket();
 
     const client = clientRef.current;
     const userSessionId = sessionIdRef.current;
 
     if (client && userSessionId) {
-      setConsoleOutput(""); // 터미널 초기화
+      setConsoleOutput("");
       client.publish({
         destination: "/app/execute",
         body: JSON.stringify({
@@ -104,17 +110,11 @@ export const CodeEditor = () => {
           language: languages.toUpperCase(),
         }),
       });
+      setActiveTab("execution");
     } else {
       console.log("WebSocket client or session ID is not ready.");
     }
-  }, [
-    clientRef,
-    sessionIdRef,
-    code,
-    languages,
-    connectWebSocket,
-    setConsoleOutput,
-  ]);
+  }, [isTestLoading, connectWebSocket, clientRef, sessionIdRef, setConsoleOutput, code, languages]);
 
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
@@ -149,6 +149,12 @@ export const CodeEditor = () => {
     setErrorCode(null);
     navigate("/game/contest");
   };
+  useEffect(() => {
+    // Disable input when process finishes
+    if (consoleOutput.includes("Process finished with exit code 0")) {
+      setInputDisabled(true); // Disable input on process finish
+    }
+  }, [consoleOutput]);
 
   const handleSubmit = async () => {
     if (isSubmitting) {
@@ -289,6 +295,7 @@ export const CodeEditor = () => {
           isExecutionActive={isExecutionActive}
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
+          isInputDisabled={isInputDisabled} // Pass state to TestBox
         />
       </S.TestBoxLayout>
       {errorCode && (
