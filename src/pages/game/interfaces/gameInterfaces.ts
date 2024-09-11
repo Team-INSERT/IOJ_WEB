@@ -46,3 +46,7 @@ export interface TestBoxProps {
   submissionResults: string[];
   disconnectWebSocket: () => void; // 새로 추가된 속성
 }
+
+export interface TestBoxHandles {
+  resetAndEnableTerminal: () => void;
+}

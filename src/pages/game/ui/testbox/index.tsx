@@ -13,12 +13,9 @@ import { gameDetail } from "../../api/gameDetail";
 import {
   TestBoxProps,
   problemInfoProps,
+  TestBoxHandles,
 } from "../../interfaces/gameInterfaces";
 import "xterm/css/xterm.css";
-
-interface TestBoxHandles {
-  resetAndEnableTerminal: () => void;
-}
 
 export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
   (
@@ -29,6 +26,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       isTestLoading,
       consoleOutput,
       onSubmit, // CodeEditor로 입력 값을 전달하는 함수
+      isExecutionActive,
       submissionResults,
       disconnectWebSocket,
     },
@@ -42,8 +40,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const terminalRef = useRef<HTMLDivElement | null>(null); // 터미널 DOM 참조
     const terminalInstance = useRef<Terminal | null>(null); // 터미널 인스턴스
     const inputBuffer = useRef<string>(""); // 입력 버퍼 관리
-    const [isInputDisabled, setIsInputDisabled] = useState(false); // 입력 차단 상태
     const [isProcessFinished, setIsProcessFinished] = useState(false); // 프로세스 종료 상태
+    const [isInputDisabled, setIsInputDisabled] = useState(false); // 터미널 입력 비활성화 상태
 
     useEffect(() => {
       const countAcceptedTestCases = testResult.filter(
@@ -110,35 +108,18 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       )
       .join("\n");
 
-    // 터미널 인스턴스를 초기화하는 함수
-    const initializeTerminal = () => {
-      if (terminalRef.current && !terminalInstance.current) {
-        terminalInstance.current = new Terminal({
-          cursorBlink: true,
-          scrollback: 1000,
-          tabStopWidth: 4,
-        });
-        terminalInstance.current.open(terminalRef.current);
-      }
-    };
-
-    // 컴포넌트가 마운트될 때 터미널 초기화
-    useEffect(() => {
-      initializeTerminal();
-    }, []);
-
     // 외부에서 호출할 수 있게 메소드를 노출
     useImperativeHandle(ref, () => ({
       resetAndEnableTerminal: () => {
         if (terminalInstance.current) {
-          terminalInstance.current.reset();
+          terminalInstance.current.reset(); // 터미널 초기화
+          terminalInstance.current?.writeln("프로세스가 실행됩니다.");
+          terminalInstance.current?.writeln("");
+          setIsInputDisabled(false); // 입력 가능하게 설정
+          setIsProcessFinished(false); // 프로세스 종료 상태 초기화
         }
       },
     }));
-
-    useEffect(() => {
-      initializeTerminal();
-    }, [onSubmit]);
 
     useEffect(() => {
       if (consoleOutput && terminalInstance.current) {
@@ -148,35 +129,55 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           terminalInstance.current.writeln("Process finished with exit code 0");
           disconnectWebSocket();
           setIsProcessFinished(true); // 종료 상태 설정
+          setIsInputDisabled(true); // 입력 비활성화
         }
       }
     }, [consoleOutput]);
 
-    // 터미널 입력 처리
     useEffect(() => {
-      if (terminalInstance.current) {
-        terminalInstance.current.onData((data) => {
-          if (!isProcessFinished) {
-            if (data === "\r" || data === "\n") {
-              if (inputBuffer.current.trim() !== "") {
-                terminalInstance.current?.writeln("");
-                onSubmit(inputBuffer.current); // 서버로 입력값 전달
-                inputBuffer.current = "";
+      const initializeTerminal = () => {
+        if (terminalRef.current && !terminalInstance.current) {
+          terminalInstance.current = new Terminal({
+            cursorBlink: true,
+            scrollback: 1000,
+            tabStopWidth: 4,
+          });
+          terminalInstance.current.open(terminalRef.current);
+          terminalInstance.current.writeln("프로세스가 실행됩니다.");
+          terminalInstance.current.writeln("");
+
+          // 터미널 입력 이벤트 리스너 등록
+          terminalInstance.current.onData((data) => {
+            // 입력이 비활성화되어 있지 않고 프로세스가 종료되지 않은 경우에만 실행
+            if (!isInputDisabled && !isProcessFinished) {
+              if (data === "\r" || data === "\n") {
+                if (inputBuffer.current.trim() !== "") {
+                  terminalInstance.current?.writeln(""); // 개행
+                  onSubmit(inputBuffer.current); // 서버로 입력값 전달
+                  inputBuffer.current = ""; // 입력 버퍼 초기화
+                  setIsInputDisabled(true); // 입력 비활성화
+                }
+              } else if (data === "\u007F") {
+                // 백스페이스 처리
+                if (inputBuffer.current.length > 0) {
+                  inputBuffer.current = inputBuffer.current.slice(0, -1);
+                  terminalInstance.current?.write("\b \b");
+                }
+              } else {
+                inputBuffer.current += data; // 입력 버퍼에 데이터 추가
+                terminalInstance.current?.write(data); // 터미널에 입력 표시
               }
-            } else if (data === "\u007F") {
-              // 백스페이스 처리
-              if (inputBuffer.current.length > 0) {
-                inputBuffer.current = inputBuffer.current.slice(0, -1);
-                terminalInstance.current?.write("\b \b");
-              }
-            } else {
-              inputBuffer.current += data;
-              terminalInstance.current?.write(data);
             }
-          }
-        });
+          });
+        }
+      };
+
+      if (isExecutionActive) {
+        initializeTerminal(); // 터미널 초기화
+        setIsProcessFinished(false); // 프로세스 종료 상태 초기화
+        setIsInputDisabled(false); // 입력 활성화
       }
-    }, [onSubmit, isProcessFinished]);
+    }, [isExecutionActive, onSubmit, isInputDisabled, isProcessFinished]);
 
     return (
       <S.Container>

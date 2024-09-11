@@ -33,7 +33,9 @@ export const CodeEditor = () => {
     contestId: string;
     problemId: string;
   }>();
-  const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(null);
+  const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(
+    null,
+  );
 
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
@@ -48,6 +50,7 @@ export const CodeEditor = () => {
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isInputDisabled, setInputDisabled] = useState(false); // Add state to control terminal input disable
 
   const [input, setInput] = useState<string>("");
 
@@ -85,6 +88,7 @@ export const CodeEditor = () => {
 
   const handleExecution = useCallback(async () => {
     testBoxRef.current?.resetAndEnableTerminal();
+    setInputDisabled(false); 
     await connectWebSocket(); // 웹소켓 새로 연결
 
     const client = clientRef.current;
