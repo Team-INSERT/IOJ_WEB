@@ -54,6 +54,17 @@ export const CodeEditor = () => {
   >(null);
 
   useEffect(() => {
+    if (submitStatus) {
+      const timer = setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [submitStatus]);
+
+  useEffect(() => {
     if (problemId) {
       const savedCode = localStorage.getItem(`code_${problemId}`);
       const savedLanguage = localStorage.getItem(`language_${problemId}`);
@@ -117,7 +128,6 @@ export const CodeEditor = () => {
         return updatedResults;
       });
 
-      // 응답 값에 따라 submitStatus를 설정
       if (res === "ACCEPTED") {
         setSubmitStatus("Correct");
       } else if (res === "WRONG_ANSWER") {

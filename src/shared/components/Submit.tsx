@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { ReactComponent as CorrectModal } from "@/assets/CorrectModal.svg";
 import { ReactComponent as InCorrectModal } from "@/assets/Submit.svg";
 import { NexonFont } from "../style";
@@ -23,6 +23,17 @@ const modeStyles = (mode: SubmitMode) => {
   }
 };
 
+const slideInOpacity = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
 const SubmitDiv = styled.div<SubmitProps>`
   display: flex;
   align-items: center;
@@ -31,6 +42,9 @@ const SubmitDiv = styled.div<SubmitProps>`
   right: 1rem;
   top: 9rem;
   z-index: 100;
+
+  animation: ${slideInOpacity} 1.5s ease forwards;
+
   ${({ mode }) => modeStyles(mode)}
 `;
 
@@ -38,6 +52,8 @@ const TextOverlay = styled.div`
   position: absolute;
   color: white;
   ${NexonFont.NexonSmallText}
+  right :2rem;
+  animation: ${slideInOpacity} 1s ease forwards;
 `;
 
 const SubmitType: React.FC<SubmitProps> = ({ mode, ...props }) => (
