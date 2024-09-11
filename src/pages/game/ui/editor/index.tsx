@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
@@ -33,6 +33,7 @@ export const CodeEditor = () => {
     contestId: string;
     problemId: string;
   }>();
+  const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(null);
 
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
@@ -83,6 +84,7 @@ export const CodeEditor = () => {
   }, [code, languages, problemId]);
 
   const handleExecution = useCallback(async () => {
+    testBoxRef.current?.resetAndEnableTerminal();
     await connectWebSocket(); // 웹소켓 새로 연결
 
     const client = clientRef.current;
@@ -272,6 +274,7 @@ export const CodeEditor = () => {
       />
       <S.TestBoxLayout>
         <TestBox
+          ref={testBoxRef}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           testResult={testResult}
