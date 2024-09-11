@@ -38,10 +38,10 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const problemNum = parseInt(segments[segments.length - 1], 10);
     const [acceptCount, setAcceptCount] = useState(0);
     const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
-    const terminalRef = useRef<HTMLDivElement | null>(null); // 터미널 DOM 참조
-    const terminalInstance = useRef<Terminal | null>(null); // 터미널 인스턴스
-    const inputBuffer = useRef<string>(""); // 입력 버퍼 관리
-    const [isProcessFinished, setIsProcessFinished] = useState(false); // 프로세스 종료 상태
+    const terminalRef = useRef<HTMLDivElement | null>(null);
+    const terminalInstance = useRef<Terminal | null>(null);
+    const inputBuffer = useRef<string>("");
+    const [isProcessFinished, setIsProcessFinished] = useState(false);
     const inputDisableRef = useRef(isInputDisabled);
 
     useEffect(() => {

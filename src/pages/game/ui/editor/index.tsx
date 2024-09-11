@@ -55,7 +55,7 @@ export const CodeEditor = () => {
   const [input, setInput] = useState<string>("");
 
   const {
-    clientRef, // useRef로 반환
+    clientRef,
     sessionIdRef,
     consoleOutput,
     isExecutionActive,
@@ -118,7 +118,7 @@ export const CodeEditor = () => {
 
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
-      const client = clientRef.current; // 최신 client 참조
+      const client = clientRef.current;
       const userSessionId = sessionIdRef.current;
 
       if (client && userSessionId) {
@@ -150,9 +150,8 @@ export const CodeEditor = () => {
     navigate("/game/contest");
   };
   useEffect(() => {
-    // Disable input when process finishes
     if (consoleOutput.includes("Process finished with exit code 0")) {
-      setInputDisabled(true); // Disable input on process finish
+      setInputDisabled(true);
     }
   }, [consoleOutput]);
 
@@ -295,7 +294,7 @@ export const CodeEditor = () => {
           isExecutionActive={isExecutionActive}
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
-          isInputDisabled={isInputDisabled} // Pass state to TestBox
+          isInputDisabled={isInputDisabled}
         />
       </S.TestBoxLayout>
       {errorCode && (
