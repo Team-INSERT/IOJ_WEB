@@ -6,6 +6,7 @@ import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
 import AceEditor from "react-ace";
+import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
@@ -65,6 +66,21 @@ export const CodeEditor = () => {
     disconnectWebSocket,
   } = useWebSocket();
 
+  const [submitStatus, setSubmitStatus] = useState<
+    "Correct" | "RunTime" | "InCorrect" | null
+  >(null);
+
+  useEffect(() => {
+    if (submitStatus) {
+      const timer = setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [submitStatus]);
+
   useEffect(() => {
     if (problemId) {
       const savedCode = localStorage.getItem(`code_${problemId}`);
@@ -114,7 +130,15 @@ export const CodeEditor = () => {
     } else {
       console.log("WebSocket client or session ID is not ready.");
     }
-  }, [isTestLoading, connectWebSocket, clientRef, sessionIdRef, setConsoleOutput, code, languages]);
+  }, [
+    isTestLoading,
+    connectWebSocket,
+    clientRef,
+    sessionIdRef,
+    setConsoleOutput,
+    code,
+    languages,
+  ]);
 
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
@@ -153,8 +177,7 @@ export const CodeEditor = () => {
     if (consoleOutput.includes("Process finished with exit code 0")) {
       setInputDisabled(true);
     }
-  }, [consoleOutput]);
-
+  });
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
@@ -178,6 +201,16 @@ export const CodeEditor = () => {
         updatedResults[0] = res;
         return updatedResults;
       });
+
+      if (res === "ACCEPTED") {
+        setSubmitStatus("Correct");
+      } else if (res === "WRONG_ANSWER") {
+        setSubmitStatus("InCorrect");
+      } else if (res === "RUNTIME_ERROR") {
+        setSubmitStatus("RunTime");
+      } else {
+        setSubmitStatus("InCorrect");
+      }
     } catch (err: any) {
       console.error(err);
       setErrorCode(err.response.data.code);
@@ -186,10 +219,13 @@ export const CodeEditor = () => {
         updatedResults[0] = "런타임 에러";
         return updatedResults;
       });
+
+      setSubmitStatus("RunTime");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage);
     setFileName(file);
@@ -263,6 +299,7 @@ export const CodeEditor = () => {
           </S.Button>
         </S.ButtonBox>
       </S.HeaderBox>
+      {submitStatus && <Submit mode={submitStatus} />}
       <AceEditor
         mode={
           ["c", "cpp"].includes(languages.toLowerCase())
@@ -270,7 +307,7 @@ export const CodeEditor = () => {
             : languages.toLowerCase()
         }
         theme="monokai"
-        height="20rem"
+        height="18.5rem"
         width="100%"
         fontSize={16}
         value={code}
