@@ -20,6 +20,7 @@ export const TabContainer = styled.div`
   background-color: ${theme.grey900};
   position: fixed;
   width: 100%;
+  z-index: 1;
 `;
 
 export const Tab = styled.div<TabProps>`
@@ -38,6 +39,10 @@ export const Content = styled.div`
 export const Text = styled.p`
   ${Pretendard.SmallText}
   margin-bottom: 2%;
+`;
+
+export const ExecuteResult = styled.div`
+  ${Pretendard.SmallText}
 `;
 
 export const TestCasesHeader = styled.h2`
@@ -122,4 +127,8 @@ export const ResultBox = styled.div`
   background-color: ${theme.grey800};
   color: ${theme.white};
   border-radius: 4px;
+`;
+
+export const Trmt = styled.div`
+  text-align: left !important; /* 터미널 텍스트를 좌측 정렬 */
 `;
