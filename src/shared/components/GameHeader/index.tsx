@@ -117,12 +117,10 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
         </S.Clock>
       </S.ClockContainer>
       <S.Setting>
-        <Button mode="small" color="gray" font="nexon">
+        {/* <Button mode="small" color="gray" font="nexon">
           제출현황
-        </Button>
-        <S.LineContainer>
-          <S.Line />
-        </S.LineContainer>
+        </Button> */}
+        <S.LineContainer>{/* <S.Line /> */}</S.LineContainer>
         <Button mode="small" color="red" font="nexon" onClick={handleExit}>
           나가기
         </Button>
