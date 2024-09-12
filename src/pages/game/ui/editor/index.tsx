@@ -233,7 +233,7 @@ export const CodeEditor = () => {
             : language.toLowerCase()
         }
         theme="monokai"
-        height="20rem"
+        height="18.5rem"
         width="100%"
         fontSize={16}
         value={code}

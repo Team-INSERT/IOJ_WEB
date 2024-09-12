@@ -43,7 +43,7 @@ const SubmitDiv = styled.div<SubmitProps>`
   top: 9rem;
   z-index: 100;
 
-  animation: ${slideInOpacity} 1.5s ease forwards;
+  animation: ${slideInOpacity} 0.8s ease forwards;
 
   ${({ mode }) => modeStyles(mode)}
 `;
