@@ -50,11 +50,10 @@ export const CreateContest = () => {
   const [modalSubtitle, setModalSubtitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
   const [contests, setContests] = useState<contestTypes[]>([]);
+  const [questionInput, setQuestionInput] = useState("");
 
   const nameLengthRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
-
-  const questionsString = questions.join(", ");
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -68,18 +67,6 @@ export const CreateContest = () => {
     setModalTitle(title);
     setModalSubtitle(subtitle);
     setIsModalOpen(true);
-  };
-
-  const questionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    const questionArray = input
-      .split(",")
-      .map((question) => {
-        const num = parseInt(question.trim(), 10);
-        return !Number.isNaN(num) ? num : null;
-      })
-      .filter((question) => question !== null) as number[];
-    setQuestions(questionArray);
   };
 
   const onCreateClick = async () => {
@@ -148,6 +135,7 @@ export const CreateContest = () => {
         setStartDay({ date: "", time: "" });
         setEndDay({ date: "", time: "" });
         setQuestions([]);
+        setQuestionInput("")
         setJoinAuthority("");
       } catch (err) {
         showModal(
@@ -157,6 +145,18 @@ export const CreateContest = () => {
         );
       }
     }
+  };
+
+  const onQuestionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestionInput(e.target.value);
+
+    const questionNumbers = questionInput
+      .split(",")
+      .map((num) => num.trim())
+      .filter((num) => !Number.isNaN(Number(num)) && num !== "")
+      .map(Number);
+
+    setQuestions(questionNumbers);
   };
 
   useEffect(() => {
@@ -253,8 +253,8 @@ export const CreateContest = () => {
             <S.Subject>문제</S.Subject>
             <S.Input
               placeholder="문제번호를 입력하세요 (,로 구분)"
-              onChange={questionChange}
-              value={questionsString}
+              value={questionInput}
+              onChange={(e) => onQuestionInputChange(e)}
             />
           </S.QuestionLayout>
           <S.AuthorityLayout>
