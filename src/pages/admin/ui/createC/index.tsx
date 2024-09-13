@@ -1,3 +1,4 @@
+import { validateContest, formattedDate} from "@/shared/helper";
 import { Button, Footer, MainHeader } from "@/shared/components";
 import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
@@ -37,28 +38,22 @@ const ContestInfo = ({ label, value }: contestInfoType) => (
 );
 
 export const CreateContest = () => {
-  const today = new Date();
-  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const [startDay, setStartDay] = useState({ date: "", time: "" });
   const [endDay, setEndDay] = useState({ date: "", time: "" });
-  const [contestName, setContestName] = useState("");
-  const [questions, setQuestions] = useState<number[]>([]);
-  const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  const [joinAuthority, setJoinAuthority] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalSubtitle, setModalSubtitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  const [contestName, setContestName] = useState("");
   const [contests, setContests] = useState<contestTypes[]>([]);
+  const [questions, setQuestions] = useState<number[]>([]);
+  const [questionInput, setQuestionInput] = useState("");
 
   const nameLengthRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
-  const questionsString = questions.join(", ");
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
   const showModal = (
     status: "나쁨" | "좋음",
     title: string,
@@ -70,66 +65,29 @@ export const CreateContest = () => {
     setIsModalOpen(true);
   };
 
-  const questionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    const questionArray = input
-      .split(",")
-      .map((question) => {
-        const num = parseInt(question.trim(), 10);
-        return !Number.isNaN(num) ? num : null;
-      })
-      .filter((question) => question !== null) as number[];
-    setQuestions(questionArray);
-  };
-
   const onCreateClick = async () => {
     const startDateTime = `${startDay.date}T${startDay.time}`;
     const endDateTime = `${endDay.date}T${endDay.time}`;
     const todayDateTime = new Date();
 
-    if (contestName.length === 0) {
+    const validationResult = validateContest(
+      contestName,
+      startDateTime,
+      endDateTime,
+      todayDateTime,
+      questions,
+      joinAuthority
+    );
+
+    if (!validationResult.valid) {
       showModal(
-        "나쁨",
-        "대회명을 입력해주세요.",
-        "대회명은 필수로 입력되어야 합니다!",
+        validationResult.status,
+        validationResult.title,
+        validationResult.subtitle
       );
-    } else if (contestName.length < 2 || contestName.length > 22) {
-      showModal(
-        "나쁨",
-        "대회명을 입력해주세요.",
-        "대회명은 2자 이상 22자 이하여야합니다!",
-      );
-    } else if (startDateTime.length !== 16 || endDateTime.length !== 16) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "날짜와 시간은 모두 입력되어야 합니다!",
-      );
-    } else if (new Date(startDateTime) <= todayDateTime) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "시작 날짜와 시간은 현재 시각 이후여야 합니다.",
-      );
-    } else if (questions.length === 0) {
-      showModal(
-        "나쁨",
-        "문제를 입력해주세요.",
-        "문제는 한가지 이상 추가되어야 합니다!",
-      );
-    } else if (endDateTime <= startDateTime) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "끝나는 날짜와 시간이 시작되는 날짜와 시간보다 이전이거나 같을 수 없습니다!",
-      );
-    } else if (joinAuthority === "") {
-      showModal(
-        "나쁨",
-        "참가 권한을 선택해주세요.",
-        "참가 권한은 필수로 지정되어야 합니다!",
-      );
-    } else {
+      return;
+    }
+
       try {
         const postBody: postBodyProps = {
           title: contestName,
@@ -148,6 +106,7 @@ export const CreateContest = () => {
         setStartDay({ date: "", time: "" });
         setEndDay({ date: "", time: "" });
         setQuestions([]);
+        setQuestionInput("")
         setJoinAuthority("");
       } catch (err) {
         showModal(
@@ -156,7 +115,18 @@ export const CreateContest = () => {
           "사용자의 네트워크 연결상태를 확인해주세요.",
         );
       }
-    }
+  };
+
+  const onQuestionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestionInput(e.target.value);
+
+    const questionNumbers = questionInput
+      .split(",")
+      .map((num) => num.trim())
+      .filter((num) => !Number.isNaN(Number(num)) && num !== "")
+      .map(Number);
+
+    setQuestions(questionNumbers);
   };
 
   useEffect(() => {
@@ -253,8 +223,8 @@ export const CreateContest = () => {
             <S.Subject>문제</S.Subject>
             <S.Input
               placeholder="문제번호를 입력하세요 (,로 구분)"
-              onChange={questionChange}
-              value={questionsString}
+              value={questionInput}
+              onChange={(e) => onQuestionInputChange(e)}
             />
           </S.QuestionLayout>
           <S.AuthorityLayout>
@@ -314,7 +284,7 @@ export const CreateContest = () => {
           mode="알림"
           title={modalTitle}
           subtitle={modalSubtitle}
-          onClose={handleModalClose}
+          onClose={() => setIsModalOpen(false)}
           animation
         />
       )}
