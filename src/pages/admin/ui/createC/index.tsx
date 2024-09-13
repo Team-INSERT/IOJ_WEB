@@ -1,4 +1,4 @@
-import { validateContest } from "@/shared/helper/validateContestHelper";
+import { validateContest, formattedDate} from "@/shared/helper";
 import { Button, Footer, MainHeader } from "@/shared/components";
 import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
@@ -38,27 +38,22 @@ const ContestInfo = ({ label, value }: contestInfoType) => (
 );
 
 export const CreateContest = () => {
-  const today = new Date();
-  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const [startDay, setStartDay] = useState({ date: "", time: "" });
   const [endDay, setEndDay] = useState({ date: "", time: "" });
-  const [contestName, setContestName] = useState("");
-  const [questions, setQuestions] = useState<number[]>([]);
-  const [joinAuthority, setJoinAuthority] = useState("");
   const [minEndDate, setMinEndDate] = useState(formattedDate);
+  const [joinAuthority, setJoinAuthority] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalSubtitle, setModalSubtitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  const [contestName, setContestName] = useState("");
   const [contests, setContests] = useState<contestTypes[]>([]);
+  const [questions, setQuestions] = useState<number[]>([]);
   const [questionInput, setQuestionInput] = useState("");
 
   const nameLengthRef = useRef<HTMLParagraphElement>(null);
   const contestNameInputRef = useRef<HTMLInputElement>(null);
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
   const showModal = (
     status: "나쁨" | "좋음",
     title: string,
@@ -289,7 +284,7 @@ export const CreateContest = () => {
           mode="알림"
           title={modalTitle}
           subtitle={modalSubtitle}
-          onClose={handleModalClose}
+          onClose={() => setIsModalOpen(false)}
           animation
         />
       )}
