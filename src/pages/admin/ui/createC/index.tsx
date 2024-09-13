@@ -1,3 +1,4 @@
+import { validateContest } from "@/shared/helper/validateContestHelper";
 import { Button, Footer, MainHeader } from "@/shared/components";
 import React, { useState, useEffect, useRef } from "react";
 import { theme } from "@/shared/style";
@@ -74,49 +75,24 @@ export const CreateContest = () => {
     const endDateTime = `${endDay.date}T${endDay.time}`;
     const todayDateTime = new Date();
 
-    if (contestName.length === 0) {
+    const validationResult = validateContest(
+      contestName,
+      startDateTime,
+      endDateTime,
+      todayDateTime,
+      questions,
+      joinAuthority
+    );
+
+    if (!validationResult.valid) {
       showModal(
-        "나쁨",
-        "대회명을 입력해주세요.",
-        "대회명은 필수로 입력되어야 합니다!",
+        validationResult.status,
+        validationResult.title,
+        validationResult.subtitle
       );
-    } else if (contestName.length < 2 || contestName.length > 22) {
-      showModal(
-        "나쁨",
-        "대회명을 입력해주세요.",
-        "대회명은 2자 이상 22자 이하여야합니다!",
-      );
-    } else if (startDateTime.length !== 16 || endDateTime.length !== 16) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "날짜와 시간은 모두 입력되어야 합니다!",
-      );
-    } else if (new Date(startDateTime) <= todayDateTime) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "시작 날짜와 시간은 현재 시각 이후여야 합니다.",
-      );
-    } else if (questions.length === 0) {
-      showModal(
-        "나쁨",
-        "문제를 입력해주세요.",
-        "문제는 한가지 이상 추가되어야 합니다!",
-      );
-    } else if (endDateTime <= startDateTime) {
-      showModal(
-        "나쁨",
-        "날짜와 시간을 입력해주세요.",
-        "끝나는 날짜와 시간이 시작되는 날짜와 시간보다 이전이거나 같을 수 없습니다!",
-      );
-    } else if (joinAuthority === "") {
-      showModal(
-        "나쁨",
-        "참가 권한을 선택해주세요.",
-        "참가 권한은 필수로 지정되어야 합니다!",
-      );
-    } else {
+      return;
+    }
+
       try {
         const postBody: postBodyProps = {
           title: contestName,
@@ -144,7 +120,6 @@ export const CreateContest = () => {
           "사용자의 네트워크 연결상태를 확인해주세요.",
         );
       }
-    }
   };
 
   const onQuestionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
