@@ -9,6 +9,7 @@ export const Layout = styled.div`
 `;
 
 export const GameDetails = styled.div`
+  width: 30%;
   ${flex.FLEX}
   padding-left: 40px;
   ${NexonFont.NexonSmallText};
@@ -21,7 +22,7 @@ export const QuestionNumber = styled.div`
 `;
 
 export const ClockContainer = styled.div`
-  width: 70%;
+  width: 60%;
   ${flex.CENTER}
 `;
 
@@ -40,9 +41,10 @@ export const Time = styled.div`
 `;
 
 export const Setting = styled.div`
-  ${flex.FLEX}
-  margin-left: auto;
+  width: 30%;
+  display: flex;
   padding-right: 20px;
+  justify-content: flex-end;
 `;
 
 export const LineContainer = styled.div`
