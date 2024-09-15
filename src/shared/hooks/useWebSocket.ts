@@ -15,7 +15,7 @@ export const useWebSocket = () => {
   const connectWebSocket = async () =>
     new Promise<void>((resolve, reject) => {
       const { baseURL } = customAxios.defaults;
-      const socket = new SockJS(`${baseURL}/execution`);
+      const socket = new SockJS(`${baseURL}/ws`);
 
       const stompClient = new Client({
         webSocketFactory: () => socket,
