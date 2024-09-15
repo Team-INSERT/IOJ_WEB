@@ -119,7 +119,7 @@ export const CodeEditor = () => {
     if (client && userSessionId) {
       setConsoleOutput("");
       client.publish({
-        destination: "/app/execute",
+        destination: "/app/execution",
         body: JSON.stringify({
           sessionId: userSessionId,
           sourcecode: code,
