@@ -108,6 +108,11 @@ export const CodeEditor = () => {
       return;
     }
 
+    // 실행할 때마다 WebSocket 연결을 끊고 다시 연결
+    if (clientRef.current) {
+      disconnectWebSocket();
+    }
+
     setActiveTab("execution");
     testBoxRef.current?.resetAndEnableTerminal();
     setInputDisabled(false);
@@ -133,6 +138,7 @@ export const CodeEditor = () => {
   }, [
     isTestLoading,
     connectWebSocket,
+    disconnectWebSocket, // 추가
     clientRef,
     sessionIdRef,
     setConsoleOutput,
@@ -177,7 +183,7 @@ export const CodeEditor = () => {
     if (consoleOutput.includes("Process finished with exit code 0")) {
       setInputDisabled(true);
     }
-  });
+  }, [consoleOutput]);
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
