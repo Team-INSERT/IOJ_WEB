@@ -18,6 +18,7 @@ export interface RequestDataProps {
   title: string;
   content: string;
   inputContent: string;
+  outputContent: string;
   level: number;
   memoryLimit: number;
   timeLimit: number;
@@ -38,6 +39,7 @@ export const CreateQuestion = () => {
   const [problemTitle, setProblemTitle] = useState("");
   const [explain, setExplain] = useState("");
   const [inputExplain, setInputExplain] = useState("");
+  const [outputExplain, setOutputExplain] = useState("");
   const [problemMemoryLimit, setProblemMemoryLimit] = useState("");
   const [problemTimeLimit, setProblemTimeLimit] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
@@ -80,9 +82,10 @@ export const CreateQuestion = () => {
       title: problemTitle,
       content: explain,
       inputContent: inputExplain,
-      level: selectedLevel !== null ? selectedLevel : 1, // 기본값 설정
-      memoryLimit: parseInt(problemMemoryLimit, 10), // 문자열을 숫자로 변환
-      timeLimit: parseInt(problemTimeLimit, 10), // 문자열을 숫자로 변환
+      outputContent: outputExplain,
+      level: selectedLevel !== null ? selectedLevel : 1,
+      memoryLimit: parseInt(problemMemoryLimit, 10),
+      timeLimit: parseInt(problemTimeLimit, 10),
       testcases: testCases,
     };
     try {
@@ -115,9 +118,16 @@ export const CreateQuestion = () => {
           </S.Box>
           <S.Box>
             <S.Text>입력 설명</S.Text>
-            <S.InputInput
+            <S.ExplainInput
               value={inputExplain}
               onChange={(e) => setInputExplain(e.target.value)}
+            />
+          </S.Box>
+          <S.Box>
+            <S.Text>출력 설명</S.Text>
+            <S.ExplainInput
+              value={outputExplain}
+              onChange={(e) => setOutputExplain(e.target.value)}
             />
           </S.Box>
           <S.Box>
@@ -216,6 +226,10 @@ export const CreateQuestion = () => {
             <S.Problem>입력</S.Problem>
             <S.ProblemContent>
               {formatTextWithLineBreaks(inputExplain)}
+            </S.ProblemContent>
+            <S.Problem>출력</S.Problem>
+            <S.ProblemContent>
+              {formatTextWithLineBreaks(outputExplain)}
             </S.ProblemContent>
           </S.ProblemContentBox>
           <S.TestBox>
