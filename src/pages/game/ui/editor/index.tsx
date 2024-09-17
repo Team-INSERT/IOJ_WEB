@@ -48,10 +48,11 @@ export const CodeEditor = () => {
   >("execution");
 
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [isExecuteLoading, setIsExecuteLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isInputDisabled, setInputDisabled] = useState(false); // Add state to control terminal input disable
+  const [isInputDisabled, setInputDisabled] = useState(false);
 
   const [input, setInput] = useState<string>("");
 
@@ -61,7 +62,6 @@ export const CodeEditor = () => {
     consoleOutput,
     isExecutionActive,
     setConsoleOutput,
-    setIsExecutionActive,
     connectWebSocket,
     disconnectWebSocket,
   } = useWebSocket();
@@ -103,44 +103,49 @@ export const CodeEditor = () => {
   }, [code, languages, problemId]);
 
   const handleExecution = useCallback(async () => {
-    if (isTestLoading) {
+    if (isExecuteLoading) {
       setIsModalOpen(true);
       return;
     }
 
-    // 실행할 때마다 WebSocket 연결을 끊고 다시 연결
-    if (clientRef.current) {
-      disconnectWebSocket();
-    }
-
     setActiveTab("execution");
-    testBoxRef.current?.resetAndEnableTerminal();
-    setInputDisabled(false);
-    await connectWebSocket();
+    setIsExecuteLoading(true);
+    try {
+      if (clientRef.current) {
+        disconnectWebSocket();
+      }
+      testBoxRef.current?.resetAndEnableTerminal();
+      setInputDisabled(false);
+      await connectWebSocket();
 
-    const client = clientRef.current;
-    const userSessionId = sessionIdRef.current;
+      const client = clientRef.current;
+      const userSessionId = sessionIdRef.current;
 
-    if (client && userSessionId) {
-      setConsoleOutput("");
-      client.publish({
-        destination: "/app/execution",
-        body: JSON.stringify({
-          sessionId: userSessionId,
-          sourcecode: code,
-          language: languages.toUpperCase(),
-        }),
-      });
-      setActiveTab("execution");
-    } else {
-      console.log("WebSocket client or session ID is not ready.");
+      if (client && userSessionId) {
+        setConsoleOutput("");
+        client.publish({
+          destination: "/app/execution",
+          body: JSON.stringify({
+            sessionId: userSessionId,
+            sourcecode: code,
+            language: languages.toUpperCase(),
+          }),
+        });
+        setActiveTab("execution");
+      } else {
+        console.log("WebSocket client or session ID is not ready.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsExecuteLoading(false);
     }
   }, [
-    isTestLoading,
-    connectWebSocket,
-    disconnectWebSocket, // 추가
+    isExecuteLoading,
     clientRef,
+    connectWebSocket,
     sessionIdRef,
+    disconnectWebSocket,
     setConsoleOutput,
     code,
     languages,
