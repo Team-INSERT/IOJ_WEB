@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import Clock from "@/assets/Clock";
 import Button from "../Button";
@@ -24,6 +25,7 @@ interface ContestDetails {
 
 const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   const { pathname } = window.location;
+  const navigate = useNavigate();
   const segments = pathname.split("/");
   const contestId = parseInt(segments[segments.length - 3], 10);
 
@@ -31,7 +33,8 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   const [remainingTime, setRemainingTime] = useState("00 : 00 : 00");
 
   const handleExit = () => {
-    window.location.href = pathname.replace(/\/code\/\d+$/, "");
+    const newPath = pathname.replace(/\/code\/\d+$/, "");
+    navigate(newPath);
   };
 
   useEffect(() => {

@@ -225,7 +225,7 @@ export const ProblemContent = styled.p`
   ${Pretendard.SmallText};
   color: ${theme.grey900};
   font-weight: 500;
-  margin: 2% 0 4% 1%;
+  margin: 2% 0 4% 0;
   min-height: 2rem;
 `;
 
