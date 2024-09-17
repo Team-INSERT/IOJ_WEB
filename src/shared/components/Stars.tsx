@@ -34,7 +34,7 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
       {[0, 1, 2, 3, 4].map((_, index) => (
         <span
           onClick={() => handleClick(index)}
-          style={{ cursor: setting ? "pointer" : "default" }}
+          style={{ cursor: setting ? "pointer" : "default", display: "flex", alignItems: "center" }}
           key={_}
         >
           {index < currentStarsValue ? (
