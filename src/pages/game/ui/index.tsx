@@ -30,13 +30,13 @@ export const Game = () => {
     level: 0,
     content: "",
     inputContent: "",
+    outputContent: "",
     memoryLimit: 0,
     testcases: [],
     timeLimit: 0,
   });
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
-
   const findProblemIndexById = (problems: problemType[], id: number) =>
     problems.findIndex((item) => item.id === id);
 
@@ -79,6 +79,7 @@ export const Game = () => {
           memoryLimit={problem.memoryLimit}
           content={problem.content}
           inputContent={problem.inputContent}
+          outputContent={problem.outputContent}
           level={problem.level}
           testcases={problem.testcases}
         />
