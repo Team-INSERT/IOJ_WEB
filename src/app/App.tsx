@@ -3,7 +3,7 @@ import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
-import { Loading } from "@/pages/loading/index";
+import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
 import {
   GameHome,
@@ -12,7 +12,7 @@ import {
   ContestRanking,
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
-import { ProblemDetail } from "@/pages/problem";
+import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
 
 const App = () => {
@@ -37,6 +37,7 @@ const App = () => {
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />
+        <Route path="/problem" element={<ProblemList />} />
         <Route path="/problem/1" element={<ProblemDetail />} />
         <Route path="/google/callback" element={<Loading />} />
         <Route path="/*" element={<NotFound />} />
