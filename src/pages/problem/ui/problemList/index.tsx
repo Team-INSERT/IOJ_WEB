@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainHeader, Stars } from "@/shared/components";
 import { problemList } from "@/pages/problem/api/problemList";
 
@@ -11,6 +12,7 @@ interface ProblemsType {
 }
 
 export const ProblemList = () => {
+  const navigate = useNavigate()
   const [problems, setProblems] = useState<ProblemsType[]>();
 
   useEffect(() => {
@@ -43,7 +45,7 @@ export const ProblemList = () => {
             {problems?.map((item) => {
               const formattedId = String(item.id).padStart(4, "0")
               return (
-                <S.ProblemLayout>
+                <S.ProblemLayout onClick={() => navigate(`/problem/${item.id}`)}>
                   <S.ProblemData>{formattedId}</S.ProblemData>
                   <S.ProblemData>{item.title}</S.ProblemData>
                   <S.ProblemData>

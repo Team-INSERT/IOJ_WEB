@@ -38,7 +38,7 @@ const App = () => {
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />
         <Route path="/problem" element={<ProblemList />} />
-        <Route path="/problem/1" element={<ProblemDetail />} />
+        <Route path="/problem/:problemId" element={<ProblemDetail />} />
         <Route path="/google/callback" element={<Loading />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
