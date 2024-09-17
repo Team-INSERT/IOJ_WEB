@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MainHeader, Stars } from "@/shared/components";
+import { problemList } from "@/pages/problem/api/problemList";
 
 import * as S from "./style";
 
+interface ProblemsType {
+  id: number;
+  title: string;
+  level: number;
+}
+
 export const ProblemList = () => {
-  console.log();
+  const [problems, setProblems] = useState<ProblemsType[]>();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await problemList();
+        setProblems(res);
+      } catch (err) {
+        /**/
+      }
+    })();
+  }, []);
+
   return (
     <S.Main>
       <MainHeader />
@@ -21,41 +40,18 @@ export const ProblemList = () => {
             <S.Attribute>난이도</S.Attribute>
           </S.ListHeader>
           <S.ListContent>
-            <S.ProblemLayout>
-              <S.ProblemData>0001</S.ProblemData>
-              <S.ProblemData>제목입니다</S.ProblemData>
-              <S.ProblemData>
-                <Stars read value={3} />
-              </S.ProblemData>
-            </S.ProblemLayout>
-            <S.ProblemLayout>
-              <S.ProblemData>0001</S.ProblemData>
-              <S.ProblemData>제목입니다</S.ProblemData>
-              <S.ProblemData>
-                <Stars read value={3} />
-              </S.ProblemData>
-            </S.ProblemLayout>
-            <S.ProblemLayout>
-              <S.ProblemData>0001</S.ProblemData>
-              <S.ProblemData>제목입니다</S.ProblemData>
-              <S.ProblemData>
-                <Stars read value={3} />
-              </S.ProblemData>
-            </S.ProblemLayout>
-            <S.ProblemLayout>
-              <S.ProblemData>0001</S.ProblemData>
-              <S.ProblemData>제목입니다</S.ProblemData>
-              <S.ProblemData>
-                <Stars read value={3} />
-              </S.ProblemData>
-            </S.ProblemLayout>
-            <S.ProblemLayout>
-              <S.ProblemData>0001</S.ProblemData>
-              <S.ProblemData>제목입니다</S.ProblemData>
-              <S.ProblemData>
-                <Stars read value={3} />
-              </S.ProblemData>
-            </S.ProblemLayout>
+            {problems?.map((item) => {
+              const formattedId = String(item.id).padStart(4, "0")
+              return (
+                <S.ProblemLayout>
+                  <S.ProblemData>{formattedId}</S.ProblemData>
+                  <S.ProblemData>{item.title}</S.ProblemData>
+                  <S.ProblemData>
+                    <Stars read value={item.level} />
+                  </S.ProblemData>
+                </S.ProblemLayout>
+              );
+            })}
           </S.ListContent>
         </S.ListLayout>
       </S.Layout>

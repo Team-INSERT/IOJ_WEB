@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import SearchIcon from "@/assets/Search.svg"
 import { flex, Pretendard, RobotoMono, theme } from "@/shared/style";
 
 export const Main = styled.div`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #F6F6F6;
 `
 export const Layout = styled.div`
@@ -24,7 +25,15 @@ export const SearchInput = styled.input`
   height: 36px;
   border-radius: 4px;
   border: 1px solid ${theme.grey200};
-  padding: 9px 209px 9px 12px;
+  padding: 9px 40px 9px 12px;
+  background: url(${SearchIcon}) no-repeat right 12px center;
+  background-color: ${theme.white};
+  ${Pretendard.SmallText};
+  color: ${theme.grey800};
+  
+  &::placeholder {
+    color: ${theme.grey400};
+  }
 `;
 export const ListLayout = styled.div`
   background-color: ${theme.white};
@@ -62,9 +71,13 @@ export const ProblemLayout = styled.div`
   height: 40px;
   ${flex.START};
   border-bottom: 1px solid ${theme.grey200};
+  cursor: pointer;
   
   &:last-child {
     border: none;
+  }
+  &:hover {
+    background-color: #F9F9F9;
   }
 `
 export const ProblemData = styled.div`

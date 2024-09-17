@@ -1,15 +1,19 @@
 import styled from "styled-components";
-import { Pretendard, flex } from "@/shared/style";
+import { Pretendard, flex, theme } from "@/shared/style";
 
 export const Layout = styled.div`
   padding: 4px 8px;
-  gap: 35px;
-  ${flex.CENTER}
   border-radius: 4px;
-  background: var(--white, #fff);
+  background: ${theme.white};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+  ${flex.FLEX};
+  align-items: center;
 `;
+export const Properties = styled.div`
+  gap: 35px;
+  ${flex.START}
+`
 export const QustionNumber = styled.div`
   font-weight: bold;
   text-align: left;
@@ -30,5 +34,8 @@ export const Title = styled.div`
   ${Pretendard.Text}
 `;
 export const Stars = styled.div`
-  margin-left: auto;
+  position: absolute;
+  right: 8px;
+  transform: translateX(-90%);
+  ${flex.FLEX};
 `;

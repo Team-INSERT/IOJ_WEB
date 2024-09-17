@@ -15,10 +15,12 @@ const Question = ({ mode, qustionNumebr, number, title, level }: Details) => {
 
   return (
     <S.Layout>
-      <QuestionCategory mode={mode} />
-      <S.QustionNumber>{qustionNumebr}</S.QustionNumber>
-      <S.Number>{formattedNumber}</S.Number>
-      <S.Title>{title}</S.Title>
+      <S.Properties>
+        <QuestionCategory mode={mode} />
+        <S.QustionNumber>{qustionNumebr}</S.QustionNumber>
+        <S.Number>{formattedNumber}</S.Number>
+        <S.Title>{title}</S.Title>
+      </S.Properties>
       <S.Stars>
         <Stars read value={level} />
       </S.Stars>
