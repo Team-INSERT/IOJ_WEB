@@ -65,6 +65,7 @@ export const ProblemContent = styled.p`
   ${Pretendard.Text};
   color: ${theme.grey900};
   margin: 2% 0 4% 0;
+  white-space: pre-line;
 `;
 
 export const TestBox = styled.div`

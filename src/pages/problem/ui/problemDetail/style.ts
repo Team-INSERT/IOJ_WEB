@@ -70,7 +70,8 @@ export const SubTitleLayout = styled.div`
 `;
 export const ProblemInfo = styled.p`
   color: ${theme.grey900};
-  ${Pretendard.Text}
+  ${Pretendard.Text};
+  white-space: pre-line;
 `;
 export const ExampleLayout = styled.div`
   width: 100%;
