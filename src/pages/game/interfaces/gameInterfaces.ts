@@ -9,6 +9,7 @@ export interface problemInfoProps {
   level: number;
   content: string;
   inputContent: string;
+  outputContent: string;
   memoryLimit: number;
   testcases: testcaseType[];
   timeLimit: number;

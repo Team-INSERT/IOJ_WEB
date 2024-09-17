@@ -60,17 +60,6 @@ export const ExplainInput = styled.textarea`
   background: ${theme.white};
 `;
 
-export const InputInput = styled.textarea`
-  ${Pretendard.SmallText}
-  padding: 12px;
-  ${flex.FLEX}
-  width: 40rem;
-  height: 10rem;
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
-  background: ${theme.white};
-`;
-
 export const LebelBox = styled.div`
   ${flex.FLEX}
 `;
