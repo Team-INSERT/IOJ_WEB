@@ -21,12 +21,14 @@ customAxios.interceptors.response.use(
       return Promise.reject(err);
     }
     try {
+      deleteCookie("accessToken");
       const BASE_URL = process.env.REACT_APP_BASE_URL;
       const refreshToken = getCookie("refreshToken");
       const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {
         refreshToken,
       });
       setCookie("accessToken", data.accessToken);
+      window.location.reload();
       return undefined;
     } catch (refreshErr) {
       alert("토큰이 만료되거나 존재하지 않습니다! 다시 로그인 해주세요.");

@@ -30,7 +30,7 @@ const MainHeader = () => {
         setIsModalOpen(true);
         return;
       }
-      window.location.replace(url);
+      navigate(url)
     } else {
       navigate(url);
     }
