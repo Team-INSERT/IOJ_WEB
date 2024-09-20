@@ -66,6 +66,12 @@ export const CodeEditor = () => {
     disconnectWebSocket,
   } = useWebSocket();
 
+  const [executionActive, setExecutionActive] = useState(isExecutionActive);
+
+  useEffect(() => {
+    setExecutionActive(isExecutionActive);
+  }, [isExecutionActive]);
+
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
@@ -102,18 +108,26 @@ export const CodeEditor = () => {
     }
   }, [code, languages, problemId]);
 
+  useEffect(() => {
+    console.log(executionActive);
+  }, [executionActive]);
+
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
       return;
     }
+    if (activeTab !== "execution") {
+      setActiveTab("execution");
+    }
+    disconnectWebSocket();
 
-    setActiveTab("execution");
+    if (!executionActive) {
+      setExecutionActive(true);
+    }
+
     setIsExecuteLoading(true);
     try {
-      if (clientRef.current) {
-        disconnectWebSocket();
-      }
       testBoxRef.current?.resetAndEnableTerminal();
       setInputDisabled(false);
       await connectWebSocket();
@@ -149,6 +163,7 @@ export const CodeEditor = () => {
     setConsoleOutput,
     code,
     languages,
+    executionActive,
   ]);
 
   const handleInputSubmit = useCallback(
@@ -339,7 +354,7 @@ export const CodeEditor = () => {
           onInputChange={handleInputChange}
           onSubmit={handleInputSubmit}
           consoleOutput={consoleOutput}
-          isExecutionActive={isExecutionActive}
+          isExecutionActive={executionActive}
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}
