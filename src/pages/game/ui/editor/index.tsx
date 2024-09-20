@@ -82,9 +82,11 @@ export const CodeEditor = () => {
   }, [submitStatus]);
 
   useEffect(() => {
-    if (problemId) {
-      const savedCode = localStorage.getItem(`code_${problemId}`);
-      const savedLanguage = localStorage.getItem(`language_${problemId}`);
+    if (problemId && contestId) {
+      const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
+      const savedLanguage = localStorage.getItem(
+        `language_${contestId}_${problemId}`,
+      );
 
       if (savedCode) {
         setCode(savedCode);
@@ -93,14 +95,14 @@ export const CodeEditor = () => {
         setLanguage(savedLanguage);
       }
     }
-  }, [problemId]);
+  }, [problemId, contestId]);
 
   useEffect(() => {
-    if (problemId) {
-      localStorage.setItem(`code_${problemId}`, code);
-      localStorage.setItem(`language_${problemId}`, languages);
+    if (problemId && contestId) {
+      localStorage.setItem(`code_${contestId}_${problemId}`, code);
+      localStorage.setItem(`language_${contestId}_${problemId}`, languages);
     }
-  }, [code, languages, problemId]);
+  }, [code, languages, problemId, contestId]);
 
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
@@ -291,6 +293,7 @@ export const CodeEditor = () => {
                 handleLanguageChange(selectedLanguage, file);
               }}
               problemId={problemId!}
+              contestId={contestId!}
             />
           </S.Button>
           <S.Button onClick={onTestcaseClick}>
