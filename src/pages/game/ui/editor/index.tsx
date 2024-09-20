@@ -18,6 +18,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as S from "./style";
+import { boilerplateCode } from "../../api/boilerplateCode";
 
 interface TestCase {
   index: number;
@@ -46,13 +47,19 @@ export const CodeEditor = () => {
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [boilerplate, setBoilerplate] = useState("");
 
-  const boilerplateCode: { [key: string]: string } = {
-    python: ``,
-    cpp: `function solution() {\n    // Your code here\n}`,
-    java: `public class Main {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}`,
-    c: `#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}`,
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await boilerplateCode(language);
+        setBoilerplate(res);
+        setCode(res);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [language]);
 
   useEffect(() => {
     if (problemId) {
@@ -62,34 +69,13 @@ export const CodeEditor = () => {
       if (savedCode) {
         setCode(savedCode);
       } else {
-        setCode(boilerplateCode[language]);
+        setCode(boilerplate);
       }
       if (savedLanguage) {
         setLanguage(savedLanguage);
       }
     }
   }, [problemId]);
-
-  useEffect(() => {
-    const getCode = localStorage.getItem(`code_${problemId}`);
-    if (getCode) {
-      // 로컬스토리지의 코드가 보일러플레이트와 같다면, 새로운 언어의 보일러플레이트 코드로 바꿈
-      if (
-        getCode === boilerplateCode.python ||
-        getCode === boilerplateCode.javascript ||
-        getCode === boilerplateCode.java ||
-        getCode === boilerplateCode.c
-      ) {
-        setCode(boilerplateCode[language]);
-      } else {
-        // 보일러플레이트가 아니면 로컬스토리지의 코드를 그대로 사용
-        setCode(getCode);
-      }
-    } else {
-      // 로컬스토리지에 코드가 없으면 새로운 언어의 보일러플레이트 코드로 설정
-      setCode(boilerplateCode[language]);
-    }
-  }, [language, problemId]);
 
   useEffect(() => {
     if (problemId) {
