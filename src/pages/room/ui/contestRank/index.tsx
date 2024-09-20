@@ -15,7 +15,7 @@ interface Player {
   problemStatuses: ProblemStatuses[];
 }
 
-export const ContestRanking = () => {
+export const ContestRank = () => {
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
   const [rankedPlayers, setRankedPlayers] = useState<Player[][]>([]);
   const { contestId } = useParams<{ contestId: string }>();
