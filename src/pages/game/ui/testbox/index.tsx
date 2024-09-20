@@ -6,7 +6,6 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { theme } from "@/shared/style";
-import Button from "@/shared/components/Button";
 import { Terminal } from "xterm";
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
@@ -30,6 +29,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       submissionResults,
       disconnectWebSocket,
       isInputDisabled,
+      errorCode,
     },
     ref,
   ) => {
@@ -61,7 +61,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           const res = await gameDetail(problemNum);
           setProblemDetail(res);
         } catch (err) {
-          /**/
+          console.error(err);
         }
       })();
     }, [problemNum]);
@@ -113,7 +113,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
 
-    // 외부에서 호출할 수 있게 메소드를 노출
     useImperativeHandle(ref, () => ({
       resetAndEnableTerminal: () => {
         if (terminalInstance.current) {
@@ -296,11 +295,13 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
             ))}
           {activeTab === "results" && (
             <S.ResultBoxContainer>
-              {submissionResults.map((result) => (
-                <S.ResultBox>
-                  <p>{translateSubmissionResult(result)}</p>
-                </S.ResultBox>
-              ))}
+              {submissionResults.map((result) =>
+                !errorCode ? (
+                  <S.ResultBox>
+                    <p>{translateSubmissionResult(result)}</p>
+                  </S.ResultBox>
+                ) : null,
+              )}
             </S.ResultBoxContainer>
           )}
         </S.Content>
