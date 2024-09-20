@@ -10,6 +10,7 @@ export const Layout = styled.div<LayoutProps>`
   background-image: url(${(props) => props.backgroundImage});
   background-size: cover;
   padding-left: 19px;
+  padding-bottom: 6px;
   width: 358px;
   height: 89px;
   ${flex.FLEX}
@@ -48,7 +49,7 @@ export const Details = styled.div`
 `;
 
 export const Title = styled.div`
-  padding-bottom: 12px;
+  padding-bottom: 9px;
   ${NexonFont.NexonSmallText}
 `;
 
