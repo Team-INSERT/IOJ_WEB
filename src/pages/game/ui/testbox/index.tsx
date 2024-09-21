@@ -6,7 +6,6 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { theme } from "@/shared/style";
-import Button from "@/shared/components/Button";
 import { Terminal } from "xterm";
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
+import { Result } from "@/pages/result";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/admin/question" element={<CreateQuestion />} />
         <Route path="/problem" element={<ProblemList />} />
         <Route path="/problem/:problemId" element={<ProblemDetail />} />
+        <Route path="/game/result" element={<Result />} />
         <Route path="/google/callback" element={<Loading />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>

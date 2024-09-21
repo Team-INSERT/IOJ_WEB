@@ -96,12 +96,20 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
   const modeStyles = (() => {
     switch (mode) {
       case "big":
-        return css`
-          width: auto;
-          padding: 12px 60px;
-          font-weight: 700 !important;
-          ${Pretendard.Text}
-        `;
+        return font === "nexon"
+          ? css`
+              width: auto;
+              padding: 12px 60px;
+              font-weight: 500 !important;
+              ${NexonFont.NexonText};
+            `
+          : css`
+              width: auto;
+              padding: 12px 60px;
+              font-weight: 700 !important;
+              ${Pretendard.Text};
+            `;
+
       case "exit":
         return css`
           padding: 13px 61px;
