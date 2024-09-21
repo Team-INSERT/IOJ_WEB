@@ -15,6 +15,6 @@ export const Layout = styled.div`
   }
 `;
 export const UserName = styled.div`
-  ${NexonFont.NexonCaption}
+  ${NexonFont.NexonText}
   padding-top: 7px;
 `;

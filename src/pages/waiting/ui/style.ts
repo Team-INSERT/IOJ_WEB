@@ -2,7 +2,7 @@ import { flex, NexonFont, Pretendard, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 160px 216px;
+  padding: 140px 216px;
   width: 100%;
   ${flex.COLUMN_FLEX}
 `;
@@ -37,6 +37,23 @@ export const UserCompartmentContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
   margin-top: 20px;
+`;
+
+export const UserCompartmentBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  box-sizing: border-box;
+`;
+
+export const Ready = styled.img`
+  position: absolute;
+  bottom: 70px;
+  right: 20px;
+  z-index: 2;
+  width: auto;
+  height: 30px;
 `;
 
 export const ButtonBox = styled.div`

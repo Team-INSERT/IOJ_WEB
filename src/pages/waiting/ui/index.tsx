@@ -2,6 +2,7 @@ import React from "react";
 import { UserCompartment, Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
+import Ready from "@/assets/Ready.svg";
 import * as S from "./style";
 
 export const Waiting = () => (
@@ -18,7 +19,10 @@ export const Waiting = () => (
     </S.TitleBox>
     <S.UserCompartmentContainer>
       {Array.from({ length: 8 }).map(() => (
-        <UserCompartment UserName="Dsf" color="red" />
+        <S.UserCompartmentBox>
+          <UserCompartment UserName="Dsf" color="red" />
+          <S.Ready src={Ready} />
+        </S.UserCompartmentBox>
       ))}
     </S.UserCompartmentContainer>
     <S.ButtonBox>
