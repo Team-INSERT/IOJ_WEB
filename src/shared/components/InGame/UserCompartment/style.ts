@@ -5,8 +5,8 @@ import { NexonFont, flex } from "@/shared/style";
 
 export const Layout = styled.div`
   background-image: url(${InGameUserPartment});
-  width: 148px;
-  height: 148px;
+  width: 240px;
+  height: 240px;
   border-radius: 4px;
   ${flex.COLUMN_CENTER}
   cursor: pointer;
