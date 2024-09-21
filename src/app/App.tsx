@@ -14,6 +14,7 @@ import {
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
+import { GameFind } from "@/pages/room/ui/gameFind";
 
 const App = () => {
   useAuthService();
