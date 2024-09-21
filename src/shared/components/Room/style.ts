@@ -11,9 +11,10 @@ export const Layout = styled.div<LayoutProps>`
   background-size: cover;
   padding-left: 19px;
   padding-bottom: 6px;
-  width: 358px;
-  height: 89px;
+  width: 100%;
+  height: 96px;
   ${flex.FLEX}
+  border-radius: 4px;
 `;
 
 export const Number = styled.div<{ category: string }>`
