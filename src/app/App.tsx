@@ -9,11 +9,12 @@ import {
   GameHome,
   ContestList,
   ContestQuestion,
-  ContestRanking,
+  ContestRank,
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
+import { GameFind } from "@/pages/room/ui/gameFind";
 
 const App = () => {
   useAuthService();
@@ -28,7 +29,7 @@ const App = () => {
         <Route path="/game/contest/:contestId" element={<ContestQuestion />} />
         <Route
           path="/game/contest/ranking/:contestId"
-          element={<ContestRanking />}
+          element={<ContestRank />}
         />
         <Route
           path="/game/contest/:contestId/code/:problemId"

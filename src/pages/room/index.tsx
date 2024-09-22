@@ -1,4 +1,4 @@
-export { ContestList } from "./ui/Contest/List";
-export { ContestQuestion } from "./ui/Contest/Question";
-export { GameHome } from "./ui/GameHome";
-export { ContestRanking } from "./ui/Contest/Rank";
+export { ContestList } from "./ui/contestList";
+export { ContestQuestion } from "./ui/contestQuestion";
+export { GameHome } from "./ui/gameHome";
+export { ContestRank } from "./ui/contestRank";
