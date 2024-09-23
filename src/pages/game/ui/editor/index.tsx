@@ -93,6 +93,7 @@ export const CodeEditor = () => {
 
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
+
   useEffect(() => {
     if (problemId) {
       const savedCode = localStorage.getItem(`code_${problemId}`);
@@ -110,9 +111,8 @@ export const CodeEditor = () => {
   useEffect(() => {
     if (problemId) {
       localStorage.setItem(`code_${problemId}`, code);
-      localStorage.setItem(`language_${problemId}`, languages);
     }
-  }, [code, languages, problemId]);
+  }, [code, problemId]);
 
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
