@@ -7,7 +7,6 @@ interface RoomProps {
   category: string;
   roomNumber: number;
   roomTitle: string;
-  mode: string;
   gameUserCount: string;
   userCount: string;
   time: number;
@@ -19,7 +18,6 @@ const Room = ({
   category,
   roomNumber,
   roomTitle,
-  mode,
   gameUserCount,
   userCount,
   time,
@@ -35,7 +33,6 @@ const Room = ({
       <S.Details>
         <S.Title>{roomTitle}</S.Title>
         <S.CartegoryNumber>
-          <S.DarkGrayFont>{mode}</S.DarkGrayFont>/
           <S.DarkGrayFont>{gameUserCount}</S.DarkGrayFont>/
           <S.DarkGrayFont>{userCount}</S.DarkGrayFont>
         </S.CartegoryNumber>
