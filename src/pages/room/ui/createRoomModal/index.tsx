@@ -2,7 +2,11 @@ import { Stars } from "@/shared/components";
 import { ReactComponent as XBold } from "@/assets/XBold.svg";
 import * as S from "./style";
 
-export const CreateRoomModal = () => {
+interface CreateRoomModalProps {
+  onClose: () => void; // onClose 함수의 타입을 () => void로 명시적으로 선언
+}
+
+export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
   const container = [
     {
       id: 1,
@@ -49,7 +53,7 @@ export const CreateRoomModal = () => {
       <S.ModalContainer>
         <S.Header>
           <S.Title>방 생성하기</S.Title>
-          <S.No>
+          <S.No onClick={onClose}>
             <XBold />
           </S.No>
         </S.Header>
@@ -59,7 +63,7 @@ export const CreateRoomModal = () => {
             {detail.detail}
           </S.InputContainer>
         ))}
-        <S.CreateButton>생성하기</S.CreateButton>
+        <S.CreateButton onClick={onClose}>생성하기</S.CreateButton>
       </S.ModalContainer>
     </S.Overlay>
   );
