@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
+import { useWebSocket } from "@/shared/hooks/useWebSocket";
 import AceEditor from "react-ace";
+import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
-import { execution } from "../../api/execution";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
 
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as S from "./style";
 import { boilerplateCode } from "../../api/boilerplateCode";
@@ -34,9 +35,12 @@ export const CodeEditor = () => {
     contestId: string;
     problemId: string;
   }>();
+  const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(
+    null,
+  );
 
   const [code, setCode] = useState<string>("");
-  const [language, setLanguage] = useState<string>("python");
+  const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,9 +48,11 @@ export const CodeEditor = () => {
     "execution" | "testCases" | "results"
   >("execution");
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
+  const [isExecuteLoading, setIsExecuteLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const [boilerplate, setBoilerplate] = useState("");
 
   useEffect(() => {
@@ -60,6 +66,47 @@ export const CodeEditor = () => {
       }
     })();
   }, [language]);
+  const [isInputDisabled, setInputDisabled] = useState(false);
+  const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
+
+  const [input, setInput] = useState<string>("");
+
+  const {
+    clientRef,
+    sessionIdRef,
+    consoleOutput,
+    isExecutionActive,
+    setConsoleOutput,
+    connectWebSocket,
+    disconnectWebSocket,
+  } = useWebSocket();
+
+  const [submitStatus, setSubmitStatus] = useState<
+    "Correct" | "RunTime" | "InCorrect" | null
+  >(null);
+
+  useEffect(() => {
+    if (submitStatus) {
+      const timer = setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [submitStatus]);
+
+  useEffect(() => {
+    const updateEditorHeight = () => {
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
+    };
+
+    updateEditorHeight();
+    window.addEventListener("resize", updateEditorHeight);
+
+    return () => window.removeEventListener("resize", updateEditorHeight);
+  }, []);
 
   useEffect(() => {
     if (problemId) {
@@ -80,28 +127,85 @@ export const CodeEditor = () => {
   useEffect(() => {
     if (problemId) {
       localStorage.setItem(`code_${problemId}`, code);
-      localStorage.setItem(`language_${problemId}`, language);
     }
-  }, [code, language, problemId]);
+  }, [code, problemId]);
 
-  const handleModalClose = () => {
-    setErrorCode(null);
-    navigate("/game/contest");
-  };
+  const handleExecution = useCallback(async () => {
+    if (isExecuteLoading) {
+      setIsModalOpen(true);
+      return;
+    }
 
-  const handleExecution = async () => {
+    setActiveTab("execution");
+    setIsExecuteLoading(true);
     try {
-      const response = await execution({
-        id: Number(problemId),
-        sourcecode: code,
-      });
-    } catch (err: any) {
-      if (err.response) {
-        setErrorCode(err.response.data.code);
-      } else {
-        setErrorCode("UNKNOWN");
+      if (clientRef.current) {
+        disconnectWebSocket();
       }
+      testBoxRef.current?.resetAndEnableTerminal();
+      setInputDisabled(false);
+      await connectWebSocket();
+
+      const client = clientRef.current;
+      const userSessionId = sessionIdRef.current;
+
+      if (client && userSessionId) {
+        setConsoleOutput("");
+        client.publish({
+          destination: "/app/execution",
+          body: JSON.stringify({
+            sessionId: userSessionId,
+            sourcecode: code,
+            language: languages.toUpperCase(),
+          }),
+        });
+        setActiveTab("execution");
+      } else {
+        console.log("WebSocket client or session ID is not ready.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsExecuteLoading(false);
     }
+  }, [
+    isExecuteLoading,
+    clientRef,
+    connectWebSocket,
+    sessionIdRef,
+    disconnectWebSocket,
+    setConsoleOutput,
+    code,
+    languages,
+  ]);
+
+  const handleInputSubmit = useCallback(
+    (userResultInput: string) => {
+      const client = clientRef.current;
+      const userSessionId = sessionIdRef.current;
+
+      if (client && userSessionId) {
+        client.publish({
+          destination: "/app/input",
+          body: JSON.stringify({
+            sessionId: userSessionId,
+            input: userResultInput,
+          }),
+        });
+        setInput("");
+      } else {
+        console.log(
+          "WebSocket client or session ID is not ready.",
+          client,
+          userSessionId,
+        );
+      }
+    },
+    [clientRef, sessionIdRef],
+  );
+
+  const handleInputChange = (userInput: string) => {
+    setInput(userInput);
   };
 
   const handleSubmit = async () => {
@@ -119,7 +223,7 @@ export const CodeEditor = () => {
         contestId: Number(contestId),
         problemId: Number(problemId),
         sourcecode: code,
-        language: language.toUpperCase(),
+        language: languages.toUpperCase(),
       });
 
       setSubmissionResults((prevResults) => {
@@ -127,25 +231,38 @@ export const CodeEditor = () => {
         updatedResults[0] = res;
         return updatedResults;
       });
+
+      if (res === "ACCEPTED") {
+        setSubmitStatus("Correct");
+      } else if (res === "WRONG_ANSWER") {
+        setSubmitStatus("InCorrect");
+      } else if (res === "RUNTIME_ERROR") {
+        setSubmitStatus("RunTime");
+      } else {
+        setSubmitStatus("InCorrect");
+      }
     } catch (err: any) {
       console.error(err);
+      setErrorCode(err.response.data.code);
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = "런타임 에러";
         return updatedResults;
       });
+
+      setSubmitStatus("RunTime");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
-    setLanguage(selectedLanguage.toLowerCase());
+    setLanguage(selectedLanguage);
     setFileName(file);
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
-        selectedLanguage.toLowerCase(),
+        selectedLanguage.toUpperCase(),
       );
     }
   };
@@ -162,7 +279,7 @@ export const CodeEditor = () => {
       const res = await getTestcase({
         id: Number(problemId),
         sourcecode: code,
-        language: language.toUpperCase(),
+        language: languages.toUpperCase(),
       });
       setTestResult([...res]);
     } catch (err) {
@@ -211,14 +328,19 @@ export const CodeEditor = () => {
           </S.Button>
         </S.ButtonBox>
       </S.HeaderBox>
+      {submitStatus && <Submit mode={submitStatus} />}
       <AceEditor
-        mode={language === "c" ? "c_cpp" : language}
+        mode={
+          ["c", "cpp"].includes(languages.toLowerCase())
+            ? "c_cpp"
+            : languages.toLowerCase()
+        }
         theme="monokai"
-        height="20rem"
+        height={editorHeight}
         width="100%"
         fontSize={16}
         value={code}
-        onChange={(value) => setCode(value || "")}
+        onChange={(value: any) => setCode(value || "")}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
@@ -227,15 +349,25 @@ export const CodeEditor = () => {
       />
       <S.TestBoxLayout>
         <TestBox
+          ref={testBoxRef}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           testResult={testResult}
           isTestLoading={isTestLoading}
+          onInputChange={handleInputChange}
+          onSubmit={handleInputSubmit}
+          consoleOutput={consoleOutput}
+          isExecutionActive={isExecutionActive}
           submissionResults={submissionResults}
+          disconnectWebSocket={disconnectWebSocket}
+          isInputDisabled={isInputDisabled}
         />
       </S.TestBoxLayout>
       {errorCode && (
-        <ErrorModal errorCode={errorCode} onClose={handleModalClose} />
+        <ErrorModal
+          errorCode={errorCode}
+          onClose={() => navigate(`/game/contest/${contestId}`)}
+        />
       )}
     </S.EditorLayout>
   );

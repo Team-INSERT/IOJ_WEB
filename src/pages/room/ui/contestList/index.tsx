@@ -27,16 +27,14 @@ export const ContestList = () => {
   const [contestDetail, setContestDetail] = useState<contest[]>([]);
 
   useEffect(() => {
-    const list = async () => {
+    (async () => {
       try {
         const res = contestList();
         setContestDetail(await res);
-        console.log(res);
       } catch (err) {
-        console.log(err);
+        /**/
       }
-    };
-    list();
+    })();
   }, []);
 
   return (

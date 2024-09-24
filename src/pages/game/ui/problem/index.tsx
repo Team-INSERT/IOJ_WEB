@@ -10,6 +10,7 @@ export const Problem = ({
   memoryLimit,
   content,
   inputContent,
+  outputContent,
   level,
   testcases,
 }: problemInfoProps) => {
@@ -72,9 +73,11 @@ export const Problem = ({
       </S.MiniBox>
       <S.ProblemContentBox>
         <S.Problem>문제</S.Problem>
-        <S.ProblemContent>{inputContent}</S.ProblemContent>
-        <S.Problem>입력</S.Problem>
         <S.ProblemContent>{content}</S.ProblemContent>
+        <S.Problem>입력</S.Problem>
+        <S.ProblemContent>{inputContent}</S.ProblemContent>
+        <S.Problem>출력</S.Problem>
+        <S.ProblemContent>{outputContent}</S.ProblemContent>
       </S.ProblemContentBox>
       <S.Case>
         {testcases.map((example, index) => (

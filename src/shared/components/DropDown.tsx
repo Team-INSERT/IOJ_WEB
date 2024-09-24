@@ -50,8 +50,8 @@ const BaseButton = styled.button`
   text-align: left;
   min-width: 75px;
 `;
+
 interface DropdownProps {
-  // eslint-disable-next-line no-unused-vars
   onSelectLanguage: (language: string, file: string) => void;
   problemId: string;
 }
@@ -67,9 +67,22 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("PYTHON");
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem(`language_${problemId}`);
+    if (savedLanguage) {
+      const uppercaseLanguage = savedLanguage.toUpperCase();
+      setSelectedItem(uppercaseLanguage);
+      const language = uppercaseLanguage.toLowerCase();
+      const extension = extensions[language === "cpp" ? "cpp" : language];
+      const file = `Main.${extension}`;
+      onSelectLanguage(language, file);
+    }
+  }, [problemId, onSelectLanguage]);
+
   const handleItemClick = useCallback(
     (item: string) => {
-      let language = item.toLowerCase();
+      const uppercaseItem = item.toUpperCase();
+      let language = uppercaseItem.toLowerCase();
 
       if (language === "c++") {
         language = "cpp";
@@ -78,22 +91,14 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
       const extension = extensions[language];
       const file = `Main.${extension}`;
 
-      setSelectedItem(item);
+      setSelectedItem(uppercaseItem);
       setIsOpen(false);
 
-      localStorage.setItem(`language_${problemId}`, item);
+      localStorage.setItem(`language_${problemId}`, uppercaseItem);
       onSelectLanguage(language, file);
     },
     [problemId, onSelectLanguage],
   );
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem(`language_${problemId}`);
-    if (savedLanguage) {
-      setSelectedItem(savedLanguage);
-      handleItemClick(savedLanguage);
-    }
-  }, [handleItemClick, problemId]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

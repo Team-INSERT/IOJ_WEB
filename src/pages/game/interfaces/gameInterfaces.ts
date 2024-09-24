@@ -9,6 +9,7 @@ export interface problemInfoProps {
   level: number;
   content: string;
   inputContent: string;
+  outputContent: string;
   memoryLimit: number;
   testcases: testcaseType[];
   timeLimit: number;
@@ -39,5 +40,15 @@ export interface TestBoxProps {
   setActiveTab: (tab: "execution" | "testCases" | "results") => void;
   testResult: TestCaseType[];
   isTestLoading: boolean;
+  onInputChange: (input: string) => void;
+  isExecutionActive: boolean;
+  consoleOutput: string;
+  onSubmit: (userInput: string) => void;
   submissionResults: string[];
+  disconnectWebSocket: () => void; // 새로 추가된 속성
+  isInputDisabled: boolean;
+}
+
+export interface TestBoxHandles {
+  resetAndEnableTerminal: () => void;
 }
