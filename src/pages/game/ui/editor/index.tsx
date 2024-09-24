@@ -19,6 +19,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
 
 import * as S from "./style";
+import { boilerplateCode } from "../../api/boilerplateCode";
 
 interface TestCase {
   index: number;
@@ -46,12 +47,25 @@ export const CodeEditor = () => {
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
-
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const [boilerplate, setBoilerplate] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await boilerplateCode(languages);
+        setBoilerplate(res);
+        setCode(res);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [languages]);
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
 
@@ -101,6 +115,8 @@ export const CodeEditor = () => {
 
       if (savedCode) {
         setCode(savedCode);
+      } else {
+        setCode(boilerplate);
       }
       if (savedLanguage) {
         setLanguage(savedLanguage);
@@ -243,7 +259,6 @@ export const CodeEditor = () => {
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage);
     setFileName(file);
-
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
