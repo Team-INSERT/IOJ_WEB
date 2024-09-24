@@ -58,14 +58,14 @@ export const CodeEditor = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await boilerplateCode(language);
+        const res = await boilerplateCode(languages);
         setBoilerplate(res);
         setCode(res);
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [language]);
+  }, [languages]);
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
 
