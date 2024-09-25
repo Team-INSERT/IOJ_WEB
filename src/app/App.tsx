@@ -5,6 +5,7 @@ import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
+import { Prepare } from "@/pages/prepare";
 import {
   GameHome,
   ContestList,
@@ -23,6 +24,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/game" element={<GameHome />} />
+        <Route path="/ranking" element={<Prepare />} />
+        <Route path="/introduce" element={<Prepare />} />
+        <Route path="/guide" element={<Prepare />} />
         <Route path="/login" element={<Login />} />
         <Route path="/setting" element={<Ai />} />
         <Route path="/game/contest" element={<ContestList />} />
