@@ -29,6 +29,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       submissionResults,
       disconnectWebSocket,
       isInputDisabled,
+      errorCode,
     },
     ref,
   ) => {
@@ -60,7 +61,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           const res = await gameDetail(problemNum);
           setProblemDetail(res);
         } catch (err) {
-          /**/
+          console.error(err);
         }
       })();
     }, [problemNum]);
@@ -111,6 +112,17 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     useEffect(() => {
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
+
+    useImperativeHandle(ref, () => ({
+      resetAndEnableTerminal: () => {
+        if (terminalInstance.current) {
+          terminalInstance.current.reset();
+          terminalInstance.current?.writeln("프로세스가 실행됩니다.");
+          terminalInstance.current?.writeln("");
+          setIsProcessFinished(false);
+        }
+      },
+    }));
 
     useEffect(() => {
       const initializeTerminal = () => {
@@ -333,11 +345,13 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
             ))}
           {activeTab === "results" && (
             <S.ResultBoxContainer>
-              {submissionResults.map((result) => (
-                <S.ResultBox>
-                  <p>{translateSubmissionResult(result)}</p>
-                </S.ResultBox>
-              ))}
+              {submissionResults.map((result) =>
+                !errorCode ? (
+                  <S.ResultBox>
+                    <p>{translateSubmissionResult(result)}</p>
+                  </S.ResultBox>
+                ) : null,
+              )}
             </S.ResultBoxContainer>
           )}
         </S.Content>

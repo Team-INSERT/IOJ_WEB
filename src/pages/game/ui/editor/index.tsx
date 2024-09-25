@@ -19,6 +19,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
 
 import * as S from "./style";
+import { boilerplateCode } from "../../api/boilerplateCode";
 
 interface TestCase {
   index: number;
@@ -46,13 +47,27 @@ export const CodeEditor = () => {
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
-
   const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const [boilerplate, setBoilerplate] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await boilerplateCode(languages);
+        setBoilerplate(res);
+        setCode(res);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [languages]);
   const [isInputDisabled, setInputDisabled] = useState(false);
+  const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
 
   const [input, setInput] = useState<string>("");
 
@@ -88,25 +103,52 @@ export const CodeEditor = () => {
   }, [submitStatus]);
 
   useEffect(() => {
-    if (problemId) {
-      const savedCode = localStorage.getItem(`code_${problemId}`);
-      const savedLanguage = localStorage.getItem(`language_${problemId}`);
+    const updateEditorHeight = () => {
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
+    };
+
+    updateEditorHeight();
+    window.addEventListener("resize", updateEditorHeight);
+
+    return () => window.removeEventListener("resize", updateEditorHeight);
+  }, []);
+
+  useEffect(() => {
+    const updateEditorHeight = () => {
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
+    };
+
+    updateEditorHeight();
+    window.addEventListener("resize", updateEditorHeight);
+
+    return () => window.removeEventListener("resize", updateEditorHeight);
+  }, []);
+
+  useEffect(() => {
+    if (problemId && contestId) {
+      const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
+      const savedLanguage = localStorage.getItem(
+        `language_${contestId}_${problemId}`,
+      );
 
       if (savedCode) {
         setCode(savedCode);
+      } else {
+        setCode(boilerplate);
       }
       if (savedLanguage) {
         setLanguage(savedLanguage);
       }
     }
-  }, [problemId]);
+  }, [problemId, contestId]);
 
   useEffect(() => {
     if (problemId) {
       localStorage.setItem(`code_${problemId}`, code);
-      localStorage.setItem(`language_${problemId}`, languages);
     }
-  }, [code, languages, problemId]);
+  }, [code, problemId]);
 
   useEffect(() => {
     console.log(executionActive);
@@ -196,6 +238,7 @@ export const CodeEditor = () => {
       setInputDisabled(true);
     }
   }, [consoleOutput]);
+    
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
@@ -237,8 +280,7 @@ export const CodeEditor = () => {
         updatedResults[0] = "런타임 에러";
         return updatedResults;
       });
-
-      setSubmitStatus("RunTime");
+      setSubmitStatus(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -247,7 +289,6 @@ export const CodeEditor = () => {
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage);
     setFileName(file);
-
     if (problemId) {
       localStorage.setItem(
         `language_${problemId}`,
@@ -298,6 +339,7 @@ export const CodeEditor = () => {
                 handleLanguageChange(selectedLanguage, file);
               }}
               problemId={problemId!}
+              contestId={contestId!}
             />
           </S.Button>
           <S.Button onClick={onTestcaseClick}>
@@ -325,7 +367,7 @@ export const CodeEditor = () => {
             : languages.toLowerCase()
         }
         theme="monokai"
-        height="18.5rem"
+        height={editorHeight}
         width="100%"
         fontSize={16}
         value={code}
@@ -350,6 +392,7 @@ export const CodeEditor = () => {
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}
+          errorCode={errorCode}
         />
       </S.TestBoxLayout>
       {errorCode && (
