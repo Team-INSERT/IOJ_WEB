@@ -263,8 +263,7 @@ export const CodeEditor = () => {
         updatedResults[0] = "런타임 에러";
         return updatedResults;
       });
-
-      setSubmitStatus("RunTime");
+      setSubmitStatus(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -376,6 +375,7 @@ export const CodeEditor = () => {
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}
+          errorCode={errorCode}
         />
       </S.TestBoxLayout>
       {errorCode && (
