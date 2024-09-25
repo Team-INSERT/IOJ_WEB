@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
+import { Waiting } from "@/pages/waiting";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
