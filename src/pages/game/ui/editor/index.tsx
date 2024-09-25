@@ -81,6 +81,12 @@ export const CodeEditor = () => {
     disconnectWebSocket,
   } = useWebSocket();
 
+  const [executionActive, setExecutionActive] = useState(isExecutionActive);
+
+  useEffect(() => {
+    setExecutionActive(isExecutionActive);
+  }, [isExecutionActive]);
+
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
@@ -144,6 +150,10 @@ export const CodeEditor = () => {
     }
   }, [code, problemId]);
 
+  useEffect(() => {
+    console.log(executionActive);
+  }, [executionActive]);
+
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
@@ -151,11 +161,12 @@ export const CodeEditor = () => {
     }
 
     setActiveTab("execution");
-    setIsExecuteLoading(true);
+    disconnectWebSocket();
+
+    if (!executionActive) {
+      setExecutionActive(true);
+    }
     try {
-      if (clientRef.current) {
-        disconnectWebSocket();
-      }
       testBoxRef.current?.resetAndEnableTerminal();
       setInputDisabled(false);
       await connectWebSocket();
@@ -173,7 +184,6 @@ export const CodeEditor = () => {
             language: languages.toUpperCase(),
           }),
         });
-        setActiveTab("execution");
       } else {
         console.log("WebSocket client or session ID is not ready.");
       }
@@ -191,6 +201,7 @@ export const CodeEditor = () => {
     setConsoleOutput,
     code,
     languages,
+    executionActive,
   ]);
 
   const handleInputSubmit = useCallback(
@@ -222,6 +233,12 @@ export const CodeEditor = () => {
     setInput(userInput);
   };
 
+  useEffect(() => {
+    if (consoleOutput.includes("Process finished with exit code 0")) {
+      setInputDisabled(true);
+    }
+  }, [consoleOutput]);
+    
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
@@ -371,7 +388,7 @@ export const CodeEditor = () => {
           onInputChange={handleInputChange}
           onSubmit={handleInputSubmit}
           consoleOutput={consoleOutput}
-          isExecutionActive={isExecutionActive}
+          isExecutionActive={executionActive}
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}

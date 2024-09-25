@@ -161,11 +161,61 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           });
         }
       };
+
       if (isExecutionActive) {
         initializeTerminal();
         setIsProcessFinished(false);
+        inputDisableRef.current = false;
       }
     }, [isExecutionActive, onSubmit, isProcessFinished]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        resetAndEnableTerminal: () => {
+          if (terminalInstance.current) {
+            terminalInstance.current.dispose();
+            terminalInstance.current = new Terminal({
+              cursorBlink: true,
+              scrollback: 1000,
+              tabStopWidth: 4,
+            });
+
+            if (terminalRef.current) {
+              terminalInstance.current.open(terminalRef.current);
+              terminalInstance.current.writeln("프로세스가 재시작됩니다.");
+              terminalInstance.current.writeln("");
+
+              terminalInstance.current.onData((data) => {
+                if (!inputDisableRef.current) {
+                  // 입력 가능 상태 확인
+                  if (data === "\r" || data === "\n") {
+                    if (inputBuffer.current.trim() !== "") {
+                      terminalInstance.current?.writeln("");
+                      onSubmit(inputBuffer.current);
+                      inputBuffer.current = "";
+                    }
+                  } else if (data === "\u007F") {
+                    // 백스페이스 처리
+                    if (inputBuffer.current.length > 0) {
+                      inputBuffer.current = inputBuffer.current.slice(0, -1);
+                      terminalInstance.current?.write("\b \b");
+                    }
+                  } else {
+                    inputBuffer.current += data;
+                    terminalInstance.current?.write(data);
+                  }
+                }
+              });
+            }
+
+            setIsProcessFinished(false);
+            inputDisableRef.current = false;
+          }
+        },
+      }),
+      [onSubmit],
+    );
 
     useEffect(() => {
       if (consoleOutput && terminalInstance.current) {
@@ -173,9 +223,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           terminalInstance.current.writeln(consoleOutput);
         } else {
           terminalInstance.current.writeln("Process finished with exit code 0");
-          disconnectWebSocket();
-          setIsProcessFinished(true);
           inputDisableRef.current = true;
+          disconnectWebSocket();
+          setIsProcessFinished(false);
         }
       }
     }, [consoleOutput]);

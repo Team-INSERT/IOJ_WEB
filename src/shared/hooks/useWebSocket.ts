@@ -26,6 +26,7 @@ export const useWebSocket = () => {
           console.log("Connected to WebSocket:", frame);
 
           try {
+            setIsExecutionActive(true); // 실행 상태 설정
             // 세션 ID를 서버에서 받아옴
             const response = await customAxios.get(`/execution`);
             const sessionId = response.data;
@@ -66,7 +67,6 @@ export const useWebSocket = () => {
 
       stompClient.activate();
       clientRef.current = stompClient;
-      setIsExecutionActive(true); // 실행 상태 설정
     });
 
   // 웹소켓 연결 해제 함수
@@ -75,8 +75,8 @@ export const useWebSocket = () => {
       clientRef.current.deactivate(); // STOMP 클라이언트 비활성화
       console.log("WebSocket disconnected");
     }
-    isSubscribedRef.current = false; // 구독 상태 리셋
     setIsExecutionActive(false); // 실행 상태 리셋
+    isSubscribedRef.current = false; // 구독 상태 리셋
   };
 
   return {
