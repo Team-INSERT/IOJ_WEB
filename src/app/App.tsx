@@ -5,15 +5,17 @@ import { Game } from "@/pages/game";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
+import { Prepare } from "@/pages/prepare";
 import {
   GameHome,
   ContestList,
   ContestQuestion,
-  ContestRanking,
+  ContestRank,
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
+import { GameFind } from "@/pages/room/ui/gameFind";
 
 const App = () => {
   useAuthService();
@@ -22,13 +24,16 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/game" element={<GameHome />} />
+        <Route path="/ranking" element={<Prepare />} />
+        <Route path="/introduce" element={<Prepare />} />
+        <Route path="/guide" element={<Prepare />} />
         <Route path="/login" element={<Login />} />
         <Route path="/setting" element={<Ai />} />
         <Route path="/game/contest" element={<ContestList />} />
         <Route path="/game/contest/:contestId" element={<ContestQuestion />} />
         <Route
           path="/game/contest/ranking/:contestId"
-          element={<ContestRanking />}
+          element={<ContestRank />}
         />
         <Route
           path="/game/contest/:contestId/code/:problemId"
