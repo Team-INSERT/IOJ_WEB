@@ -1,6 +1,9 @@
 import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
+import Mini from "@/assets/Mini.svg";
+import Winner from "@/assets/Winner.svg";
+import Crown from "@/assets/Crown";
 import flash from "@/assets/flash.png";
 import Character from "@/assets/Character";
 import Podium from "@/assets/Podium.svg";
