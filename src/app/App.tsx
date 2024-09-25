@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useAuthService } from "@/shared/utils/auth/useAuthService";
 import { Main } from "@/pages/main";
 import { Game } from "@/pages/game";
+import { Waiting } from "@/pages/waiting";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
@@ -15,7 +16,6 @@ import {
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
-import { GameFind } from "@/pages/room/ui/gameFind";
 
 const App = () => {
   useAuthService();
@@ -39,6 +39,7 @@ const App = () => {
           path="/game/contest/:contestId/code/:problemId"
           element={<Game />}
         />
+        <Route path="game/waiting" element={<Waiting />} />
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />

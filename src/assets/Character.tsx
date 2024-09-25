@@ -6,8 +6,8 @@ interface CharacterProps extends SVGProps<SVGSVGElement> {
 
 const Character = ({ color = "#D9D9D9", ...props }: CharacterProps) => (
   <svg
-    width="96"
-    height="100"
+    width="155"
+    height="150"
     viewBox="0 0 96 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
