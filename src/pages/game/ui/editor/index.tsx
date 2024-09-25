@@ -191,10 +191,6 @@ export const CodeEditor = () => {
     setInput(userInput);
   };
 
-  const handleModalClose = () => {
-    setErrorCode(null);
-    navigate("/game/contest");
-  };
   useEffect(() => {
     if (consoleOutput.includes("Process finished with exit code 0")) {
       setInputDisabled(true);
