@@ -114,11 +114,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
 
     useEffect(() => {
       const initializeTerminal = () => {
-        if (
-          isExecutionActive &&
-          terminalRef.current &&
-          !terminalInstance.current
-        ) {
+        if (terminalRef.current && !terminalInstance.current) {
           terminalInstance.current = new Terminal({
             cursorBlink: true,
             scrollback: 1000,
@@ -215,9 +211,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           terminalInstance.current.writeln(consoleOutput);
         } else {
           terminalInstance.current.writeln("Process finished with exit code 0");
-          disconnectWebSocket();
-          setIsProcessFinished(true);
           inputDisableRef.current = true;
+          disconnectWebSocket();
+          setIsProcessFinished(false);
         }
       }
     }, [consoleOutput]);

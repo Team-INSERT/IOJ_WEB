@@ -117,16 +117,13 @@ export const CodeEditor = () => {
       setIsModalOpen(true);
       return;
     }
-    if (activeTab !== "execution") {
-      setActiveTab("execution");
-    }
+
+    setActiveTab("execution");
     disconnectWebSocket();
 
     if (!executionActive) {
       setExecutionActive(true);
     }
-
-    setIsExecuteLoading(true);
     try {
       testBoxRef.current?.resetAndEnableTerminal();
       setInputDisabled(false);
@@ -145,7 +142,6 @@ export const CodeEditor = () => {
             language: languages.toUpperCase(),
           }),
         });
-        setActiveTab("execution");
       } else {
         console.log("WebSocket client or session ID is not ready.");
       }
