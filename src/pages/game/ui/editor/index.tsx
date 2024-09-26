@@ -42,7 +42,7 @@ export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
-  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
@@ -56,20 +56,35 @@ export const CodeEditor = () => {
   const [boilerplate, setBoilerplate] = useState("");
 
   useEffect(() => {
-    console.log(languages);
-  }, [languages]);
-
-  useEffect(() => {
     (async () => {
       try {
-        const res = await boilerplateCode(languages);
-        setBoilerplate(res);
-        setCode(res);
+        const savedCode = localStorage.getItem(
+          `code_${contestId}_${problemId}_${languages}`,
+        );
+
+        if (savedCode) {
+          setCode(savedCode);
+        } else {
+          const res = await boilerplateCode(languages);
+          setBoilerplate(res);
+          setCode(res);
+          localStorage.setItem(
+            `code_${contestId}_${problemId}_${languages}`,
+            res,
+          );
+        }
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [languages]);
+  }, [languages, contestId, problemId]);
+
+  useEffect(() => {
+    if (code && problemId && contestId) {
+      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
+    }
+  }, [code, problemId, contestId, languages]);
+
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
 
@@ -118,6 +133,7 @@ export const CodeEditor = () => {
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (problemId && contestId) {
       const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
@@ -136,6 +152,8 @@ export const CodeEditor = () => {
     }
   }, [code, problemId]);
 
+=======
+>>>>>>> 5550691b1f4c26a080d19263b45abfcb87d1dd68
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
@@ -261,7 +279,7 @@ export const CodeEditor = () => {
       }
     } catch (err: any) {
       console.error(err);
-      setErrorCode(err.response.data.code);
+      setErrorMessage(err.response.data.message);
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = "런타임 에러";
@@ -380,12 +398,12 @@ export const CodeEditor = () => {
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}
-          errorCode={errorCode}
+          errorMessage={errorMessage}
         />
       </S.TestBoxLayout>
-      {errorCode && (
+      {errorMessage && (
         <ErrorModal
-          errorCode={errorCode}
+          errorMessage={errorMessage}
           onClose={() => navigate(`/game/contest/${contestId}`)}
         />
       )}
