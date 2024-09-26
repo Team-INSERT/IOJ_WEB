@@ -47,7 +47,7 @@ export interface TestBoxProps {
   submissionResults: string[];
   disconnectWebSocket: () => void; // 새로 추가된 속성
   isInputDisabled: boolean;
-  errorCode: string | null;
+  errorMessage: string | null;
 }
 
 export interface TestBoxHandles {

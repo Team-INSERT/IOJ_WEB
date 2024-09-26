@@ -29,7 +29,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       submissionResults,
       disconnectWebSocket,
       isInputDisabled,
-      errorCode,
+      errorMessage,
     },
     ref,
   ) => {
@@ -335,7 +335,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           {activeTab === "results" && (
             <S.ResultBoxContainer>
               {submissionResults.map((result) =>
-                !errorCode ? (
+                !errorMessage ? (
                   <S.ResultBox>
                     <p>{translateSubmissionResult(result)}</p>
                   </S.ResultBox>
