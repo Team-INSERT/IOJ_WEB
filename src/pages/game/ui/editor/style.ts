@@ -5,7 +5,7 @@ export const EditorLayout = styled.div`
   background-color: #1e1e1e;
   ${flex.COLUMN_FLEX};
   width: 50%;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
 `;
 

@@ -108,20 +108,8 @@ export const CodeEditor = () => {
 
   useEffect(() => {
     const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.45;
-      setEditorHeight(`${newHeight}px`);
-    };
-
-    updateEditorHeight();
-    window.addEventListener("resize", updateEditorHeight);
-
-    return () => window.removeEventListener("resize", updateEditorHeight);
-  }, []);
-
-  useEffect(() => {
-    const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.45;
-      setEditorHeight(`${newHeight}px`);
+      const newHeight = window.innerHeight * 0.1;
+      setEditorHeight(`${newHeight}vh`);
     };
 
     updateEditorHeight();
@@ -377,6 +365,7 @@ export const CodeEditor = () => {
         }}
         editorProps={{ $blockScrolling: true }}
       />
+
       <S.TestBoxLayout>
         <TestBox
           ref={testBoxRef}
