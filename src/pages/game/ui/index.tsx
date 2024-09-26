@@ -11,11 +11,13 @@ import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
+  position: fixed;
   overflow: hidden;
 `;
 
 export const GameBox = styled.div`
   ${flex.HORIZONTAL}
+  position: fixed;
   width: 100%;
   height: 100%;
 `;

@@ -108,7 +108,7 @@ export const CodeEditor = () => {
 
   useEffect(() => {
     const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.1;
+      const newHeight = window.innerHeight * 0.06;
       setEditorHeight(`${newHeight}vh`);
     };
 
