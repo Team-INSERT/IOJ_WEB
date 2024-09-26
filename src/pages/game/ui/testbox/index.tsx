@@ -113,17 +113,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
 
-    useImperativeHandle(ref, () => ({
-      resetAndEnableTerminal: () => {
-        if (terminalInstance.current) {
-          terminalInstance.current.reset();
-          terminalInstance.current?.writeln("프로세스가 실행됩니다.");
-          terminalInstance.current?.writeln("");
-          setIsProcessFinished(false);
-        }
-      },
-    }));
-
     useEffect(() => {
       const initializeTerminal = () => {
         if (terminalRef.current && !terminalInstance.current) {
