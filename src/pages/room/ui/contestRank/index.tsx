@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import { gameRakingList } from "@/pages/room/api/roomApi";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/shared/components";
 import * as S from "./style";
 
 interface ProblemStatuses {
@@ -16,6 +17,7 @@ interface Player {
 }
 
 export const ContestRank = () => {
+  const navigate = useNavigate();
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
   const [rankedPlayers, setRankedPlayers] = useState<Player[][]>([]);
   const { contestId } = useParams<{ contestId: string }>();
@@ -73,7 +75,14 @@ export const ContestRank = () => {
         <GameRankGrey />
       </S.GreyBg>
       <S.Content>
-        <S.Title>{title}</S.Title>
+        <S.TitleLayout>
+          <S.Title>{title}</S.Title>
+          <S.ExitButton>
+            <Button mode="small" color="red" font="pretendard" onClick={() => navigate(-1)}>
+              나가기
+            </Button>
+          </S.ExitButton>
+        </S.TitleLayout>
         <S.Chart>
           <S.Attribute>
             <S.PropertyText>순위</S.PropertyText>

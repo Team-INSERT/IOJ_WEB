@@ -110,7 +110,7 @@ export const ContestQuestion = () => {
             color="blue"
             onClick={() => {
               const url = `/game/contest/ranking/${contestId}?title=${encodeURIComponent(contestDetail.title)}`;
-              window.open(url, "_blank");
+              navigate(url);
             }}
           >
             순위보러가기

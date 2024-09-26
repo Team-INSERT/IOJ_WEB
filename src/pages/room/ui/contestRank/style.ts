@@ -17,6 +17,7 @@ export const Content = styled.div`
   gap: 3.75rem;
   padding-top: 6.25rem;
   padding-bottom: 12rem;
+  position: relative;
 `;
 export const BlueBg = styled.div`
   position: absolute;
@@ -134,3 +135,11 @@ export const QuestionSolveRank = styled.p`
   ${NexonFont.NexonBigText}
   color: ${theme.white};
 `;
+export const TitleLayout = styled.div`
+  width: 100%;
+  ${flex.CENTER};
+`
+export const ExitButton = styled.div`
+  position: absolute;
+  right: 0;
+`
