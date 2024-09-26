@@ -5,7 +5,7 @@ export const EditorLayout = styled.div`
   background-color: #1e1e1e;
   ${flex.COLUMN_FLEX};
   width: 50%;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
 `;
 
@@ -35,7 +35,7 @@ export const TestBoxLayout = styled.div`
   background-color: ${theme.black};
   height: 16rem;
   overflow: auto;
-  z-index: 5;
+  z-index: 20;
   position: fixed;
   bottom: 0;
   width: 50%;

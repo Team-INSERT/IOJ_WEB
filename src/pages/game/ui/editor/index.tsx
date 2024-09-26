@@ -133,6 +133,36 @@ export const CodeEditor = () => {
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
 
+  useEffect(() => {
+    const updateEditorHeight = () => {
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
+    };
+
+    updateEditorHeight();
+    window.addEventListener("resize", updateEditorHeight);
+
+    return () => window.removeEventListener("resize", updateEditorHeight);
+  }, []);
+
+  useEffect(() => {
+    if (problemId && contestId) {
+      const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
+
+      if (savedCode) {
+        setCode(savedCode);
+      } else {
+        setCode(boilerplate);
+      }
+    }
+  }, [problemId, contestId, boilerplate]);
+
+  useEffect(() => {
+    if (problemId) {
+      localStorage.setItem(`code_${problemId}`, code);
+    }
+  }, [code, problemId]);
+
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
@@ -362,6 +392,7 @@ export const CodeEditor = () => {
         }}
         editorProps={{ $blockScrolling: true }}
       />
+
       <S.TestBoxLayout>
         <TestBox
           ref={testBoxRef}

@@ -8,7 +8,7 @@ interface TabProps {
 export const Container = styled.div`
   ${flex.COLUMN_FLEX}
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: #222;
   color: white;
   overflow-x: hidden;
