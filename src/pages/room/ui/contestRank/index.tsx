@@ -66,7 +66,7 @@ export const ContestRank = () => {
     };
     playerList();
   }, [contestId]);
-  return (
+  return rankedPlayers.length ? (
     <S.Layout>
       <S.BlueBg>
         <GameRankBlue />
@@ -78,7 +78,12 @@ export const ContestRank = () => {
         <S.TitleLayout>
           <S.Title>{title}</S.Title>
           <S.ExitButton>
-            <Button mode="small" color="red" font="pretendard" onClick={() => navigate(-1)}>
+            <Button
+              mode="small"
+              color="red"
+              font="pretendard"
+              onClick={() => navigate(-1)}
+            >
               나가기
             </Button>
           </S.ExitButton>
@@ -145,5 +150,7 @@ export const ContestRank = () => {
         </S.Chart>
       </S.Content>
     </S.Layout>
+  ) : (
+    <div>Loading...</div>
   );
 };
