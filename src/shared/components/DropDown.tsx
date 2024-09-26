@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import Button from "./Button";
 import { NexonFont, theme } from "../style";
 
 const DropdownContainer = styled.div`
@@ -89,11 +88,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const handleItemClick = useCallback(
     (item: string) => {
       const uppercaseItem = item.toUpperCase();
-      let language = uppercaseItem.toLowerCase();
-
-      if (language === "c++") {
-        language = "cpp";
-      }
+      const language = uppercaseItem.toLowerCase();
 
       const extension = extensions[language];
       const file = `Main.${extension}`;
@@ -101,7 +96,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       setSelectedItem(uppercaseItem);
       setIsOpen(false);
 
-      localStorage.setItem(`language_${contestId}_${problemId}`, uppercaseItem);
+      localStorage.setItem(`language_${contestId}_${problemId}`, language);
       onSelectLanguage(language, file);
     },
     [contestId, problemId, onSelectLanguage],
@@ -124,7 +119,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         <DropdownItem onClick={() => handleItemClick("PYTHON")}>
           PYTHON
         </DropdownItem>
-        <DropdownItem onClick={() => handleItemClick("C++")}>C++</DropdownItem>
+        <DropdownItem onClick={() => handleItemClick("CPP")}>C++</DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C")}>C</DropdownItem>
       </DropdownContent>
     </DropdownContainer>
