@@ -56,6 +56,10 @@ export const CodeEditor = () => {
   const [boilerplate, setBoilerplate] = useState("");
 
   useEffect(() => {
+    console.log(languages);
+  }, [languages]);
+
+  useEffect(() => {
     (async () => {
       try {
         const res = await boilerplateCode(languages);
@@ -129,20 +133,14 @@ export const CodeEditor = () => {
   useEffect(() => {
     if (problemId && contestId) {
       const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
-      const savedLanguage = localStorage.getItem(
-        `language_${contestId}_${problemId}`,
-      );
 
       if (savedCode) {
         setCode(savedCode);
       } else {
         setCode(boilerplate);
       }
-      if (savedLanguage) {
-        setLanguage(savedLanguage);
-      }
     }
-  }, [problemId, contestId]);
+  }, [problemId, contestId, boilerplate]);
 
   useEffect(() => {
     if (problemId) {
