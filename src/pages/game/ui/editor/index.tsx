@@ -42,7 +42,7 @@ export const CodeEditor = () => {
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
-  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
@@ -258,7 +258,7 @@ export const CodeEditor = () => {
       }
     } catch (err: any) {
       console.error(err);
-      setErrorCode(err.response.data.code);
+      setErrorMessage(err.response.data.message);
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = "런타임 에러";
@@ -376,12 +376,12 @@ export const CodeEditor = () => {
           submissionResults={submissionResults}
           disconnectWebSocket={disconnectWebSocket}
           isInputDisabled={isInputDisabled}
-          errorCode={errorCode}
+          errorMessage={errorMessage}
         />
       </S.TestBoxLayout>
-      {errorCode && (
+      {errorMessage && (
         <ErrorModal
-          errorCode={errorCode}
+          errorMessage={errorMessage}
           onClose={() => navigate(`/game/contest/${contestId}`)}
         />
       )}

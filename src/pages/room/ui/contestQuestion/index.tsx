@@ -22,7 +22,7 @@ export const ContestQuestion = () => {
   const navigate = useNavigate();
   const [contestDetail, setContestDetail] = useState<Contest | null>(null);
   const [remainingTime, setRemainingTime] = useState<string>("");
-  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { contestId } = useParams<{ contestId: string }>();
 
   useEffect(() => {
@@ -36,9 +36,9 @@ export const ContestQuestion = () => {
         setContestDetail(res);
       } catch (err: any) {
         if (err.response) {
-          setErrorCode(err.response.data.code);
+          setErrorMessage(err.response.data.message);
         } else {
-          setErrorCode("UNKNOWN");
+          setErrorMessage("UNKNOWN");
         }
       }
     };
@@ -74,10 +74,10 @@ export const ContestQuestion = () => {
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
 
-  if (errorCode) {
+  if (errorMessage) {
     return (
       <ErrorModal
-        errorCode={errorCode}
+        errorMessage={errorMessage}
         onClose={() => navigate("/game/contest")}
       />
     );

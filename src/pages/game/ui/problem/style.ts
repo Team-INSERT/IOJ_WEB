@@ -64,7 +64,7 @@ export const Problem = styled.p`
 export const ProblemContent = styled.p`
   ${Pretendard.Text};
   color: ${theme.grey900};
-  margin: 2% 0 4% 0;
+  margin: 2% 0 8% 0;
   white-space: pre-line;
 `;
 
