@@ -13,6 +13,7 @@ export const GameLayout = styled.div`
   height: 100vh;
   overflow: hidden;
 `;
+
 export const GameBox = styled.div`
   ${flex.HORIZONTAL}
   width: 100%;

@@ -138,9 +138,6 @@ export const CodeEditor = () => {
       } else {
         setCode(boilerplate);
       }
-      if (savedLanguage) {
-        setLanguage(savedLanguage);
-      }
     }
   }, [problemId, contestId]);
 
