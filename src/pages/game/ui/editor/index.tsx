@@ -123,8 +123,8 @@ export const CodeEditor = () => {
 
   useEffect(() => {
     const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.06;
-      setEditorHeight(`${newHeight}vh`);
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
     };
 
     updateEditorHeight();
@@ -133,7 +133,18 @@ export const CodeEditor = () => {
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
 
-<<<<<<< HEAD
+  useEffect(() => {
+    const updateEditorHeight = () => {
+      const newHeight = window.innerHeight * 0.45;
+      setEditorHeight(`${newHeight}px`);
+    };
+
+    updateEditorHeight();
+    window.addEventListener("resize", updateEditorHeight);
+
+    return () => window.removeEventListener("resize", updateEditorHeight);
+  }, []);
+
   useEffect(() => {
     if (problemId && contestId) {
       const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
@@ -152,8 +163,6 @@ export const CodeEditor = () => {
     }
   }, [code, problemId]);
 
-=======
->>>>>>> 5550691b1f4c26a080d19263b45abfcb87d1dd68
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
