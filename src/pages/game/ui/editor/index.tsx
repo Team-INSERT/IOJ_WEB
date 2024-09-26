@@ -150,22 +150,17 @@ export const CodeEditor = () => {
     }
   }, [code, problemId]);
 
-  useEffect(() => {
-    console.log(executionActive);
-  }, [executionActive]);
-
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
       return;
     }
-
-    setActiveTab("execution");
-    disconnectWebSocket();
-
     if (!executionActive) {
       setExecutionActive(true);
     }
+    setActiveTab("execution");
+    disconnectWebSocket();
+
     try {
       testBoxRef.current?.resetAndEnableTerminal();
       setInputDisabled(false);
@@ -204,6 +199,12 @@ export const CodeEditor = () => {
     executionActive,
   ]);
 
+  useEffect(() => {
+    if (activeTab === "execution") {
+      testBoxRef.current?.resetAndEnableTerminal();
+    }
+  }, [activeTab]);
+
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
       const client = clientRef.current;
@@ -238,7 +239,7 @@ export const CodeEditor = () => {
       setInputDisabled(true);
     }
   }, [consoleOutput]);
-    
+
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
