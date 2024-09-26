@@ -10,11 +10,12 @@ interface RankColorProps {
 
 export const Layout = styled.div`
   width: 100%;
+  min-height: 100vh;
   ${flex.HORIZONTAL}
   position: relative;
 `;
 export const Content = styled.div`
-  ${flex.COLUMN_CENTER}
+  ${flex.COLUMN_VERTICAL}
   gap: 3.75rem;
   padding-top: 6.25rem;
   margin-bottom: 12rem;
