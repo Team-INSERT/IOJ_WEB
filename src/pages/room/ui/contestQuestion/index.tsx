@@ -26,7 +26,7 @@ export const ContestQuestion = () => {
   const { contestId } = useParams<{ contestId: string }>();
 
   useEffect(() => {
-    const list = async () => {
+    (async () => {
       if (!contestId) {
         console.error("Contest ID가 제공되지 않았습니다.");
         return;
@@ -41,8 +41,7 @@ export const ContestQuestion = () => {
           setErrorMessage("UNKNOWN");
         }
       }
-    };
-    list();
+    })();
   }, [contestId]);
 
   const calculateRemainingTime = (endTime: string) => {
@@ -51,25 +50,30 @@ export const ContestQuestion = () => {
     const distance = end - now;
 
     if (distance < 0) {
-      setRemainingTime("종료되었습니다");
-      return;
+      return "종료되었습니다";
     }
 
     const hours = Math.floor(distance / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    setRemainingTime(`${hours}시간 ${minutes}분 ${seconds}초`);
+    return `${hours}시간 ${minutes}분 ${seconds}초`;
   };
 
   useEffect(() => {
-    if (contestDetail) {
-      const interval = setInterval(() => {
-        calculateRemainingTime(contestDetail.endTime);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-    return undefined;
+    let animationFrameId: number;
+
+    const updateRemainingTime = () => {
+      if (contestDetail) {
+        const updatedTime = calculateRemainingTime(contestDetail.endTime);
+        setRemainingTime(updatedTime);
+      }
+      animationFrameId = requestAnimationFrame(updateRemainingTime);
+    };
+
+    updateRemainingTime();
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, [contestDetail]);
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
