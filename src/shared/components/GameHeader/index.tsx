@@ -37,37 +37,47 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
     navigate(newPath);
   };
 
+  const calculateRemainingTime = (endTime: string) => {
+    const endDate = new Date(endTime);
+    const now = new Date();
+    const diff = endDate.getTime() - now.getTime();
+
+    if (diff <= 0) {
+      return "00 : 00 : 00";
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return `${String(hours).padStart(2, "0")} : ${String(minutes).padStart(
+      2,
+      "0"
+    )} : ${String(seconds).padStart(2, "0")}`;
+  };
+
   useEffect(() => {
-    const calculateRemainingTime = (endTime: string) => {
-      const endDate = new Date(endTime);
-      const interval = setInterval(() => {
-        const now = new Date();
-        const diff = endDate.getTime() - now.getTime();
+    // eslint-disable-next-line no-undef
+    let intervalId: NodeJS.Timeout;
 
-        if (diff <= 0) {
-          clearInterval(interval);
-          setRemainingTime("00 : 00 : 00");
-        } else {
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-          setRemainingTime(
-            `${String(hours).padStart(2, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")}`,
-          );
-        }
-      }, 1000);
-    };
     (async () => {
       try {
         const res: ContestDetails = await contestProblem(contestId);
         setProblemList(res.problems);
-        // 남은 시간 계산
-        calculateRemainingTime(res.endTime);
+
+        setRemainingTime(calculateRemainingTime(res.endTime));
+
+        intervalId = setInterval(() => {
+          setRemainingTime(calculateRemainingTime(res.endTime));
+        }, 1000);
       } catch (err) {
         /**/
       }
     })();
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [contestId]);
 
   const onNextClick = (mode: string) => {
@@ -76,7 +86,7 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
         const nextProblemId = problemList[problemIndex + 1]?.id;
         window.location.href = pathname.replace(
           /\/code\/\d+/,
-          `/code/${nextProblemId}`,
+          `/code/${nextProblemId}`
         );
       }
     } else if (mode === "previous") {
@@ -84,7 +94,7 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
         const previousProblemId = problemList[problemIndex - 1]?.id;
         window.location.href = pathname.replace(
           /\/code\/\d+/,
-          `/code/${previousProblemId}`,
+          `/code/${previousProblemId}`
         );
       }
     }
@@ -120,9 +130,6 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
         </S.Clock>
       </S.ClockContainer>
       <S.Setting>
-        {/* <Button mode="small" color="gray" font="nexon">
-          제출현황
-        </Button> */}
         <S.LineContainer>{/* <S.Line /> */}</S.LineContainer>
         <Button mode="small" color="red" font="nexon" onClick={handleExit}>
           나가기
