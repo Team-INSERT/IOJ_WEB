@@ -61,19 +61,18 @@ export const ContestQuestion = () => {
   };
 
   useEffect(() => {
-    let animationFrameId: number;
+    // eslint-disable-next-line no-undef
+    let intervalId: NodeJS.Timeout;
 
-    const updateRemainingTime = () => {
-      if (contestDetail) {
-        const updatedTime = calculateRemainingTime(contestDetail.endTime);
-        setRemainingTime(updatedTime);
-      }
-      animationFrameId = requestAnimationFrame(updateRemainingTime);
-    };
+    if (contestDetail) {
+      setRemainingTime(calculateRemainingTime(contestDetail.endTime));
 
-    updateRemainingTime();
+      intervalId = setInterval(() => {
+        setRemainingTime(calculateRemainingTime(contestDetail.endTime));
+      }, 1000);
+    }
 
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => clearInterval(intervalId);
   }, [contestDetail]);
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
