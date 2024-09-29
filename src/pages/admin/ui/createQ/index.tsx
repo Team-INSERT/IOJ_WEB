@@ -4,8 +4,11 @@ import Plus from "@/assets/Plus.svg";
 import Minus from "@/assets/Minus.svg";
 import Check from "@/assets/Check.svg";
 import Out from "@/assets/Out.png";
+
+import Modal from "@/shared/components/Modal";
 import { useNavigate } from "react-router-dom";
 import { postProblem } from "@/pages/admin/api/createProblem";
+import { validateQuestion } from "@/shared/helper/validateQuestion";
 import * as S from "./style";
 
 interface TestCase {
@@ -35,6 +38,11 @@ const formatTextWithLineBreaks = (text: string) =>
 
 export const CreateQuestion = () => {
   const navigate = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalSubtitle, setModalSubtitle] = useState("");
+  const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
 
   const [problemTitle, setProblemTitle] = useState("");
   const [explain, setExplain] = useState("");
@@ -77,7 +85,37 @@ export const CreateQuestion = () => {
     setTestCases(newTestCases);
   };
 
+  const showModal = (
+    status: "나쁨" | "좋음",
+    title: string,
+    subtitle: string,
+  ) => {
+    setModalStatus(status);
+    setModalTitle(title);
+    setModalSubtitle(subtitle);
+    setIsModalOpen(true);
+  };
+
   const onQuestionCreateClick = async () => {
+    const validationResult = validateQuestion(
+      problemTitle,
+      explain,
+      inputExplain,
+      outputExplain,
+      selectedLevel,
+      problemMemoryLimit,
+      problemTimeLimit,
+    );
+
+    if (!validationResult.valid) {
+      showModal(
+        validationResult.status,
+        validationResult.title,
+        validationResult.subtitle,
+      );
+      return;
+    }
+
     const requestData: RequestDataProps = {
       title: problemTitle,
       content: explain,
@@ -90,8 +128,24 @@ export const CreateQuestion = () => {
     };
     try {
       await postProblem(requestData);
+      showModal(
+        "좋음",
+        "대회 생성에 성공하였습니다!",
+        "대회가 성공적으로 생성되었습니다!",
+      );
+      setProblemTitle("");
+      setExplain("");
+      setInputExplain("");
+      setOutputExplain("");
+      setSelectedLevel(null);
+      setProblemMemoryLimit("");
+      setProblemTimeLimit("");
     } catch (err) {
-      /**/
+      showModal(
+        "나쁨",
+        "대회 생성에 실패하였습니다.",
+        "사용자의 네트워크 연결상태를 확인해주세요.",
+      );
     }
   };
 
@@ -251,6 +305,16 @@ export const CreateQuestion = () => {
             </S.TestOutputBox>
           </S.TestBox>
         </S.previewSection>
+        {isModalOpen && (
+          <Modal
+            status={modalStatus}
+            mode="알림"
+            title={modalTitle}
+            subtitle={modalSubtitle}
+            onClose={() => setIsModalOpen(false)}
+            animation
+          />
+        )}
       </S.createQLayout>
     </>
   );
