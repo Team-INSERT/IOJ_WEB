@@ -23,7 +23,7 @@ const MainHeader = () => {
   const refreshToken = getCookie("refreshToken");
 
   const headerItemClick = (url: string, id: number) => {
-    if (id === 2) {
+    if (id === 2 || id === 3) {
       if (!isLogin) {
         setIsModalOpen(true);
         return;
