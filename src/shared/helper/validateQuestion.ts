@@ -67,14 +67,14 @@ export const validateQuestion = (
   }
 
   if (
-    parseInt(problemMemoryLimit, 10) < 128 ||
+    parseInt(problemMemoryLimit, 10) < 1 ||
     parseInt(problemMemoryLimit, 10) > 1024
   ) {
     return {
       valid: false,
       status: "나쁨",
       title: "메모리 제한을 확인해주세요.",
-      subtitle: "메모리 제한은 128MB에서 1024MB 사이여야 합니다!",
+      subtitle: "메모리 제한은 1MB에서 1024MB 사이여야 합니다!",
     };
   }
 
