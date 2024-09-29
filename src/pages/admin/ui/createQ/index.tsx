@@ -130,8 +130,8 @@ export const CreateQuestion = () => {
       await postProblem(requestData);
       showModal(
         "좋음",
-        "대회 생성에 성공하였습니다!",
-        "대회가 성공적으로 생성되었습니다!",
+        "문제 생성에 성공하였습니다!",
+        "문제가 성공적으로 생성되었습니다!",
       );
       setProblemTitle("");
       setExplain("");
@@ -143,7 +143,7 @@ export const CreateQuestion = () => {
     } catch (err) {
       showModal(
         "나쁨",
-        "대회 생성에 실패하였습니다.",
+        "문제 생성에 실패하였습니다.",
         "사용자의 네트워크 연결상태를 확인해주세요.",
       );
     }
