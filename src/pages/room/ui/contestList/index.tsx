@@ -1,5 +1,5 @@
 import { Button, ContestTitle } from "@/shared/components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { contestList } from "@/pages/room/api/roomApi";
 import * as S from "./style";
@@ -24,6 +24,7 @@ export const ContestList = () => {
   };
 
   const navigate = useNavigate();
+  const location = useLocation();
   const [contestDetail, setContestDetail] = useState<contest[]>([]);
 
   useEffect(() => {
@@ -37,13 +38,27 @@ export const ContestList = () => {
     })();
   }, []);
 
+  const getRoute = () => {
+    if (location.pathname.startsWith("/contest/list")) {
+      return "/";
+    }
+    if (location.pathname.startsWith("/game")) {
+      return "/game";
+    }
+    return "/";
+  };
+
   return (
     <S.Layout>
       <S.ContentLayout>
         <S.TitleContainer>
           <S.Title>대회목록</S.Title>
           <S.Button>
-            <Button mode="small" color="red" onClick={() => navigate("/game")}>
+            <Button
+              mode="small"
+              color="red"
+              onClick={() => navigate(getRoute())}
+            >
               뒤로가기
             </Button>
           </S.Button>
