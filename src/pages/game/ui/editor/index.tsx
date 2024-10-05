@@ -134,18 +134,6 @@ export const CodeEditor = () => {
   }, []);
 
   useEffect(() => {
-    const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.45;
-      setEditorHeight(`${newHeight}px`);
-    };
-
-    updateEditorHeight();
-    window.addEventListener("resize", updateEditorHeight);
-
-    return () => window.removeEventListener("resize", updateEditorHeight);
-  }, []);
-
-  useEffect(() => {
     if (problemId && contestId) {
       const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
 
