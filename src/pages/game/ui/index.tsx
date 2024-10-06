@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
 import { useEffect, useState } from "react";
-import Split from "react-split"; // react-split import
+import Split from "react-split";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
