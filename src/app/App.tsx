@@ -40,7 +40,6 @@ const App = () => {
           path="/game/contest/:contestId/code/:problemId"
           element={<Game />}
         />
-        <Route path="/game/editor" element={<Game />} />
         <Route path="game/waiting" element={<Waiting />} />
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/contest" element={<CreateContest />} />
