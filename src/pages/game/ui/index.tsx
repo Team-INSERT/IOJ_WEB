@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import Split from "react-split"; // react-split import
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -12,33 +13,24 @@ export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
   position: fixed;
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
 `;
 
 export const GameBox = styled.div`
-  display: flex;
+  ${flex.HORIZONTAL}
+  position: fixed;
   width: 100%;
-  height: calc(100% - 50px);
+  height: 100%;
 `;
 
 export const ProblemWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
-  flex-grow: 1;
 `;
 
 export const CodeEditorWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
-  flex-grow: 1;
-`;
-
-export const Resizer = styled.div`
-  width: 5px;
-  background-color: #ccc;
-  cursor: col-resize;
-  position: relative;
 `;
 
 export const Game = () => {
@@ -67,10 +59,6 @@ export const Game = () => {
     parseInt(problemNum, 10),
   );
 
-  const problemRef = useRef<HTMLDivElement>(null);
-  const codeEditorRef = useRef<HTMLDivElement>(null);
-  const resizerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     (async () => {
       try {
@@ -94,42 +82,28 @@ export const Game = () => {
     })();
   }, [contestNum]);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (resizerRef.current && problemRef.current && codeEditorRef.current) {
-        const newWidth =
-          e.clientX - problemRef.current.getBoundingClientRect().left;
-        problemRef.current.style.width = `${newWidth}px`;
-        codeEditorRef.current.style.width = `calc(100% - ${newWidth}px)`;
-      }
-    };
-
-    const handleMouseUp = () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-
-    const handleMouseDown = () => {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    };
-
-    if (resizerRef.current) {
-      resizerRef.current.addEventListener("mousedown", handleMouseDown);
-    }
-
-    return () => {
-      if (resizerRef.current) {
-        resizerRef.current.removeEventListener("mousedown", handleMouseDown);
-      }
-    };
-  }, []);
-
   return (
     <GameLayout>
       <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
-      <GameBox>
-        <ProblemWrapper ref={problemRef}>
+      <Split
+        sizes={[50, 50]}
+        minSize={200}
+        expandToMin={false}
+        gutterSize={10}
+        gutterAlign="center"
+        direction="horizontal"
+        cursor="col-resize"
+        gutter={(index, direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction}`;
+          gutter.onmouseenter = () => {
+            gutter.style.cursor = "col-resize";
+          };
+          return gutter;
+        }}
+        style={{ display: "flex", width: "100%", height: "100%" }}
+      >
+        <ProblemWrapper>
           <Problem
             id={formattedProblemNum}
             title={problem.title}
@@ -142,11 +116,10 @@ export const Game = () => {
             testcases={problem.testcases}
           />
         </ProblemWrapper>
-        <Resizer ref={resizerRef} />
-        <CodeEditorWrapper ref={codeEditorRef}>
+        <CodeEditorWrapper>
           <CodeEditor />
         </CodeEditorWrapper>
-      </GameBox>
+      </Split>
     </GameLayout>
   );
 };
