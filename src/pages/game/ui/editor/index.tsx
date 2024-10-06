@@ -80,7 +80,6 @@ export const CodeEditor = () => {
     }
   }, [languages, contestId, problemId]);
 
-  // 코드 변경 시 로컬스토리지에 저장
   const handleCodeChange = (newCode: string) => {
     setCode(newCode);
     if (contestId && problemId) {
@@ -187,6 +186,12 @@ export const CodeEditor = () => {
     languages,
     executionActive,
   ]);
+
+  const handleSaveCode = () => {
+    if (contestId && problemId) {
+      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === "execution") {
@@ -337,7 +342,7 @@ export const CodeEditor = () => {
               테스트케이스
             </Button>
           </S.Button>
-          <S.Button onClick={onTestcaseClick}>
+          <S.Button onClick={handleSaveCode}>
             <Button mode="small" color="blue" font="nexon">
               저장
             </Button>
