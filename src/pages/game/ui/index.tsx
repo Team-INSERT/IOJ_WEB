@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
 import { useEffect, useState } from "react";
+import Split from "react-split";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -20,6 +21,16 @@ export const GameBox = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
+`;
+
+export const ProblemWrapper = styled.div`
+  height: 100%;
+  overflow-y: auto;
+`;
+
+export const CodeEditorWrapper = styled.div`
+  height: 100%;
+  overflow-y: auto;
 `;
 
 export const Game = () => {
@@ -74,20 +85,41 @@ export const Game = () => {
   return (
     <GameLayout>
       <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
-      <GameBox>
-        <Problem
-          id={formattedProblemNum}
-          title={problem.title}
-          timeLimit={problem.timeLimit}
-          memoryLimit={problem.memoryLimit}
-          content={problem.content}
-          inputContent={problem.inputContent}
-          outputContent={problem.outputContent}
-          level={problem.level}
-          testcases={problem.testcases}
-        />
-        <CodeEditor />
-      </GameBox>
+      <Split
+        sizes={[50, 50]}
+        minSize={200}
+        expandToMin={false}
+        gutterSize={10}
+        gutterAlign="center"
+        direction="horizontal"
+        cursor="col-resize"
+        gutter={(direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction}`;
+          gutter.onmouseenter = () => {
+            gutter.style.cursor = "col-resize";
+          };
+          return gutter;
+        }}
+        style={{ display: "flex", width: "100%", height: "100%" }}
+      >
+        <ProblemWrapper>
+          <Problem
+            id={formattedProblemNum}
+            title={problem.title}
+            timeLimit={problem.timeLimit}
+            memoryLimit={problem.memoryLimit}
+            content={problem.content}
+            inputContent={problem.inputContent}
+            outputContent={problem.outputContent}
+            level={problem.level}
+            testcases={problem.testcases}
+          />
+        </ProblemWrapper>
+        <CodeEditorWrapper>
+          <CodeEditor />
+        </CodeEditorWrapper>
+      </Split>
     </GameLayout>
   );
 };

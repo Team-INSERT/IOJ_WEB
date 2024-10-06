@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Split from "react-split";
+import AceEditor from "react-ace";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
-import AceEditor from "react-ace";
 import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
 import { contestSubmit } from "../../api/contestSubmt";
@@ -359,42 +360,61 @@ export const CodeEditor = () => {
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-      <AceEditor
-        mode={
-          ["c", "cpp"].includes(languages.toLowerCase())
-            ? "c_cpp"
-            : languages.toLowerCase()
-        }
-        theme="monokai"
-        height={editorHeight}
-        width="100%"
-        fontSize={16}
-        value={code}
-        onChange={(value: any) => handleCodeChange(value || "")}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
+      <Split
+        direction="vertical"
+        sizes={[50, 50]}
+        minSize={100}
+        gutterSize={10}
+        gutterAlign="center"
+        style={{ height: "100%", width: "100%" }}
+        cursor="row-resize"
+        gutter={(direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction}`;
+          gutter.onmouseenter = () => {
+            gutter.style.cursor = "row-resize";
+          };
+          return gutter;
         }}
-        editorProps={{ $blockScrolling: true }}
-      />
-
-      <S.TestBoxLayout>
-        <TestBox
-          ref={testBoxRef}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          testResult={testResult}
-          isTestLoading={isTestLoading}
-          onInputChange={handleInputChange}
-          onSubmit={handleInputSubmit}
-          consoleOutput={consoleOutput}
-          isExecutionActive={executionActive}
-          submissionResults={submissionResults}
-          disconnectWebSocket={disconnectWebSocket}
-          isInputDisabled={isInputDisabled}
-          errorMessage={errorMessage}
+      >
+        <AceEditor
+          mode={
+            ["c", "cpp"].includes(languages.toLowerCase())
+              ? "c_cpp"
+              : languages.toLowerCase()
+          }
+          theme="monokai"
+          height={editorHeight}
+          width="100%"
+          fontSize={16}
+          value={code}
+          onChange={(value: any) => handleCodeChange(value || "")}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+          }}
+          editorProps={{ $blockScrolling: true }}
         />
-      </S.TestBoxLayout>
+
+        <S.TestBoxLayout>
+          <TestBox
+            ref={testBoxRef}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            testResult={testResult}
+            isTestLoading={isTestLoading}
+            onInputChange={handleInputChange}
+            onSubmit={handleInputSubmit}
+            consoleOutput={consoleOutput}
+            isExecutionActive={executionActive}
+            submissionResults={submissionResults}
+            disconnectWebSocket={disconnectWebSocket}
+            isInputDisabled={isInputDisabled}
+            errorMessage={errorMessage}
+          />
+        </S.TestBoxLayout>
+      </Split>
+
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
