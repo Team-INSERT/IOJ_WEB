@@ -103,6 +103,10 @@ export const Result = () => (
     </S.RankingBox>
     <S.Podium>
       <S.FirstPlaceCharacter>
+        <S.CrownPosition>
+          <Crown />
+        </S.CrownPosition>
+        <S.Flash src={flash} />
         <Character />
       </S.FirstPlaceCharacter>
       <S.SecondPlaceCharacter>

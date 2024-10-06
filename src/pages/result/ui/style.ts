@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import flash from "@/assets/flash.png";
-import { Pretendard, theme, flex, NexonFont } from "@/shared/style";
+import { theme, flex, NexonFont } from "@/shared/style";
 
 export const ResultBox = styled.div`
   width: 100%;
@@ -33,7 +32,7 @@ export const GameInfo = styled.div`
 `;
 
 export const GameTitle = styled.p`
-  ${NexonFont.NexonSmallTitle}
+  ${NexonFont.NexonSmallTitle};
 `;
 
 export const RankTable = styled.div`
@@ -46,7 +45,7 @@ export const RankTable = styled.div`
 
 export const RankHeader = styled.div`
   display: contents;
-  ${NexonFont.NexonText}
+  ${NexonFont.NexonText};
   color: ${theme.grey800};
 `;
 
@@ -59,25 +58,25 @@ export const RankRow = styled.div`
 `;
 
 export const RankRank = styled.div`
-  ${NexonFont.NexonText}
+  ${NexonFont.NexonText};
   color: ${theme.grey800};
   text-align: left;
 `;
 
 export const RankName = styled.div`
-  ${NexonFont.NexonText}
+  ${NexonFont.NexonText};
   color: ${theme.grey800};
   text-align: left;
 `;
 
 export const RankScore = styled.div`
-  ${NexonFont.NexonText}
+  ${NexonFont.NexonText};
   color: ${theme.grey800};
   text-align: left;
 `;
 
 export const RankTime = styled.div`
-  ${NexonFont.NexonText}
+  ${NexonFont.NexonText};
   color: ${theme.grey800};
   text-align: left;
 `;
@@ -86,10 +85,11 @@ export const PodiumImg = styled.img`
   width: auto;
   height: auto;
 `;
+
 export const Podium = styled.div`
-  ${flex.COLUMN_END}
+  ${flex.COLUMN_END};
   margin: 104px 60px 256px 0;
-  position: relative; /* Podium을 relative로 설정 */
+  position: relative;
 `;
 
 export const CharacterPosition = styled.div`
@@ -98,27 +98,46 @@ export const CharacterPosition = styled.div`
   height: auto;
 `;
 
-/* 각 등수에 맞는 캐릭터의 위치 */
-export const FirstPlaceCharacter = styled(CharacterPosition)`
-  bottom: 120px; /* 1등 Podium 위에 위치 */
-  left: 50%; /* Podium의 중앙에 위치 */
+export const Flash = styled.img`
+  position: absolute;
+  width: 10rem;
+  height: auto;
+  top: -50px;
+  left: 95%;
   transform: translateX(-50%);
 `;
 
+export const CrownPosition = styled.div`
+  position: absolute;
+  z-index: 3;
+  width: 30px;
+  height: auto;
+  top: -30px;
+  left: 85%;
+  transform: translateX(-50%);
+`;
+
+export const FirstPlaceCharacter = styled(CharacterPosition)`
+  bottom: 15.5rem;
+  left: 45%;
+  transform: translateX(-50%);
+  z-index: 5;
+`;
+
 export const SecondPlaceCharacter = styled(CharacterPosition)`
-  bottom: 80px; /* 2등 Podium 위에 위치 */
-  left: 25%; /* Podium의 왼쪽에 위치 */
+  bottom: 12.5rem;
+  left: 12.5%;
   transform: translateX(-50%);
 `;
 
 export const ThirdPlaceCharacter = styled(CharacterPosition)`
-  bottom: 80px; /* 3등 Podium 위에 위치 */
-  right: 25%; /* Podium의 오른쪽에 위치 */
+  bottom: 10.5rem;
+  right: 21%;
   transform: translateX(50%);
 `;
 
 export const Button = styled.div`
-  ${flex.END}
+  ${flex.END};
   width: 100%;
   padding-top: 10px;
 `;
