@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Split from "react-split"; // react-split import
+import Split from "react-split";
 import AceEditor from "react-ace";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
@@ -360,24 +360,6 @@ export const CodeEditor = () => {
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-
-      <Split
-        direction="vertical"
-        sizes={[50, 50]}
-        minSize={100}
-        gutterSize={10}
-        gutterAlign="center"
-        style={{ height: "100%", width: "100%" }}
-        cursor="row-resize"
-        gutter={(direction) => {
-          const gutter = document.createElement("div");
-          gutter.className = `gutter gutter-${direction}`;
-          gutter.onmouseenter = () => {
-            gutter.style.cursor = "row-resize";
-          };
-          return gutter;
-        }}
-      >
       <AceEditor
         mode={
           ["c", "cpp"].includes(languages.toLowerCase())
