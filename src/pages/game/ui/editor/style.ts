@@ -36,7 +36,5 @@ export const TestBoxLayout = styled.div`
   height: 16rem;
   overflow: auto;
   z-index: 20;
-  position: fixed;
-  bottom: 0;
-  width: 50%;
+  width: 100%;
 `;

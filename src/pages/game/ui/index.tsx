@@ -93,7 +93,7 @@ export const Game = () => {
         gutterAlign="center"
         direction="horizontal"
         cursor="col-resize"
-        gutter={(index, direction) => {
+        gutter={(direction) => {
           const gutter = document.createElement("div");
           gutter.className = `gutter gutter-${direction}`;
           gutter.onmouseenter = () => {
