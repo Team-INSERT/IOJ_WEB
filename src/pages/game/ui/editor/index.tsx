@@ -360,24 +360,41 @@ export const CodeEditor = () => {
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-      <AceEditor
-        mode={
-          ["c", "cpp"].includes(languages.toLowerCase())
-            ? "c_cpp"
-            : languages.toLowerCase()
-        }
-        theme="monokai"
-        height={editorHeight}
-        width="100%"
-        fontSize={16}
-        value={code}
-        onChange={(value: any) => handleCodeChange(value || "")}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
+      <Split
+        direction="vertical"
+        sizes={[50, 50]}
+        minSize={100}
+        gutterSize={10}
+        gutterAlign="center"
+        style={{ height: "100%", width: "100%" }}
+        cursor="row-resize"
+        gutter={(direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction}`;
+          gutter.onmouseenter = () => {
+            gutter.style.cursor = "row-resize";
+          };
+          return gutter;
         }}
-        editorProps={{ $blockScrolling: true }}
-      />
+      >
+        <AceEditor
+          mode={
+            ["c", "cpp"].includes(languages.toLowerCase())
+              ? "c_cpp"
+              : languages.toLowerCase()
+          }
+          theme="monokai"
+          height={editorHeight}
+          width="100%"
+          fontSize={16}
+          value={code}
+          onChange={(value: any) => handleCodeChange(value || "")}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+          }}
+          editorProps={{ $blockScrolling: true }}
+        />
 
         <S.TestBoxLayout>
           <TestBox
