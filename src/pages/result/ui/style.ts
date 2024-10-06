@@ -82,14 +82,39 @@ export const RankTime = styled.div`
   text-align: left;
 `;
 
-export const Podium = styled.div`
-  ${flex.COLUMN_END}
-  margin: 104px 60px 256px 0;
-`;
-
 export const PodiumImg = styled.img`
   width: auto;
   height: auto;
+`;
+export const Podium = styled.div`
+  ${flex.COLUMN_END}
+  margin: 104px 60px 256px 0;
+  position: relative; /* Podium을 relative로 설정 */
+`;
+
+export const CharacterPosition = styled.div`
+  position: absolute;
+  width: 50px;
+  height: auto;
+`;
+
+/* 각 등수에 맞는 캐릭터의 위치 */
+export const FirstPlaceCharacter = styled(CharacterPosition)`
+  bottom: 120px; /* 1등 Podium 위에 위치 */
+  left: 50%; /* Podium의 중앙에 위치 */
+  transform: translateX(-50%);
+`;
+
+export const SecondPlaceCharacter = styled(CharacterPosition)`
+  bottom: 80px; /* 2등 Podium 위에 위치 */
+  left: 25%; /* Podium의 왼쪽에 위치 */
+  transform: translateX(-50%);
+`;
+
+export const ThirdPlaceCharacter = styled(CharacterPosition)`
+  bottom: 80px; /* 3등 Podium 위에 위치 */
+  right: 25%; /* Podium의 오른쪽에 위치 */
+  transform: translateX(50%);
 `;
 
 export const Button = styled.div`

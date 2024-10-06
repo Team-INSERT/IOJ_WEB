@@ -102,7 +102,18 @@ export const Result = () => (
       </S.RankTable>
     </S.RankingBox>
     <S.Podium>
-      <S.PodiumImg src={Podium} />
+      <S.FirstPlaceCharacter>
+        <Character />
+      </S.FirstPlaceCharacter>
+      <S.SecondPlaceCharacter>
+        <Character />
+      </S.SecondPlaceCharacter>
+      <S.ThirdPlaceCharacter>
+        <Character />
+      </S.ThirdPlaceCharacter>
+
+      <S.PodiumImg src={Podium} alt="Podium 이미지" />
+
       <S.Button>
         <Button mode="big" color="blue" font="nexon">
           나가기
