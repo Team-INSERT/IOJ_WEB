@@ -7,7 +7,7 @@ const fontGenerator = (
   font-weight: ${weight};
   font-size: ${size}rem;
   line-height: ${lineHeight}%;
-  font-family: ${fontFamily};
+  font-family: ${fontFamily}, -apple-system;
 `;
 
 export const NexonFont = {
