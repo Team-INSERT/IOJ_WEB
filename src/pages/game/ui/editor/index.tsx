@@ -90,6 +90,16 @@ export const CodeEditor = () => {
     }
   };
 
+  const handleResetCode = async () => {
+    try {
+      const res = await boilerplateCode(languages);
+      setBoilerplate(res);
+      setCode(res);
+      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
 
@@ -328,6 +338,11 @@ export const CodeEditor = () => {
       <S.HeaderBox>
         <S.FileName>{fileName}</S.FileName>
         <S.ButtonBox>
+          <S.Button onClick={handleResetCode}>
+            <Button mode="small" color="blue" font="nexon">
+              초기화
+            </Button>
+          </S.Button>
           <S.Button>
             <Dropdown
               onSelectLanguage={(selectedLanguage, file) => {
