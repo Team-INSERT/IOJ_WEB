@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Split from "react-split";
+import AceEditor from "react-ace";
 import ErrorModal from "@/shared/components/ErrorModal";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import Dropdown from "@/shared/components/DropDown";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
-import AceEditor from "react-ace";
 import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
 import { contestSubmit } from "../../api/contestSubmt";
@@ -56,15 +57,15 @@ export const CodeEditor = () => {
   const [boilerplate, setBoilerplate] = useState("");
 
   useEffect(() => {
-    (async () => {
-      try {
-        const savedCode = localStorage.getItem(
-          `code_${contestId}_${problemId}_${languages}`,
-        );
+    const savedCode = localStorage.getItem(
+      `code_${contestId}_${problemId}_${languages}`,
+    );
 
-        if (savedCode) {
-          setCode(savedCode);
-        } else {
+    if (savedCode) {
+      setCode(savedCode);
+    } else {
+      (async () => {
+        try {
           const res = await boilerplateCode(languages);
           setBoilerplate(res);
           setCode(res);
@@ -72,18 +73,22 @@ export const CodeEditor = () => {
             `code_${contestId}_${problemId}_${languages}`,
             res,
           );
+        } catch (err) {
+          console.error(err);
         }
-      } catch (err) {
-        console.error(err);
-      }
-    })();
+      })();
+    }
   }, [languages, contestId, problemId]);
 
-  useEffect(() => {
-    if (code && problemId && contestId) {
-      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
+  const handleCodeChange = (newCode: string) => {
+    setCode(newCode);
+    if (contestId && problemId) {
+      localStorage.setItem(
+        `code_${contestId}_${problemId}_${languages}`,
+        newCode,
+      );
     }
-  }, [code, problemId, contestId, languages]);
+  };
 
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
@@ -133,36 +138,6 @@ export const CodeEditor = () => {
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
 
-  useEffect(() => {
-    const updateEditorHeight = () => {
-      const newHeight = window.innerHeight * 0.45;
-      setEditorHeight(`${newHeight}px`);
-    };
-
-    updateEditorHeight();
-    window.addEventListener("resize", updateEditorHeight);
-
-    return () => window.removeEventListener("resize", updateEditorHeight);
-  }, []);
-
-  useEffect(() => {
-    if (problemId && contestId) {
-      const savedCode = localStorage.getItem(`code_${contestId}_${problemId}`);
-
-      if (savedCode) {
-        setCode(savedCode);
-      } else {
-        setCode(boilerplate);
-      }
-    }
-  }, [problemId, contestId, boilerplate]);
-
-  useEffect(() => {
-    if (problemId) {
-      localStorage.setItem(`code_${problemId}`, code);
-    }
-  }, [code, problemId]);
-
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
@@ -211,6 +186,12 @@ export const CodeEditor = () => {
     languages,
     executionActive,
   ]);
+
+  const handleSaveCode = () => {
+    if (contestId && problemId) {
+      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === "execution") {
@@ -361,6 +342,11 @@ export const CodeEditor = () => {
               테스트케이스
             </Button>
           </S.Button>
+          <S.Button onClick={handleSaveCode}>
+            <Button mode="small" color="blue" font="nexon">
+              저장
+            </Button>
+          </S.Button>
           <S.Button onClick={handleExecution}>
             <Button mode="small" color="blue" font="nexon">
               실행
@@ -374,42 +360,61 @@ export const CodeEditor = () => {
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-      <AceEditor
-        mode={
-          ["c", "cpp"].includes(languages.toLowerCase())
-            ? "c_cpp"
-            : languages.toLowerCase()
-        }
-        theme="monokai"
-        height={editorHeight}
-        width="100%"
-        fontSize={16}
-        value={code}
-        onChange={(value: any) => setCode(value || "")}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
+      <Split
+        direction="vertical"
+        sizes={[50, 50]}
+        minSize={100}
+        gutterSize={10}
+        gutterAlign="center"
+        style={{ height: "100%", width: "100%" }}
+        cursor="row-resize"
+        gutter={(direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction}`;
+          gutter.onmouseenter = () => {
+            gutter.style.cursor = "row-resize";
+          };
+          return gutter;
         }}
-        editorProps={{ $blockScrolling: true }}
-      />
-
-      <S.TestBoxLayout>
-        <TestBox
-          ref={testBoxRef}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          testResult={testResult}
-          isTestLoading={isTestLoading}
-          onInputChange={handleInputChange}
-          onSubmit={handleInputSubmit}
-          consoleOutput={consoleOutput}
-          isExecutionActive={executionActive}
-          submissionResults={submissionResults}
-          disconnectWebSocket={disconnectWebSocket}
-          isInputDisabled={isInputDisabled}
-          errorMessage={errorMessage}
+      >
+        <AceEditor
+          mode={
+            ["c", "cpp"].includes(languages.toLowerCase())
+              ? "c_cpp"
+              : languages.toLowerCase()
+          }
+          theme="monokai"
+          height={editorHeight}
+          width="100%"
+          fontSize={16}
+          value={code}
+          onChange={(value: any) => handleCodeChange(value || "")}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+          }}
+          editorProps={{ $blockScrolling: true }}
         />
-      </S.TestBoxLayout>
+
+        <S.TestBoxLayout>
+          <TestBox
+            ref={testBoxRef}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            testResult={testResult}
+            isTestLoading={isTestLoading}
+            onInputChange={handleInputChange}
+            onSubmit={handleInputSubmit}
+            consoleOutput={consoleOutput}
+            isExecutionActive={executionActive}
+            submissionResults={submissionResults}
+            disconnectWebSocket={disconnectWebSocket}
+            isInputDisabled={isInputDisabled}
+            errorMessage={errorMessage}
+          />
+        </S.TestBoxLayout>
+      </Split>
+
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
