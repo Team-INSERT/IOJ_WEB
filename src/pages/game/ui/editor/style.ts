@@ -4,8 +4,7 @@ import { Pretendard, theme, flex } from "@/shared/style";
 export const EditorLayout = styled.div`
   background-color: #1e1e1e;
   ${flex.COLUMN_FLEX};
-  width: 50%;
-  height: calc(100vh - 20rem);
+  width: 100%;
   overflow: hidden;
 `;
 
