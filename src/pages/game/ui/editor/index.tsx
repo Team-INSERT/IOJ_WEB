@@ -204,11 +204,7 @@ export const CodeEditor = () => {
         });
         setInput("");
       } else {
-        console.log(
-          "WebSocket client or session ID is not ready.",
-          client,
-          userSessionId,
-        );
+        console.error("WebSocket client or session ID is not ready.");
       }
     },
     [clientRef, sessionIdRef],
@@ -219,10 +215,15 @@ export const CodeEditor = () => {
   };
 
   useEffect(() => {
-    if (consoleOutput.includes("Process finished with exit code 0")) {
+    if (
+      (consoleOutput &&
+        consoleOutput.includes("Process finished with exit code 0")) ||
+      consoleOutput.includes("Process finished with exit code 1")
+    ) {
       setInputDisabled(true);
+      disconnectWebSocket();
     }
-  }, [consoleOutput]);
+  }, [consoleOutput, disconnectWebSocket]);
 
   const handleSubmit = async () => {
     if (isSubmitting) {
