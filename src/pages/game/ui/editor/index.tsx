@@ -107,10 +107,6 @@ export const CodeEditor = () => {
 
   const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
-  useEffect(() => {
-    setExecutionActive(isExecutionActive);
-  }, [isExecutionActive]);
-
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
@@ -192,12 +188,6 @@ export const CodeEditor = () => {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
     }
   };
-
-  useEffect(() => {
-    if (activeTab === "execution") {
-      testBoxRef.current?.resetAndEnableTerminal();
-    }
-  }, [activeTab]);
 
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
