@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { theme } from "@/shared/style";
-import { Terminal } from "xterm";
+import { useTerminal } from "@/shared/hooks/useTerminal";
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
 import {
@@ -27,7 +27,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       onSubmit,
       isExecutionActive,
       submissionResults,
-      disconnectWebSocket,
       isInputDisabled,
       errorMessage,
     },
@@ -39,10 +38,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const [acceptCount, setAcceptCount] = useState(0);
     const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
     const terminalRef = useRef<HTMLDivElement | null>(null);
-    const terminalInstance = useRef<Terminal | null>(null);
-    const inputBuffer = useRef<string>("");
-    const [isProcessFinished, setIsProcessFinished] = useState(false);
     const inputDisableRef = useRef(isInputDisabled);
+    const { initializeTerminal, resetAndEnableTerminal, writeToTerminal } =
+      useTerminal();
 
     useEffect(() => {
       const countAcceptedTestCases = testResult.filter(
@@ -114,110 +112,36 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     }, [isInputDisabled]);
 
     useEffect(() => {
-      const initializeTerminal = () => {
-        if (terminalRef.current && !terminalInstance.current) {
-          terminalInstance.current = new Terminal({
-            cursorBlink: true,
-            scrollback: 1000,
-            tabStopWidth: 4,
-          });
-          terminalInstance.current.open(terminalRef.current);
-          terminalInstance.current.writeln("프로세스가 실행됩니다.");
-          terminalInstance.current.writeln("");
-
-          terminalInstance.current.onData((data) => {
-            if (inputDisableRef.current || isProcessFinished) {
-              console.log("Input is disabled.");
-              return;
-            }
-            if (!isProcessFinished) {
-              if (data === "\r" || data === "\n") {
-                if (inputBuffer.current.trim() !== "") {
-                  terminalInstance.current?.writeln("");
-                  onSubmit(inputBuffer.current);
-                  inputBuffer.current = "";
-                }
-              } else if (data === "\u007F") {
-                if (inputBuffer.current.length > 0) {
-                  inputBuffer.current = inputBuffer.current.slice(0, -1);
-                  terminalInstance.current?.write("\b \b");
-                }
-              } else {
-                inputBuffer.current += data;
-                terminalInstance.current?.write(data);
-              }
-            }
-          });
-        }
-      };
-
       if (isExecutionActive) {
-        initializeTerminal();
-        setIsProcessFinished(false);
-        inputDisableRef.current = false;
+        initializeTerminal({
+          terminalRef,
+          inputDisableRef,
+          isProcessFinished: false,
+          onSubmit,
+        });
       }
-    }, [isExecutionActive, onSubmit, isProcessFinished]);
+    }, [isExecutionActive, onSubmit, initializeTerminal]);
+
+    useEffect(() => {
+      if (consoleOutput) {
+        writeToTerminal(consoleOutput);
+      }
+    }, [consoleOutput, writeToTerminal]);
 
     useImperativeHandle(
       ref,
       () => ({
         resetAndEnableTerminal: () => {
-          if (terminalInstance.current) {
-            terminalInstance.current.dispose();
-            terminalInstance.current = new Terminal({
-              cursorBlink: true,
-              scrollback: 1000,
-              tabStopWidth: 4,
-            });
-
-            if (terminalRef.current) {
-              terminalInstance.current.open(terminalRef.current);
-              terminalInstance.current.writeln("프로세스가 재시작됩니다.");
-              terminalInstance.current.writeln("");
-
-              terminalInstance.current.onData((data) => {
-                if (!inputDisableRef.current) {
-                  // 입력 가능 상태 확인
-                  if (data === "\r" || data === "\n") {
-                    if (inputBuffer.current.trim() !== "") {
-                      terminalInstance.current?.writeln("");
-                      onSubmit(inputBuffer.current);
-                      inputBuffer.current = "";
-                    }
-                  } else if (data === "\u007F") {
-                    // 백스페이스 처리
-                    if (inputBuffer.current.length > 0) {
-                      inputBuffer.current = inputBuffer.current.slice(0, -1);
-                      terminalInstance.current?.write("\b \b");
-                    }
-                  } else {
-                    inputBuffer.current += data;
-                    terminalInstance.current?.write(data);
-                  }
-                }
-              });
-            }
-
-            setIsProcessFinished(false);
-            inputDisableRef.current = false;
-          }
+          resetAndEnableTerminal({
+            terminalRef,
+            inputDisableRef,
+            isProcessFinished: false,
+            onSubmit,
+          });
         },
       }),
-      [onSubmit],
+      [resetAndEnableTerminal, onSubmit],
     );
-
-    useEffect(() => {
-      if (consoleOutput && terminalInstance.current) {
-        if (!consoleOutput.includes("Process finished with exit code 0")) {
-          terminalInstance.current.writeln(consoleOutput);
-        } else {
-          terminalInstance.current.writeln("Process finished with exit code 0");
-          inputDisableRef.current = true;
-          disconnectWebSocket();
-          setIsProcessFinished(false);
-        }
-      }
-    }, [consoleOutput]);
 
     return (
       <S.Container>
