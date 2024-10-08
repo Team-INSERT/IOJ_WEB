@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { customAxios } from "../utils/customAxios";
@@ -11,7 +11,6 @@ export const useWebSocket = () => {
   const sessionIdRef = useRef<string | null>(null);
   const isSubscribedRef = useRef<boolean>(false); // 구독 중복 방지
 
-  // 웹소켓 연결 및 실행
   const connectWebSocket = async () =>
     new Promise<void>((resolve, reject) => {
       const { baseURL } = customAxios.defaults;
@@ -20,19 +19,18 @@ export const useWebSocket = () => {
       const stompClient = new Client({
         webSocketFactory: () => socket,
         debug(str: string) {
-          console.log(str); // 웹소켓 디버그 정보 출력
+          console.log(str);
         },
         onConnect: async (frame) => {
           console.log("Connected to WebSocket:", frame);
 
           try {
-            setIsExecutionActive(true); // 실행 상태 설정
-            // 세션 ID를 서버에서 받아옴
+            setIsExecutionActive(true);
             const response = await customAxios.get(`/execution`);
             const sessionId = response.data;
             sessionIdRef.current = sessionId;
             console.log("Session ID:", sessionId);
-            setConsoleOutput(""); // 터미널 출력 초기화
+            setConsoleOutput("");
 
             if (!isSubscribedRef.current) {
               isSubscribedRef.current = true;
@@ -69,14 +67,13 @@ export const useWebSocket = () => {
       clientRef.current = stompClient;
     });
 
-  // 웹소켓 연결 해제 함수
   const disconnectWebSocket = () => {
     if (clientRef.current) {
-      clientRef.current.deactivate(); // STOMP 클라이언트 비활성화
-      console.log("WebSocket disconnected");
+      clientRef.current.deactivate();
+      setConsoleOutput("");
     }
-    setIsExecutionActive(false); // 실행 상태 리셋
-    isSubscribedRef.current = false; // 구독 상태 리셋
+    setIsExecutionActive(false);
+    isSubscribedRef.current = false;
   };
 
   return {
