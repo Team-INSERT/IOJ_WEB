@@ -77,6 +77,9 @@ importers:
       react-scripts:
         specifier: 5.0.1
         version: 5.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.25.2))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.25.2))(@types/babel__core@7.20.5)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)(react@18.3.1)(sockjs-client@1.6.1)(ts-node@10.9.2(@types/node@22.5.5)(typescript@4.9.5))(type-fest@0.21.3)(typescript@4.9.5)
+      react-split:
+        specifier: ^2.0.14
+        version: 2.0.14(react@18.3.1)
       sockjs-client:
         specifier: ^1.6.1
         version: 1.6.1
@@ -5195,6 +5198,11 @@ packages:
       typescript:
         optional: true
 
+  react-split@2.0.14:
+    resolution: {integrity: sha512-bKWydgMgaKTg/2JGQnaJPg51T6dmumTWZppFgEbbY0Fbme0F5TuatAScCLaqommbGQQf/ZT1zaejuPDriscISA==}
+    peerDependencies:
+      react: '*'
+
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
@@ -5541,6 +5549,9 @@ packages:
   spdy@4.0.2:
     resolution: {integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==}
     engines: {node: '>=6.0.0'}
+
+  split.js@1.6.5:
+    resolution: {integrity: sha512-mPTnGCiS/RiuTNsVhCm9De9cCAUsrNFFviRbADdKiiV+Kk8HKp/0fWu7Kr8pi3/yBmsqLFHuXGT9UUZ+CNLwFw==}
 
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
@@ -12323,6 +12334,12 @@ snapshots:
       - webpack-hot-middleware
       - webpack-plugin-serve
 
+  react-split@2.0.14(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
+      split.js: 1.6.5
+
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -12713,6 +12730,8 @@ snapshots:
       spdy-transport: 3.0.0
     transitivePeerDependencies:
       - supports-color
+
+  split.js@1.6.5: {}
 
   sprintf-js@1.0.3: {}
 

@@ -17,7 +17,7 @@ export const Layout = styled.div`
 export const Content = styled.div`
   ${flex.COLUMN_VERTICAL}
   gap: 3.75rem;
-  padding-top: 6.25rem;
+  padding-top: 4.5rem;
   margin-bottom: 12rem;
   position: relative;
 `;
@@ -139,9 +139,7 @@ export const QuestionSolveRank = styled.p`
 `;
 export const TitleLayout = styled.div`
   width: 100%;
-  ${flex.CENTER};
-`
-export const ExitButton = styled.div`
-  position: absolute;
-  right: 0;
-`
+  ${flex.COLUMN_CENTER};
+  gap: 12px;
+`;
+export const ExitButton = styled.div``;

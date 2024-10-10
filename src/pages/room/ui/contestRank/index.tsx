@@ -4,6 +4,7 @@ import GameRankGrey from "@/assets/GameRankGrey";
 import { gameRakingList } from "@/pages/room/api/roomApi";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
+import { Loading } from "@/pages/loading";
 import * as S from "./style";
 
 interface ProblemStatuses {
@@ -151,6 +152,6 @@ export const ContestRank = () => {
       </S.Content>
     </S.Layout>
   ) : (
-    <div>Loading...</div>
+    <Loading />
   );
 };
