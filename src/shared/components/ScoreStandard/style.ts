@@ -88,4 +88,5 @@ export const ExitCircle = styled.img`
   position: absolute;
   right: 7px;
   top: 7px;
+  cursor: pointer;
 `;

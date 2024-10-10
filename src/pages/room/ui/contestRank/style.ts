@@ -17,7 +17,7 @@ export const Layout = styled.div`
 export const Content = styled.div`
   ${flex.COLUMN_VERTICAL}
   gap: 3.75rem;
-  padding-top: 60px;
+  padding-top: 52px;
   margin-bottom: 12rem;
   position: relative;
   width: 100%;
@@ -130,7 +130,7 @@ export const QuestionSolveRank = styled.p`
 export const TitleLayout = styled.div`
   width: 100%;
   ${flex.CENTER};
-  background-color: #f7f7f7;
+  background-color: ${theme.grey100};
   padding: 24px 0;
 `;
 export const Buttons = styled.div`
