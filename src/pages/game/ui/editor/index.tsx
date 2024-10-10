@@ -117,10 +117,6 @@ export const CodeEditor = () => {
 
   const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
-  useEffect(() => {
-    setExecutionActive(isExecutionActive);
-  }, [isExecutionActive]);
-
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
@@ -203,12 +199,6 @@ export const CodeEditor = () => {
     }
   };
 
-  useEffect(() => {
-    if (activeTab === "execution") {
-      testBoxRef.current?.resetAndEnableTerminal();
-    }
-  }, [activeTab]);
-
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
       const client = clientRef.current;
@@ -224,11 +214,7 @@ export const CodeEditor = () => {
         });
         setInput("");
       } else {
-        console.log(
-          "WebSocket client or session ID is not ready.",
-          client,
-          userSessionId,
-        );
+        console.error("WebSocket client or session ID is not ready.");
       }
     },
     [clientRef, sessionIdRef],
@@ -239,10 +225,15 @@ export const CodeEditor = () => {
   };
 
   useEffect(() => {
-    if (consoleOutput.includes("Process finished with exit code 0")) {
+    if (
+      (consoleOutput &&
+        consoleOutput.includes("Process finished with exit code 0")) ||
+      consoleOutput.includes("Process finished with exit code 1")
+    ) {
       setInputDisabled(true);
+      disconnectWebSocket();
     }
-  }, [consoleOutput]);
+  }, [consoleOutput, disconnectWebSocket]);
 
   const handleSubmit = async () => {
     if (isSubmitting) {
