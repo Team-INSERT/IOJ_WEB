@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { NexonFont, Pretendard, theme } from "../style";
+import { flex, NexonFont, Pretendard, theme } from "../style";
 
 type ButtonMode = "big" | "exit" | "small" | "choose" | "warn";
 type ColorMode =
@@ -111,13 +111,17 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
         return font === "nexon"
           ? css`
               width: auto;
-              padding: 7px 16px;
+              padding: 0 16px;
+              height: 32px;
               ${NexonFont.NexonSmallText}
+              ${flex.CENTER};
             `
           : css`
               width: auto;
-              padding: 7px 16px;
+              padding: 0 16px;
+              height: 32px;
               ${Pretendard.SmallText}
+              ${flex.CENTER};
             `;
       case "choose":
         return css`

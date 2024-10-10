@@ -17,20 +17,10 @@ export const Layout = styled.div`
 export const Content = styled.div`
   ${flex.COLUMN_VERTICAL}
   gap: 3.75rem;
-  padding-top: 4.5rem;
+  padding-top: 60px;
   margin-bottom: 12rem;
   position: relative;
-`;
-export const BlueBg = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
-export const GreyBg = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 607px;
+  width: 100%;
 `;
 export const Title = styled.p`
   ${Pretendard.Title}
@@ -139,7 +129,13 @@ export const QuestionSolveRank = styled.p`
 `;
 export const TitleLayout = styled.div`
   width: 100%;
-  ${flex.COLUMN_CENTER};
-  gap: 12px;
+  ${flex.CENTER};
+  background-color: #f7f7f7;
+  padding: 24px 0;
 `;
-export const ExitButton = styled.div``;
+export const Buttons = styled.div`
+  position: absolute;
+  right: 7.5rem;
+  ${flex.CENTER};
+  gap: 0.25rem;
+`;

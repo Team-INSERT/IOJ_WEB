@@ -6,6 +6,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
 import { Loading } from "@/pages/loading";
 import * as S from "./style";
+import { Buttons } from "./style";
 
 interface ProblemStatuses {
   status: string;
@@ -69,16 +70,13 @@ export const ContestRank = () => {
   }, [contestId]);
   return rankedPlayers.length ? (
     <S.Layout>
-      <S.BlueBg>
-        <GameRankBlue />
-      </S.BlueBg>
-      <S.GreyBg>
-        <GameRankGrey />
-      </S.GreyBg>
       <S.Content>
         <S.TitleLayout>
           <S.Title>{title}</S.Title>
-          <S.ExitButton>
+          <S.Buttons>
+            <Button mode="small" color="gray" font="pretendard">
+              채점기준
+            </Button>
             <Button
               mode="small"
               color="red"
@@ -87,7 +85,7 @@ export const ContestRank = () => {
             >
               나가기
             </Button>
-          </S.ExitButton>
+          </S.Buttons>
         </S.TitleLayout>
         <S.Chart>
           <S.Attribute>
