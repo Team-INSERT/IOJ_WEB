@@ -2,12 +2,17 @@ import { SVGProps } from "react";
 
 interface CharacterProps extends SVGProps<SVGSVGElement> {
   color?: string;
+  width?: number;
 }
 
-const Character = ({ color = "#D9D9D9", ...props }: CharacterProps) => (
+const Character = ({
+  color = "#D9D9D9",
+  width = 155,
+  ...props
+}: CharacterProps) => (
   <svg
-    width="155"
-    height="150"
+    width={width}
+    height={width}
     viewBox="0 0 96 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

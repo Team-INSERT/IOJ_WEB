@@ -3,12 +3,19 @@ import * as S from "./style";
 
 interface Details {
   UserName: string;
-  color: string;
+  layoutWidth?: number;
+  width?: number;
+  color?: string;
 }
 
-const UserCompartment = ({ UserName, color }: Details) => (
-  <S.Layout>
-    <Character color={color} />
+const UserCompartment = ({
+  layoutWidth = 240,
+  UserName,
+  width,
+  color,
+}: Details) => (
+  <S.Layout width={layoutWidth}>
+    <Character color={color} width={width} />
     <S.UserName>{UserName}</S.UserName>
   </S.Layout>
 );
