@@ -181,17 +181,7 @@ export const CodeEditor = () => {
     } finally {
       setIsExecuteLoading(false);
     }
-  }, [
-    isExecuteLoading,
-    clientRef,
-    connectWebSocket,
-    sessionIdRef,
-    disconnectWebSocket,
-    setConsoleOutput,
-    code,
-    languages,
-    executionActive,
-  ]);
+  }, [isExecuteLoading, clientRef, connectWebSocket, sessionIdRef, setConsoleOutput, code, languages, executionActive]);
 
   const handleSaveCode = () => {
     if (contestId && problemId) {
@@ -292,6 +282,10 @@ export const CodeEditor = () => {
       );
     }
   };
+
+  useEffect(() => {
+    console.log(consoleOutput);
+  }, [consoleOutput])
 
   const onTestcaseClick = async () => {
     if (isTestLoading) {

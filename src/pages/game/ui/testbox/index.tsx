@@ -123,6 +123,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     }, [isExecutionActive, onSubmit, initializeTerminal]);
 
     useEffect(() => {
+      console.log(consoleOutput);
+
       if (consoleOutput) {
         writeToTerminal(consoleOutput);
       }
