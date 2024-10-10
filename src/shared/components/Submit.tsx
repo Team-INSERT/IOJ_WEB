@@ -40,7 +40,7 @@ const SubmitDiv = styled.div<SubmitProps>`
   justify-content: center;
   position: absolute;
   right: 1rem;
-  top: 5rem;
+  top: 10rem;
   z-index: 100;
 
   animation: ${slideInOpacity} 0.8s ease forwards;
