@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { customAxios } from "../utils/customAxios";
@@ -12,15 +12,10 @@ export const useWebSocket = () => {
   const isSubscribedRef = useRef<boolean>(false); // 중복 구독 방지 플래그
   const processingRef = useRef<boolean>(false); // 메시지 처리 중인지 확인하는 플래그
 
-  // 메시지 큐에서 하나씩 처리하는 함수
   const processMessage = (message: string) => {
-    // 상태를 누적하여 업데이트
-    setConsoleOutput((prevOutput) => {
-      const outputLines = prevOutput.split("\n").filter(line => line.trim() !== "");
-      const newOutput = `${message}\n`;
-      const updatedOutput = [...outputLines, newOutput].join("\n");
-      return updatedOutput;
-    });
+    const trimmedMessage = message.trimStart();
+    setConsoleOutput((prevOutput) => `${prevOutput}${trimmedMessage}\n`);
+    console.log(trimmedMessage);
   };
 
   // WebSocket 연결 함수
@@ -53,7 +48,7 @@ export const useWebSocket = () => {
               stompClient.subscribe(
                 `/topic/output/${sessionId}`,
                 (message: IMessage) => {
-                  processMessage(message.body); // 메시지 처리 시작
+                  processMessage(message.body);
                 },
               );
 

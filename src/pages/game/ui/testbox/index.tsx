@@ -41,6 +41,15 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const inputDisableRef = useRef(isInputDisabled);
     const { initializeTerminal, resetAndEnableTerminal, writeToTerminal } =
       useTerminal();
+    const previousOutputRef = useRef<string>(""); // 이전 출력 저장
+
+    useEffect(() => {
+      if (consoleOutput && consoleOutput !== previousOutputRef.current) {
+        const newOutput = consoleOutput.slice(previousOutputRef.current.length);
+        writeToTerminal(newOutput);
+        previousOutputRef.current = consoleOutput;
+      }
+    }, [consoleOutput, writeToTerminal]);
 
     useEffect(() => {
       const countAcceptedTestCases = testResult.filter(
@@ -121,23 +130,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         });
       }
     }, [isExecutionActive, onSubmit, initializeTerminal]);
-
-    useEffect(() => {
-      if (consoleOutput) {
-        const outputLines = consoleOutput.split("\n").filter((line) => line);
-        const uniqueLines = Array.from(new Set(outputLines));
-        const processFinished = uniqueLines.some(line => line.includes("Process finished with exit code 0"));
-        if (processFinished) {
-          uniqueLines.forEach((line, index) => {
-            if (!terminalRef.current?.innerText.includes(line)) {
-              setTimeout(() => {
-                writeToTerminal(line);
-              }, index * 1000);
-            }
-          });
-        }
-      }
-    }, [isExecutionActive, consoleOutput, writeToTerminal]);
 
     useImperativeHandle(
       ref,
