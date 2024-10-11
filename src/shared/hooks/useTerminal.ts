@@ -76,15 +76,12 @@ export const useTerminal = () => {
     }
   };
 
-  const writeToTerminal = useCallback(
-    (output: string) => {
-      if (terminalInstanceRef.current) {
-        terminalInstanceRef.current.writeln(output);
-        disconnectWebSocket();
-      }
-    },
-    [disconnectWebSocket],
-  );
+  const writeToTerminal = (output: string) => {
+    if (terminalInstanceRef.current) {
+      terminalInstanceRef.current.writeln(output);
+      disconnectWebSocket();
+    }
+  };
 
   return {
     initializeTerminal,

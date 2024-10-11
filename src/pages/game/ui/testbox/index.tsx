@@ -41,6 +41,15 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const inputDisableRef = useRef(isInputDisabled);
     const { initializeTerminal, resetAndEnableTerminal, writeToTerminal } =
       useTerminal();
+    const previousOutputRef = useRef<string>(""); // 이전 출력 저장
+
+    useEffect(() => {
+      if (consoleOutput && consoleOutput !== previousOutputRef.current) {
+        const newOutput = consoleOutput.slice(previousOutputRef.current.length);
+        writeToTerminal(newOutput);
+        previousOutputRef.current = consoleOutput;
+      }
+    }, [consoleOutput, writeToTerminal]);
 
     useEffect(() => {
       const countAcceptedTestCases = testResult.filter(
@@ -48,11 +57,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       ).length;
       setAcceptCount(countAcceptedTestCases);
     }, [testResult]);
-
     useEffect(() => {
       window.scrollTo(0, 0);
     }, [activeTab, testResult]);
-
     useEffect(() => {
       (async () => {
         try {
@@ -63,7 +70,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         }
       })();
     }, [problemNum]);
-
     const translateVerdict = (verdict: string) => {
       const verdictMapping: Record<string, React.ReactNode> = {
         WRONG_ANSWER: "불일치",
@@ -73,10 +79,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         TIME_LIMIT_EXCEEDED: "시간초과",
         RUNTIME_ERROR: "런타임 에러",
       };
-
       return verdictMapping[verdict] || "알 수 없는 결과";
     };
-
     const translateSubmissionResult = (result: string) => {
       const resultMapping: Record<string, string> = {
         WRONG_ANSWER: "오답입니다.",
@@ -87,10 +91,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         RUNTIME_ERROR: "런타임 에러",
         "처리중...": "처리 중...",
       };
-
       return resultMapping[result] || "알 수 없는 결과";
     };
-
     const isErrorOutput = (verdict: string) =>
       [
         "COMPILATION_ERROR",
@@ -98,7 +100,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         "OUT_OF_MEMORY",
         "TIME_LIMIT_EXCEEDED",
       ].includes(verdict);
-
     const errorOutput = testResult
       .filter((testCase) => isErrorOutput(testCase.verdict))
       .map(
@@ -106,11 +107,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           `${translateVerdict(testCase.verdict)}\n${testCase.output}`,
       )
       .join("\n");
-
     useEffect(() => {
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
-
     useEffect(() => {
       if (isExecutionActive) {
         initializeTerminal({
@@ -121,13 +120,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         });
       }
     }, [isExecutionActive, onSubmit, initializeTerminal]);
-
-    useEffect(() => {
-      if (consoleOutput) {
-        writeToTerminal(consoleOutput);
-      }
-    }, [consoleOutput, writeToTerminal]);
-
     useImperativeHandle(
       ref,
       () => ({
@@ -142,7 +134,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       }),
       [resetAndEnableTerminal, onSubmit],
     );
-
     return (
       <S.Container>
         <S.TabContainer>
@@ -174,7 +165,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
               />
             </S.ExecuteResult>
           )}
-
           {activeTab === "testCases" &&
             (isErrorOutput(testResult[0]?.verdict) && !isTestLoading ? (
               <>

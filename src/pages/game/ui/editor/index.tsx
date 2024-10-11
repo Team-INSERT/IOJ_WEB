@@ -11,14 +11,12 @@ import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
-
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
-
 import * as S from "./style";
 import { boilerplateCode } from "../../api/boilerplateCode";
 
@@ -29,7 +27,6 @@ interface TestCase {
   expectOutput: string;
   verdict: string;
 }
-
 export const CodeEditor = () => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
@@ -39,7 +36,6 @@ export const CodeEditor = () => {
   const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(
     null,
   );
-
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
@@ -53,14 +49,11 @@ export const CodeEditor = () => {
   const [testResult, setTestResult] = useState<TestCase[]>([]);
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
   const [boilerplate, setBoilerplate] = useState("");
-
   useEffect(() => {
     const savedCode = localStorage.getItem(
       `code_${contestId}_${problemId}_${languages}`,
     );
-
     if (savedCode) {
       setCode(savedCode);
     } else {
@@ -79,7 +72,6 @@ export const CodeEditor = () => {
       })();
     }
   }, [languages, contestId, problemId]);
-
   const handleCodeChange = (newCode: string) => {
     setCode(newCode);
     if (contestId && problemId) {
@@ -89,7 +81,6 @@ export const CodeEditor = () => {
       );
     }
   };
-
   const handleResetCode = async () => {
     try {
       const res = await boilerplateCode(languages);
@@ -102,9 +93,7 @@ export const CodeEditor = () => {
   };
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
-
   const [input, setInput] = useState<string>("");
-
   const {
     clientRef,
     sessionIdRef,
@@ -115,35 +104,31 @@ export const CodeEditor = () => {
     disconnectWebSocket,
   } = useWebSocket();
 
+  console.log(consoleOutput);
+
   const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
-
   useEffect(() => {
     if (submitStatus) {
       const timer = setTimeout(() => {
         setSubmitStatus(null);
       }, 3000);
-
       return () => clearTimeout(timer);
     }
     return undefined;
   }, [submitStatus]);
-
   useEffect(() => {
     const updateEditorHeight = () => {
       const newHeight = window.innerHeight * 0.06;
       setEditorHeight(`${newHeight}vh`);
     };
-
     updateEditorHeight();
     window.addEventListener("resize", updateEditorHeight);
-
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
-
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);
@@ -154,15 +139,12 @@ export const CodeEditor = () => {
     }
     setActiveTab("execution");
     disconnectWebSocket();
-
     try {
       testBoxRef.current?.resetAndEnableTerminal();
       setInputDisabled(false);
       await connectWebSocket();
-
       const client = clientRef.current;
       const userSessionId = sessionIdRef.current;
-
       if (client && userSessionId) {
         setConsoleOutput("");
         client.publish({
@@ -186,24 +168,32 @@ export const CodeEditor = () => {
     clientRef,
     connectWebSocket,
     sessionIdRef,
-    disconnectWebSocket,
     setConsoleOutput,
     code,
     languages,
     executionActive,
   ]);
-
   const handleSaveCode = () => {
     if (contestId && problemId) {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
     }
   };
 
+  useEffect(() => {
+    if (
+      (consoleOutput &&
+        consoleOutput.includes("Process finished with exit code 0")) ||
+      consoleOutput.includes("Process finished with exit code 1")
+    ) {
+      setInputDisabled(true);
+      disconnectWebSocket();
+    }
+  }, [consoleOutput, disconnectWebSocket]);
+
   const handleInputSubmit = useCallback(
     (userResultInput: string) => {
       const client = clientRef.current;
       const userSessionId = sessionIdRef.current;
-
       if (client && userSessionId) {
         client.publish({
           destination: "/app/input",
@@ -219,32 +209,17 @@ export const CodeEditor = () => {
     },
     [clientRef, sessionIdRef],
   );
-
   const handleInputChange = (userInput: string) => {
     setInput(userInput);
   };
-
-  useEffect(() => {
-    if (
-      (consoleOutput &&
-        consoleOutput.includes("Process finished with exit code 0")) ||
-      consoleOutput.includes("Process finished with exit code 1")
-    ) {
-      setInputDisabled(true);
-      disconnectWebSocket();
-    }
-  }, [consoleOutput, disconnectWebSocket]);
-
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
       return;
     }
-
     setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
     setIsSubmitting(true);
     setActiveTab("results");
-
     try {
       const res = await contestSubmit({
         contestId: Number(contestId),
@@ -252,13 +227,11 @@ export const CodeEditor = () => {
         sourcecode: code,
         language: languages.toUpperCase(),
       });
-
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = res;
         return updatedResults;
       });
-
       if (res === "ACCEPTED") {
         setSubmitStatus("Correct");
       } else if (res === "WRONG_ANSWER") {
@@ -281,7 +254,6 @@ export const CodeEditor = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage);
     setFileName(file);
@@ -292,13 +264,11 @@ export const CodeEditor = () => {
       );
     }
   };
-
   const onTestcaseClick = async () => {
     if (isTestLoading) {
       setIsModalOpen(true);
       return;
     }
-
     setActiveTab("testCases");
     setIsTestLoading(true);
     try {
@@ -314,7 +284,6 @@ export const CodeEditor = () => {
       setIsTestLoading(false);
     }
   };
-
   return (
     <S.EditorLayout>
       {isModalOpen && (
@@ -401,7 +370,6 @@ export const CodeEditor = () => {
           }}
           editorProps={{ $blockScrolling: true }}
         />
-
         <S.TestBoxLayout>
           <TestBox
             ref={testBoxRef}
@@ -420,7 +388,6 @@ export const CodeEditor = () => {
           />
         </S.TestBoxLayout>
       </Split>
-
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
