@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Split from "react-split";
 import { CodeEditor } from "./editor";
@@ -34,11 +35,7 @@ export const CodeEditorWrapper = styled.div`
 `;
 
 export const Game = () => {
-  const { pathname } = window.location;
-  const segments = pathname.split("/");
-  const problemNum = segments[segments.length - 1];
-  const contestNum = parseInt(segments[segments.length - 3], 10);
-  const formattedProblemNum = problemNum.padStart(4, "0");
+  const { problemId, contestId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
     level: 0,
@@ -51,36 +48,46 @@ export const Game = () => {
   });
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
+
+  // 문제 인덱스 찾기
   const findProblemIndexById = (problems: problemType[], id: number) =>
     problems.findIndex((item) => item.id === id);
 
   const problemIndex = findProblemIndexById(
     allProblems,
-    parseInt(problemNum, 10),
+    parseInt(problemId || "0", 10),
   );
 
+  // 문제 데이터를 가져오는 useEffect
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await gameDetail(parseInt(problemNum, 10));
-        setProblem(res);
-      } catch (err) {
-        /**/
-      }
-    })();
-  }, [problemNum]);
+    if (problemId) {
+      const fetchProblem = async () => {
+        try {
+          const res = await gameDetail(parseInt(problemId, 10));
+          setProblem(res);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchProblem();
+    }
+  }, [problemId]);
 
+  // 모든 문제 리스트 가져오는 useEffect
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await contestProblems(contestNum);
-        setAllProblems(res.problems);
-        setProblemsCount(res.problems.length);
-      } catch (err) {
-        /**/
-      }
-    })();
-  }, [contestNum]);
+    if (contestId) {
+      const fetchContestProblems = async () => {
+        try {
+          const res = await contestProblems(parseInt(contestId, 10));
+          setAllProblems(res.problems);
+          setProblemsCount(res.problems.length);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchContestProblems();
+    }
+  }, [contestId]);
 
   return (
     <GameLayout>
@@ -105,7 +112,7 @@ export const Game = () => {
       >
         <ProblemWrapper>
           <Problem
-            id={formattedProblemNum}
+            id={problemId?.padStart(4, "0") || ""}
             title={problem.title}
             timeLimit={problem.timeLimit}
             memoryLimit={problem.memoryLimit}
