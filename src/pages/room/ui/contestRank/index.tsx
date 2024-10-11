@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import GameRankBlue from "@/assets/GameRankBlue";
-import GameRankGrey from "@/assets/GameRankGrey";
 import { gameRakingList } from "@/pages/room/api/roomApi";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
+import { Loading } from "@/pages/loading";
+import ScoreStandard from "@/shared/components/ScoreStandard";
 import * as S from "./style";
 
 interface ProblemStatuses {
@@ -20,6 +20,7 @@ export const ContestRank = () => {
   const navigate = useNavigate();
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
   const [rankedPlayers, setRankedPlayers] = useState<Player[][]>([]);
+  const [isStandardShow, setIsStandardShow] = useState<boolean>(false);
   const { contestId } = useParams<{ contestId: string }>();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -68,16 +69,18 @@ export const ContestRank = () => {
   }, [contestId]);
   return rankedPlayers.length ? (
     <S.Layout>
-      <S.BlueBg>
-        <GameRankBlue />
-      </S.BlueBg>
-      <S.GreyBg>
-        <GameRankGrey />
-      </S.GreyBg>
       <S.Content>
         <S.TitleLayout>
           <S.Title>{title}</S.Title>
-          <S.ExitButton>
+          <S.Buttons>
+            <Button
+              mode="small"
+              color="gray"
+              font="pretendard"
+              onClick={() => setIsStandardShow(true)}
+            >
+              채점기준
+            </Button>
             <Button
               mode="small"
               color="red"
@@ -86,7 +89,7 @@ export const ContestRank = () => {
             >
               나가기
             </Button>
-          </S.ExitButton>
+          </S.Buttons>
         </S.TitleLayout>
         <S.Chart>
           <S.Attribute>
@@ -149,8 +152,11 @@ export const ContestRank = () => {
           </S.RankingLayout>
         </S.Chart>
       </S.Content>
+      {isStandardShow && (
+        <ScoreStandard setIsStandardShow={setIsStandardShow} />
+      )}
     </S.Layout>
   ) : (
-    <div>Loading...</div>
+    <Loading />
   );
 };
