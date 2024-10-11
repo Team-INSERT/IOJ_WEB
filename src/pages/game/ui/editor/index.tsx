@@ -214,17 +214,6 @@ export const CodeEditor = () => {
     setInput(userInput);
   };
 
-  useEffect(() => {
-    if (
-      (consoleOutput &&
-        consoleOutput.includes("Process finished with exit code 0")) ||
-      consoleOutput.includes("Process finished with exit code 1")
-    ) {
-      setInputDisabled(true);
-      disconnectWebSocket();
-    }
-  }, [consoleOutput, disconnectWebSocket]);
-
   const handleSubmit = async () => {
     if (isSubmitting) {
       setIsModalOpen(true);
@@ -282,10 +271,6 @@ export const CodeEditor = () => {
       );
     }
   };
-
-  useEffect(() => {
-    console.log(consoleOutput);
-  }, [consoleOutput])
 
   const onTestcaseClick = async () => {
     if (isTestLoading) {

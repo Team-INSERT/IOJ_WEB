@@ -123,12 +123,21 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     }, [isExecutionActive, onSubmit, initializeTerminal]);
 
     useEffect(() => {
-      console.log(consoleOutput);
-
       if (consoleOutput) {
-        writeToTerminal(consoleOutput);
+        const outputLines = consoleOutput.split("\n").filter((line) => line);
+        const uniqueLines = Array.from(new Set(outputLines));
+        const processFinished = uniqueLines.some(line => line.includes("Process finished with exit code 0"));
+        if (processFinished) {
+          uniqueLines.forEach((line, index) => {
+            if (!terminalRef.current?.innerText.includes(line)) {
+              setTimeout(() => {
+                writeToTerminal(line);
+              }, index * 1000);
+            }
+          });
+        }
       }
-    }, [consoleOutput, writeToTerminal]);
+    }, [isExecutionActive, consoleOutput, writeToTerminal]);
 
     useImperativeHandle(
       ref,
