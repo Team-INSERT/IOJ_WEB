@@ -107,6 +107,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           `${translateVerdict(testCase.verdict)}\n${testCase.output}`,
       )
       .join("\n");
+
     useEffect(() => {
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
@@ -158,7 +159,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
                 ref={terminalRef}
                 style={{
                   width: "100%",
-                  height: "fit-content",
+                  height: "50vh",
                   backgroundColor: "#000",
                   marginTop: "10px",
                 }}

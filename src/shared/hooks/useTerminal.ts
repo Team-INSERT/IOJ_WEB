@@ -78,8 +78,7 @@ export const useTerminal = () => {
 
   const writeToTerminal = (output: string) => {
     if (terminalInstanceRef.current) {
-      terminalInstanceRef.current.writeln(output);
-      disconnectWebSocket();
+      terminalInstanceRef.current.write(`${output}\r`);
     }
   };
 
