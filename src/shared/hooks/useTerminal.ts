@@ -78,7 +78,12 @@ export const useTerminal = () => {
 
   const writeToTerminal = (output: string) => {
     if (terminalInstanceRef.current) {
-      terminalInstanceRef.current.write(`${output}\r`);
+      const lines = output.split("\n");
+      lines.forEach((line) => {
+        if (line.trim() !== "") {
+          terminalInstanceRef.current?.write(`${line}\n\r`);
+        }
+      });
     }
   };
 
