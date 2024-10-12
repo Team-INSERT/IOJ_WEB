@@ -22,7 +22,7 @@ export const postRefreshToken = async () => {
   });
   return response;
 };
-let isAlertShow = false; // 전역 상태
+let isAlertShow = false;
 
 customAxios.interceptors.response.use(
   (res) => res,
@@ -51,7 +51,7 @@ customAxios.interceptors.response.use(
               deleteCookie("accessToken");
               if (!isAlertShow) {
                 isAlertShow = true;
-                alert("다시 로그인해주세요.");
+                alert("로그인 시간이 만료되었습니다. 다시 로그인해주세요.");
                 window.location.replace("/login");
               }
             }

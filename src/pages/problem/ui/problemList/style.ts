@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import SearchIcon from "@/assets/Search.svg"
+import SearchIcon from "@/assets/Search.svg";
 import { flex, Pretendard, RobotoMono, theme } from "@/shared/style";
 
 export const Main = styled.div`
   width: 100%;
   min-height: 100vh;
-  background-color: #F6F6F6;
-`
+  background-color: #f6f6f6;
+`;
 export const Layout = styled.div`
   width: 100%;
   padding: 64px 88px;
@@ -30,7 +30,7 @@ export const SearchInput = styled.input`
   background-color: ${theme.white};
   ${Pretendard.SmallText};
   color: ${theme.grey800};
-  
+
   &::placeholder {
     color: ${theme.grey400};
   }
@@ -40,62 +40,72 @@ export const ListLayout = styled.div`
   width: 100%;
   border: 1px solid ${theme.grey200};
   border-radius: 4px;
-`
+`;
 export const ListHeader = styled.div`
   width: 100%;
   height: 40px;
   ${flex.START};
   border-bottom: 1px solid ${theme.grey200};
-`
+`;
 export const Attribute = styled.div`
   height: 100%;
   ${Pretendard.SmallText};
   color: ${theme.grey500};
   ${flex.CENTER};
-  
+
   &:nth-child(1) {
     width: 14%;
   }
   &:nth-child(2) {
-    width: 66%;
+    width: 45%;
+  }
+  &:nth-child(3) {
+    width: 26%;
+    justify-content: center;
   }
   &:last-child {
-    width: 20%;
+    width: 15%;
   }
-`
+`;
 export const ListContent = styled.div`
   width: 100%;
-`
+`;
 export const ProblemLayout = styled.div`
   width: 100%;
   height: 40px;
   ${flex.START};
   border-bottom: 1px solid ${theme.grey200};
   cursor: pointer;
-  
+
   &:last-child {
     border: none;
   }
   &:hover {
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
   }
-`
+`;
 export const ProblemData = styled.div`
   height: 100%;
   ${Pretendard.Text};
   color: ${theme.grey900};
-  font-weight: 500;
   ${flex.CENTER};
-  
+
   &:nth-child(1) {
     width: 14%;
     ${RobotoMono.Text};
   }
   &:nth-child(2) {
-    width: 66%;
+    width: 45%;
     justify-content: start;
   }
-  &:last-child {
-    width: 20%;
+  &:nth-child(3) {
+    width: 26%;
+    justify-content: center;
+    ${Pretendard.SmallText};
+    font-weight: 500;
+    color: ${theme.grey700};
   }
-`
+  &:last-child {
+    width: 15%;
+  }
+`;
