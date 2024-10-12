@@ -81,21 +81,16 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   }, [contestId]);
 
   const onNextClick = (mode: string) => {
+
     if (mode === "next") {
       if (problemIndex < problemsCount - 1) {
         const nextProblemId = problemList[problemIndex + 1]?.id;
-        window.location.href = pathname.replace(
-          /\/code\/\d+/,
-          `/code/${nextProblemId}`
-        );
+        navigate(pathname.replace(/\/code\/\d+/, `/code/${nextProblemId}`));
       }
     } else if (mode === "previous") {
       if (problemIndex > 0) {
         const previousProblemId = problemList[problemIndex - 1]?.id;
-        window.location.href = pathname.replace(
-          /\/code\/\d+/,
-          `/code/${previousProblemId}`
-        );
+        navigate(pathname.replace(/\/code\/\d+/, `/code/${previousProblemId}`));
       }
     }
   };
