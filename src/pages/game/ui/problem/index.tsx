@@ -13,6 +13,7 @@ export const Problem = ({
   outputContent,
   level,
   testcases,
+  source,
 }: problemInfoProps) => {
   const inputTextRefs = useRef<(HTMLPreElement | null)[]>([]);
   const [isScrolling, setIsScrolling] = useState<boolean[]>([]);
@@ -111,6 +112,8 @@ export const Problem = ({
           </S.ExampleLayout>
         ))}
       </S.Case>
+      <S.Problem>출처</S.Problem>
+      <S.ProblemContent>{source}</S.ProblemContent>
     </S.ProblemLayout>
   );
 };

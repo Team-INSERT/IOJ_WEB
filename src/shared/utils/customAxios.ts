@@ -1,4 +1,3 @@
-// customAxios.ts
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { useSetAtom } from "jotai";
 import { deleteCookie, getCookie, setCookie } from "./cookie/cookie";

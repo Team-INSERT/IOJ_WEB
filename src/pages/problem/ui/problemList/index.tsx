@@ -9,6 +9,7 @@ interface ProblemsType {
   id: number;
   title: string;
   level: number;
+  source: string;
 }
 
 export const ProblemList = () => {
@@ -39,6 +40,7 @@ export const ProblemList = () => {
           <S.ListHeader>
             <S.Attribute>문제 번호</S.Attribute>
             <S.Attribute>제목</S.Attribute>
+            <S.Attribute>출처</S.Attribute>
             <S.Attribute>난이도</S.Attribute>
           </S.ListHeader>
           <S.ListContent>
@@ -48,6 +50,7 @@ export const ProblemList = () => {
                 <S.ProblemLayout onClick={() => navigate(`/problem/${item.id}`)}>
                   <S.ProblemData>{formattedId}</S.ProblemData>
                   <S.ProblemData>{item.title}</S.ProblemData>
+                  <S.ProblemData>{item.source}</S.ProblemData>
                   <S.ProblemData>
                     <Stars read value={item.level} />
                   </S.ProblemData>
