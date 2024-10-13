@@ -45,6 +45,7 @@ export const Game = () => {
     memoryLimit: 0,
     testcases: [],
     timeLimit: 0,
+    source: "",
   });
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
@@ -121,6 +122,7 @@ export const Game = () => {
             outputContent={problem.outputContent}
             level={problem.level}
             testcases={problem.testcases}
+            source={problem.source}
           />
         </ProblemWrapper>
         <CodeEditorWrapper>

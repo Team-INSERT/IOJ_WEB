@@ -6,6 +6,7 @@ export const validateQuestion = (
   selectedLevel: number | null,
   problemMemoryLimit: string,
   problemTimeLimit: string,
+  problemSource: string,
 ): {
   valid: boolean;
   status: "좋음" | "나쁨";
@@ -57,6 +58,14 @@ export const validateQuestion = (
     };
   }
 
+  if (problemSource.length === 0) {
+    return {
+      valid: false,
+      status: "나쁨",
+      title: "문제 출처를 입력해주세요.",
+      subtitle: "문제 출처는 필수로 입력되어야 합니다!",
+    }
+  }
   if (selectedLevel === null || selectedLevel < 1 || selectedLevel > 5) {
     return {
       valid: false,

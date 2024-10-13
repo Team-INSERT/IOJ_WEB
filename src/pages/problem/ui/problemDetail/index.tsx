@@ -17,6 +17,7 @@ interface ProblemType {
   memoryLimit: number;
   timeLimit: number;
   testcases: TestcaseType[];
+  source: string;
 }
 
 export const ProblemDetail = () => {
@@ -104,7 +105,7 @@ export const ProblemDetail = () => {
               <S.Problem>문제</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo>
+            <S.ProblemInfo isSource={false}>
               {problemDetail?.content}
             </S.ProblemInfo>
           </S.ProblemLayout>
@@ -113,7 +114,7 @@ export const ProblemDetail = () => {
               <S.Problem>입력</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo>
+            <S.ProblemInfo isSource={false}>
               {problemDetail?.inputContent}
             </S.ProblemInfo>
           </S.ProblemLayout>
@@ -122,7 +123,7 @@ export const ProblemDetail = () => {
               <S.Problem>출력</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo>
+            <S.ProblemInfo isSource={false}>
               {problemDetail?.outputContent}
             </S.ProblemInfo>
           </S.ProblemLayout>
@@ -158,6 +159,15 @@ export const ProblemDetail = () => {
               </S.ExampleContent>
             </S.ExampleLayout>
           ))}
+          <S.ProblemLayout>
+            <S.SubTitleLayout>
+              <S.Problem>출처</S.Problem>
+              <S.GreyLine />
+            </S.SubTitleLayout>
+            <S.ProblemInfo isSource>
+              {problemDetail?.source}
+            </S.ProblemInfo>
+          </S.ProblemLayout>
         </S.ContentLayout>
       </S.Layout>
       <Footer />

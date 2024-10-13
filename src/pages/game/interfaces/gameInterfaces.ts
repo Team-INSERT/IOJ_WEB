@@ -13,6 +13,7 @@ export interface problemInfoProps {
   memoryLimit: number;
   testcases: testcaseType[];
   timeLimit: number;
+  source: string;
 }
 
 export interface problemType {

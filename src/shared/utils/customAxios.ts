@@ -22,7 +22,7 @@ export const postRefreshToken = async () => {
   });
   return response;
 };
-let isAlertShow = false; // 전역 상태
+let isAlertShow = false;
 
 customAxios.interceptors.response.use(
   (res) => res,
@@ -33,27 +33,25 @@ customAxios.interceptors.response.use(
     } = error;
 
     if (status === 401) {
-      if (error.response.data.code === "TOKEN-401-1") {
-        const originRequest = config;
-        try {
-          const response = await postRefreshToken();
-          if (response.status === 201) {
-            const newAccessToken = response.data.accessToken;
-            setCookie("accessToken", newAccessToken);
-            axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            return axios(originRequest);
-          }
-        } catch (refreshError: unknown) {
-          if (refreshError instanceof AxiosError) {
-            if (refreshError.response?.status === 401) {
-              deleteCookie("refreshToken");
-              deleteCookie("accessToken");
-              if (!isAlertShow) {
-                isAlertShow = true;
-                alert("다시 로그인해주세요.");
-                window.location.replace("/login");
-              }
+      const originRequest = config;
+      try {
+        const response = await postRefreshToken();
+        if (response.status === 201) {
+          const newAccessToken = response.data.accessToken;
+          setCookie("accessToken", newAccessToken);
+          axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+          originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axios(originRequest);
+        }
+      } catch (refreshError: unknown) {
+        if (refreshError instanceof AxiosError) {
+          if (refreshError.response?.status === 401) {
+            deleteCookie("refreshToken");
+            deleteCookie("accessToken");
+            if (!isAlertShow) {
+              isAlertShow = true;
+              alert("로그인 시간이 만료되었습니다. 다시 로그인해주세요.");
+              window.location.replace("/login");
             }
           }
         }
