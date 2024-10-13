@@ -1,5 +1,8 @@
+// customAxios.ts
 import axios, { AxiosError, AxiosInstance } from "axios";
+import { useSetAtom } from "jotai";
 import { deleteCookie, getCookie, setCookie } from "./cookie/cookie";
+import { isAlertShowAtom, errorMessageAtom } from "./atom/modalAtom"; // 모달 상태 import
 
 export const customAxios: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -22,18 +25,18 @@ export const postRefreshToken = async () => {
   });
   return response;
 };
-let isAlertShow = false; // 전역 상태
 
-customAxios.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const {
-      config,
-      response: { status },
-    } = error;
+export const useAxiosInterceptor = () => {
+  const setIsAlertShow = useSetAtom(isAlertShowAtom); // 모달 상태 업데이트
+  const setErrorMessage = useSetAtom(errorMessageAtom);
 
-    if (status === 401) {
-      if (error.response.data.code === "TOKEN-401-1") {
+  customAxios.interceptors.response.use(
+    (res) => res,
+    async (error: AxiosError) => {
+      const { config, response } = error;
+      const status = response?.status;
+
+      if (status === 401) {
         const originRequest = config;
         try {
           const response = await postRefreshToken();
@@ -41,24 +44,27 @@ customAxios.interceptors.response.use(
             const newAccessToken = response.data.accessToken;
             setCookie("accessToken", newAccessToken);
             axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            return axios(originRequest);
+            if (originRequest && originRequest.headers) {
+              originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            }
+            if (originRequest) {
+              return axios(originRequest);
+            }
+            throw new Error("originRequest is undefined");
           }
         } catch (refreshError: unknown) {
-          if (refreshError instanceof AxiosError) {
-            if (refreshError.response?.status === 401) {
-              deleteCookie("refreshToken");
-              deleteCookie("accessToken");
-              if (!isAlertShow) {
-                isAlertShow = true;
-                alert("다시 로그인해주세요.");
-                window.location.replace("/login");
-              }
-            }
+          if ((refreshError as AxiosError).response?.status === 401) {
+            deleteCookie("refreshToken");
+            deleteCookie("accessToken");
+
+            setErrorMessage(
+              "로그인 시간이 만료되었습니다. 다시 로그인해주세요.",
+            );
+            setIsAlertShow(true);
           }
         }
       }
-    }
-    return Promise.reject(error);
-  },
-);
+      return Promise.reject(error);
+    },
+  );
+};
