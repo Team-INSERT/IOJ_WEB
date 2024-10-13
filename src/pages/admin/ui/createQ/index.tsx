@@ -107,6 +107,7 @@ export const CreateQuestion = () => {
       selectedLevel,
       problemMemoryLimit,
       problemTimeLimit,
+      problemSource,
     );
 
     if (!validationResult.valid) {
