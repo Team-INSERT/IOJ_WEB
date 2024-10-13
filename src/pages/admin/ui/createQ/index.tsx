@@ -296,6 +296,10 @@ export const CreateQuestion = () => {
             <S.ProblemContent>
               {formatTextWithLineBreaks(outputExplain)}
             </S.ProblemContent>
+            <S.Problem>출처</S.Problem>
+            <S.ProblemContent>
+              {formatTextWithLineBreaks(problemSource)}
+            </S.ProblemContent>
           </S.ProblemContentBox>
           <S.TestBox>
             <S.TestInputBox>

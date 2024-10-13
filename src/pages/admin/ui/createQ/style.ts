@@ -198,7 +198,6 @@ export const ProblemContent = styled.p`
 
 export const TestBox = styled.div`
   ${flex.FLEX};
-  margin-top: 4%;
 `;
 
 export const TestInputBox = styled.div`
