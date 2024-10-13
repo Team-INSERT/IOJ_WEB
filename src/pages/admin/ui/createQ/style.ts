@@ -38,7 +38,7 @@ export const Text = styled.p`
   margin-bottom: 2px;
 `;
 
-export const ProblemInput = styled.input`
+export const Input = styled.input`
   ${Pretendard.SmallText}
   padding: 12px;
   ${flex.FLEX}
@@ -62,28 +62,6 @@ export const ExplainInput = styled.textarea`
 
 export const LebelBox = styled.div`
   ${flex.FLEX}
-`;
-
-export const MemoryInput = styled.input`
-  ${Pretendard.SmallText}
-  padding: 12px;
-  ${flex.FLEX}
-  width: 40rem;
-  height: 2.5rem;
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
-  background: ${theme.white};
-`;
-
-export const TimeInput = styled.input`
-  ${Pretendard.SmallText}
-  padding: 12px;
-  ${flex.FLEX}
-  width: 40rem;
-  height: 2.5rem;
-  border-radius: 4px;
-  border: 1px solid ${theme.grey200};
-  background: ${theme.white};
 `;
 
 export const InputBox = styled.textarea`

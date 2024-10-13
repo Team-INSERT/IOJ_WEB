@@ -26,6 +26,7 @@ export interface RequestDataProps {
   memoryLimit: number;
   timeLimit: number;
   testcases: TestCase[];
+  source: string;
 }
 
 const formatTextWithLineBreaks = (text: string) =>
@@ -54,6 +55,7 @@ export const CreateQuestion = () => {
   const [testCases, setTestCases] = useState<TestCase[]>([
     { input: "", output: "", example: false },
   ]);
+  const [problemSource, setProblemSource] = useState<string>("");
 
   const addTestCase = () => {
     setTestCases([...testCases, { input: "", output: "", example: false }]);
@@ -125,6 +127,7 @@ export const CreateQuestion = () => {
       memoryLimit: parseInt(problemMemoryLimit, 10),
       timeLimit: parseInt(problemTimeLimit, 10),
       testcases: testCases,
+      source: problemSource,
     };
     try {
       await postProblem(requestData);
@@ -158,7 +161,7 @@ export const CreateQuestion = () => {
           <S.UnderBar />
           <S.Box>
             <S.Text>문제명</S.Text>
-            <S.ProblemInput
+            <S.Input
               value={problemTitle}
               onChange={(e) => setProblemTitle(e.target.value)}
             />
@@ -185,6 +188,13 @@ export const CreateQuestion = () => {
             />
           </S.Box>
           <S.Box>
+            <S.Text>문제 출처</S.Text>
+            <S.Input
+              value={problemSource}
+              onChange={(e) => setProblemSource(e.target.value)}
+            />
+          </S.Box>
+          <S.Box>
             <S.Text>레벨</S.Text>
             <S.LebelBox>
               <Level
@@ -196,7 +206,7 @@ export const CreateQuestion = () => {
           </S.Box>
           <S.Box>
             <S.Text>메모리 제한</S.Text>
-            <S.MemoryInput
+            <S.Input
               type="number"
               value={problemMemoryLimit}
               onChange={(e) => setProblemMemoryLimit(e.target.value)}
@@ -204,7 +214,7 @@ export const CreateQuestion = () => {
           </S.Box>
           <S.Box>
             <S.Text>시간 제한</S.Text>
-            <S.TimeInput
+            <S.Input
               type="number"
               value={problemTimeLimit}
               onChange={(e) => setProblemTimeLimit(e.target.value)}
