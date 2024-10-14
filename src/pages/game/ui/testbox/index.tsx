@@ -41,12 +41,22 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const inputDisableRef = useRef(isInputDisabled);
     const { initializeTerminal, resetAndEnableTerminal, writeToTerminal } =
       useTerminal();
-    const previousOutputRef = useRef<string>(""); // 이전 출력 저장
+    const previousOutputRef = useRef<string>("");
 
     useEffect(() => {
       if (consoleOutput && consoleOutput !== previousOutputRef.current) {
-        const newOutput = consoleOutput.slice(previousOutputRef.current.length);
-        writeToTerminal(newOutput);
+        let newOutput;
+        if (previousOutputRef.current.length > consoleOutput.length) {
+          newOutput = consoleOutput;
+        } else {
+          newOutput = consoleOutput.slice(previousOutputRef.current.length);
+        }
+
+        if (newOutput.trim() !== "") {
+          writeToTerminal(newOutput);
+        } else {
+          console.error("빈 메시지 수신: 출력할 내용이 없습니다.");
+        }
         previousOutputRef.current = consoleOutput;
       }
     }, [consoleOutput, writeToTerminal]);
