@@ -104,8 +104,6 @@ export const CodeEditor = () => {
     disconnectWebSocket,
   } = useWebSocket();
 
-  console.log(consoleOutput);
-
   const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
   const [submitStatus, setSubmitStatus] = useState<
