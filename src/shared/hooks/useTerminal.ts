@@ -10,9 +10,10 @@ interface TerminalProps {
 }
 
 export const useTerminal = () => {
-  const { disconnectWebSocket } = useWebSocket();
+  const { connectWebSocket, clientRef } = useWebSocket();
   const terminalInstanceRef = useRef<Terminal | null>(null);
   const inputBufferRef = useRef<string>("");
+  const isTerminalInitialized = useRef(false);
 
   const initializeTerminal = ({
     terminalRef,
@@ -55,6 +56,11 @@ export const useTerminal = () => {
       });
 
       terminalInstanceRef.current = terminal;
+      isTerminalInitialized.current = true;
+
+      if (!clientRef.current) {
+        connectWebSocket();
+      }
     }
   };
 
@@ -67,6 +73,7 @@ export const useTerminal = () => {
     if (terminalInstanceRef.current) {
       terminalInstanceRef.current.dispose();
       terminalInstanceRef.current = null;
+      isTerminalInitialized.current = false;
       initializeTerminal({
         terminalRef,
         inputDisableRef,
@@ -84,6 +91,8 @@ export const useTerminal = () => {
           terminalInstanceRef.current?.write(`${line}\n\r`);
         }
       });
+    } else {
+      console.error("터미널 인스턴스 없음");
     }
   };
 
