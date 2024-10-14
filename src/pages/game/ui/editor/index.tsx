@@ -173,9 +173,11 @@ export const CodeEditor = () => {
     languages,
     executionActive,
   ]);
+
   const handleSaveCode = () => {
     if (contestId && problemId) {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
+      setIsModalOpen(true);
     }
   };
 
@@ -264,6 +266,7 @@ export const CodeEditor = () => {
       );
     }
   };
+
   const onTestcaseClick = async () => {
     if (isTestLoading) {
       setIsModalOpen(true);
@@ -392,6 +395,15 @@ export const CodeEditor = () => {
         <ErrorModal
           errorMessage={errorMessage}
           onClose={() => navigate(`/game/contest/${contestId}`)}
+        />
+      )}
+      {isModalOpen && (
+        <Modal
+          status="좋음"
+          mode="알림"
+          title="저장이 완료되었습니다!"
+          animation
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </S.EditorLayout>
