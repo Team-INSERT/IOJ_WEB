@@ -17,6 +17,7 @@ const Character = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ zIndex: 1 }}
   >
     <g id="Group 49">
       <path
