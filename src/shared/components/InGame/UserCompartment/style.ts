@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { NexonFont, flex } from "@/shared/style";
 
 export const Layout = styled.div<{ width: number }>`
+  padding: 12px 0 8px 0;
   position: relative;
   overflow: hidden;
   border-radius: 4px;
