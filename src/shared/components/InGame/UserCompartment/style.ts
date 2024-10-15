@@ -13,9 +13,12 @@ export const Layout = styled.div<{ width: number }>`
   border-radius: 4px;
   ${flex.COLUMN_CENTER}
   cursor: pointer;
+  padding: 5px;
+
   &:hover {
     border: 5px solid;
     border-image: linear-gradient(180deg, #fff2af, #ff48ab) 1;
+    padding: 0px;
   }
 `;
 
@@ -50,8 +53,9 @@ export const BlueLayout = styled.div`
   backdrop-filter: blur(2px);
 `;
 
-export const UserName = styled.div`
+export const UserName = styled.div<{ smallFont: boolean }>`
   ${NexonFont.NexonText}
   padding-top: 7px;
   z-index: 1;
+  ${({ smallFont }) => (smallFont ? NexonFont.NexonCaption : "none")};
 `;

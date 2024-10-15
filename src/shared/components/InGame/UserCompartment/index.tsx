@@ -6,6 +6,7 @@ interface Details {
   layoutWidth?: number;
   width?: number;
   color?: string;
+  smallFontSize?: boolean;
 }
 
 const UserCompartment = ({
@@ -13,12 +14,13 @@ const UserCompartment = ({
   UserName,
   width,
   color,
+  smallFontSize = true,
 }: Details) => (
   <S.Layout width={layoutWidth}>
     <S.PinkLayout />
     <S.BlueLayout />
     <Character characterColor={color} width={width} />
-    <S.UserName>{UserName}</S.UserName>
+    <S.UserName smallFont={smallFontSize}>{UserName}</S.UserName>
   </S.Layout>
 );
 
