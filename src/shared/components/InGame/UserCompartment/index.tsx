@@ -15,6 +15,8 @@ const UserCompartment = ({
   color,
 }: Details) => (
   <S.Layout width={layoutWidth}>
+    <S.PinkLayout />
+    <S.BlueLayout />
     <Character color={color} width={width} />
     <S.UserName>{UserName}</S.UserName>
   </S.Layout>
