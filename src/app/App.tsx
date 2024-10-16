@@ -20,7 +20,7 @@ import {
 } from "@/pages/room";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
-import { Ai } from "@/pages/game/ai/ui/page/page";
+import { Setting } from "@/pages/setting/ui/page/page";
 import { useAxiosInterceptor } from "@/shared/utils/customAxios";
 import ErrorModal from "@/shared/components/ErrorModal";
 
@@ -39,10 +39,7 @@ const App = () => {
   return (
     <>
       {isAlertShow && (
-        <ErrorModal
-          errorMessage={errorMessage}
-          onClose={modalClose}
-        />
+        <ErrorModal errorMessage={errorMessage} onClose={modalClose} />
       )}
       <Router>
         <Routes>
@@ -52,7 +49,7 @@ const App = () => {
           <Route path="/introduce" element={<Prepare />} />
           <Route path="/guide" element={<Prepare />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/setting" element={<Ai />} />
+          <Route path="/setting" element={<Setting />} />
           <Route path="/contest/list" element={<ContestList />} />
           <Route path="/game/contest" element={<ContestList />} />
           <Route
