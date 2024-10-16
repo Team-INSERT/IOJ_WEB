@@ -11,6 +11,7 @@ import { Waiting } from "@/pages/waiting";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
+import { GameFind } from "@/pages/room/ui/gameFind";
 import { Prepare } from "@/pages/prepare";
 import {
   GameHome,
@@ -39,10 +40,7 @@ const App = () => {
   return (
     <>
       {isAlertShow && (
-        <ErrorModal
-          errorMessage={errorMessage}
-          onClose={modalClose}
-        />
+        <ErrorModal errorMessage={errorMessage} onClose={modalClose} />
       )}
       <Router>
         <Routes>
@@ -74,6 +72,8 @@ const App = () => {
           <Route path="/problem" element={<ProblemList />} />
           <Route path="/problem/:problemId" element={<ProblemDetail />} />
           <Route path="/google/callback" element={<Loading />} />
+
+          <Route path="/game/room/list" element={<GameFind />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </Router>

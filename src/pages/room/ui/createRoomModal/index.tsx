@@ -1,36 +1,91 @@
-import { Stars } from "@/shared/components";
+import { useState } from "react";
+import Stars from "@/shared/components/Stars";
 import { ReactComponent as XBold } from "@/assets/XBold.svg";
+import { createRoomApi } from "../../api/roomApi";
 import * as S from "./style";
 
 interface CreateRoomModalProps {
-  onClose: () => void; // onClose 함수의 타입을 () => void로 명시적으로 선언
+  onClose: () => void;
+}
+
+export interface createRoomProps {
+  title: string;
+  maxPeople: number;
+  problem: number;
+  minDifficulty: number;
+  maxDifficulty: number;
+  time: number;
 }
 
 export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
+  const [title, setTitle] = useState("");
+  const [maxPeople, setMaxPeople] = useState(0);
+  const [problem, setProblem] = useState(0);
+  const [minDifficulty, setMinDifficulty] = useState(0);
+  const [maxDifficulty, setMaxDifficulty] = useState(0);
+  const [time, setTime] = useState(3);
+
+  const onCreateRoomClick = async () => {
+    const createRoomData: createRoomProps = {
+      title,
+      maxPeople,
+      problem,
+      minDifficulty,
+      maxDifficulty,
+      time,
+    };
+
+    try {
+      await createRoomApi(createRoomData);
+      onClose();
+    } catch (error) {
+      console.error("방 생성 중 에러가 발생했습니다:", error);
+    }
+  };
+
   const container = [
     {
       id: 1,
       title: "방 이름",
       detail: (
-        <S.RoomTitleInput placeholder="방 이름을 입력하세요 (최대 20글자)" />
+        <S.RoomTitleInput
+          placeholder="방 이름을 입력하세요 (최대 20글자)"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       ),
     },
     {
       id: 2,
       title: "최대 인원 수",
-      detail: <S.RoomMaximumNumberInput type="number" placeholder="0" />,
+      detail: (
+        <S.RoomMaximumNumberInput
+          type="number"
+          placeholder="0"
+          value={maxPeople}
+          onChange={(e) => setMaxPeople(Number(e.target.value))}
+        />
+      ),
     },
     {
       id: 3,
       title: "문제 수",
-      detail: <S.RoomProblemInput type="number" placeholder="0" />,
+      detail: (
+        <S.RoomProblemInput
+          type="number"
+          placeholder="0"
+          value={problem}
+          onChange={(e) => setProblem(Number(e.target.value))}
+        />
+      ),
     },
     {
       id: 4,
       title: "문제 난이도",
       detail: (
         <S.StarContainer>
-          <Stars value={0} setting /> ~ <Stars value={0} setting />
+          <Stars value={minDifficulty} setting onChange={setMinDifficulty} /> ~
+          <Stars value={maxDifficulty} setting onChange={setMaxDifficulty} />
         </S.StarContainer>
       ),
     },
@@ -43,11 +98,13 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
           placeholder="0"
           min="3"
           max="60"
-          defaultValue="3"
+          value={time}
+          onChange={(e) => setTime(Number(e.target.value))}
         />
       ),
     },
   ];
+
   return (
     <S.Overlay>
       <S.ModalContainer>
@@ -63,7 +120,7 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
             {detail.detail}
           </S.InputContainer>
         ))}
-        <S.CreateButton onClick={onClose}>생성하기</S.CreateButton>
+        <S.CreateButton onClick={onCreateRoomClick}>생성하기</S.CreateButton>
       </S.ModalContainer>
     </S.Overlay>
   );
