@@ -14,6 +14,9 @@ export const Layout = styled.div<{ width: number }>`
   ${flex.COLUMN_CENTER}
   cursor: pointer;
   padding: 5px;
+  transition:
+    border 0.4s ease,
+    padding 0.4s ease;
 
   &:hover {
     border: 5px solid;
@@ -37,6 +40,7 @@ export const PinkLayout = styled.div`
   );
   backdrop-filter: blur(2px);
 `;
+
 export const BlueLayout = styled.div`
   position: absolute;
   width: 130%;
