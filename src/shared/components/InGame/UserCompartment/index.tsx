@@ -3,13 +3,24 @@ import * as S from "./style";
 
 interface Details {
   UserName: string;
-  color: string;
+  layoutWidth?: number;
+  width?: number;
+  color?: string;
+  smallFontSize?: boolean;
 }
 
-const UserCompartment = ({ UserName, color }: Details) => (
-  <S.Layout>
-    <Character color={color} />
-    <S.UserName>{UserName}</S.UserName>
+const UserCompartment = ({
+  layoutWidth = 240,
+  UserName,
+  width,
+  color,
+  smallFontSize = true,
+}: Details) => (
+  <S.Layout width={layoutWidth}>
+    <S.PinkLayout />
+    <S.BlueLayout />
+    <Character characterColor={color} width={width} />
+    <S.UserName smallFont={smallFontSize}>{UserName}</S.UserName>
   </S.Layout>
 );
 
