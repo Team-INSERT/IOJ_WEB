@@ -23,25 +23,22 @@ export const Title = styled.span`
 `;
 
 export const MemberContainer = styled.div<{ itemCount: number }>`
-  display: grid;
-  grid-template-columns: repeat(
-    ${({ itemCount }) => Math.min(itemCount, 4)},
-    1fr
-  );
-  grid-auto-rows: auto;
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
-  padding: 20px;
+  padding: 20px 90px;
   justify-content: center;
   align-items: center;
-  ${({ itemCount }) =>
-    itemCount <= 4 &&
-    `
-    justify-items: center; /* 각 요소를 중앙으로 */
-    `}
+  & > div {
+    flex: 1 1 calc(25% - 50px);
+    max-width: calc(25% - 20px);
+  }
 `;
 
 export const UserConpartment = styled.div`
-  background-color: aliceblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const CancelBtn = styled.button`
