@@ -11,10 +11,10 @@ import { Waiting } from "@/pages/waiting";
 import { Login } from "@/pages/login";
 import { Loading } from "@/pages/loading";
 import { NotFound } from "@/pages/not-found/Not-found";
-import { GameFind } from "@/pages/room/ui/gameFind";
 import { Prepare } from "@/pages/prepare";
 import {
   GameHome,
+  GameFind,
   ContestList,
   ContestQuestion,
   ContestRank,
@@ -65,7 +65,7 @@ const App = () => {
             path="/game/contest/:contestId/code/:problemId"
             element={<Game />}
           />
-          <Route path="game/waiting" element={<Waiting />} />
+          <Route path="/game/waiting" element={<Waiting />} />
           <Route path="/admin" element={<Start />} />
           <Route path="/admin/contest" element={<CreateContest />} />
           <Route path="/admin/question" element={<CreateQuestion />} />

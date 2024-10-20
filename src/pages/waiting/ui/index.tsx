@@ -1,4 +1,3 @@
-import React from "react";
 import { UserCompartment, Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";

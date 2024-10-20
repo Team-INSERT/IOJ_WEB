@@ -12,6 +12,7 @@ interface RoomProps {
   time: number;
   currentPeople?: number;
   category?: string;
+  onClick?: () => void;
 }
 
 const Room = ({
@@ -24,12 +25,17 @@ const Room = ({
   time,
   currentPeople = 0,
   category = "customization",
+  onClick,
 }: RoomProps) => {
   const formattedRoomNumber = id.slice(0, 8).padStart(3, "0");
   const backgroundImage = category === "contest" ? Contest : Customization;
 
   return (
-    <S.Layout backgroundImage={backgroundImage} category={category}>
+    <S.Layout
+      backgroundImage={backgroundImage}
+      category={category}
+      onClick={onClick}
+    >
       <S.Number category={category}>{formattedRoomNumber}</S.Number>
       <S.Line />
       <S.Details>

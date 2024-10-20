@@ -1,5 +1,6 @@
 import { Button, Room } from "@/shared/components";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 import { CreateRoomModal } from "../createRoomModal";
 import { roomList, roomDetail } from "../../api/roomApi";
@@ -15,14 +16,20 @@ interface RoomData {
 }
 
 export const GameFind = () => {
+  const navigate = useNavigate();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState<RoomData[]>([]);
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = roomList();
-        setRooms(await res);
+        const res = await roomList();
+        setRooms(res);
+        if (res.length > 0) {
+          setSelectedRoomId(res[0].id);
+        }
       } catch (err) {
         console.error("방 목록을 가져오는 데 실패했습니다:", err);
       }
@@ -30,10 +37,17 @@ export const GameFind = () => {
   }, []);
 
   useEffect(() => {
-    const fetchRoomDetail = async () => {
-      const roomData = await roomDetail(rooms[0].id);
-    };
-  }, []);
+    if (selectedRoomId) {
+      (async () => {
+        try {
+          const res = await roomDetail(selectedRoomId);
+          console.log("Room detail:", res);
+        } catch (err) {
+          console.error("방 상세 정보를 가져오는 데 실패했습니다:", err);
+        }
+      })();
+    }
+  }, [selectedRoomId]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -51,14 +65,12 @@ export const GameFind = () => {
         {rooms.map((room) => (
           <Room
             key={room.id}
-            id={room.id}
-            title={room.title}
-            maxPeople={room.maxPeople}
+            {...room}
             currentPeople={0}
-            time={room.time}
-            minDifficulty={room.minDifficulty}
-            maxDifficulty={room.maxDifficulty}
-            problem={room.problem}
+            onClick={() => {
+              setSelectedRoomId(room.id);
+              navigate(`/game/waiting`);
+            }}
           />
         ))}
       </S.GameList>
