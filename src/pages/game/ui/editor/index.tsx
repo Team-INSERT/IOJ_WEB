@@ -1,24 +1,20 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Split from "react-split";
-import AceEditor from "react-ace";
-import ErrorModal from "@/shared/components/ErrorModal";
-import Modal from "@/shared/components/Modal";
-import Button from "@/shared/components/Button";
-import Dropdown from "@/shared/components/DropDown";
+import {
+  Submit,
+  Dropdown,
+  Button,
+  ErrorModal,
+  Modal,
+} from "@/shared/components";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
-import { Submit } from "@/shared/components";
 import { TestBox } from "../testbox";
+import { AceEditorComponent } from "../AceEditor";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-c_cpp";
-import "ace-builds/src-noconflict/theme-monokai";
-import * as S from "./style";
 import { boilerplateCode } from "../../api/boilerplateCode";
+import * as S from "./style";
 
 interface TestCase {
   index: number;
@@ -50,6 +46,7 @@ export const CodeEditor = () => {
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [boilerplate, setBoilerplate] = useState("");
+
   useEffect(() => {
     const savedCode = localStorage.getItem(
       `code_${contestId}_${problemId}_${languages}`,
@@ -209,6 +206,7 @@ export const CodeEditor = () => {
     },
     [clientRef, sessionIdRef],
   );
+
   const handleInputChange = (userInput: string) => {
     setInput(userInput);
   };
@@ -353,23 +351,10 @@ export const CodeEditor = () => {
           return gutter;
         }}
       >
-        <AceEditor
-          mode={
-            ["c", "cpp"].includes(languages.toLowerCase())
-              ? "c_cpp"
-              : languages.toLowerCase()
-          }
-          theme="monokai"
-          height={editorHeight}
-          width="100%"
-          fontSize={16}
-          value={code}
-          onChange={(value: any) => handleCodeChange(value || "")}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-          }}
-          editorProps={{ $blockScrolling: true }}
+        <AceEditorComponent
+          initialCode={code}
+          language={languages}
+          onCodeChange={handleCodeChange}
         />
         <S.TestBoxLayout>
           <TestBox
