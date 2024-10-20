@@ -2,7 +2,7 @@ import { Button, Room } from "@/shared/components";
 import { useState, useEffect } from "react";
 import * as S from "./style";
 import { CreateRoomModal } from "../createRoomModal";
-import { roomList } from "../../api/roomApi";
+import { roomList, roomDetail } from "../../api/roomApi";
 
 interface RoomData {
   id: string;
@@ -19,16 +19,20 @@ export const GameFind = () => {
   const [rooms, setRooms] = useState<RoomData[]>([]);
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    (async () => {
       try {
-        const roomData = await roomList();
-        setRooms(roomData);
-      } catch (error) {
-        console.error("방 목록을 가져오는 데 실패했습니다:", error);
+        const res = roomList();
+        setRooms(await res);
+      } catch (err) {
+        console.error("방 목록을 가져오는 데 실패했습니다:", err);
       }
-    };
+    })();
+  }, []);
 
-    fetchRooms();
+  useEffect(() => {
+    const fetchRoomDetail = async () => {
+      const roomData = await roomDetail(rooms[0].id);
+    };
   }, []);
 
   const openModal = () => setIsModalOpen(true);

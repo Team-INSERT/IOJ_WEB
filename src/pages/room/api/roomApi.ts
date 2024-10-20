@@ -14,3 +14,6 @@ export const roomList = async () => (await customAxios.get(`/room`)).data;
 export const createRoomApi = async (createRoom: createRoomProps) => {
   await customAxios.post("/room", createRoom);
 };
+
+export const roomDetail = async (roomId: string) =>
+  (await customAxios.get(`/room/${roomId}`)).data;
