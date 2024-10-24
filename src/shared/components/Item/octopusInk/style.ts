@@ -10,6 +10,7 @@ export const Layout = styled.div`
 
 export const LogoContainer = styled.div`
   position: absolute;
+  transform-origin: center;
 `;
 
 export const NoShildText = styled.span`

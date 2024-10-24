@@ -14,14 +14,29 @@ const positions = [
 
 const OctopusInk = () => {
   const [visibleLogos, setVisibleLogos] = useState<number[]>([]);
+  const [expand, setExpand] = useState(false);
+  const [hideText, setHideText] = useState(false);
+  const [shrink, setShrink] = useState(false);
 
   useEffect(() => {
     positions.forEach((pos, index) => {
       setTimeout(() => {
         setVisibleLogos((prev) => [...prev, pos.id]);
-      }, index * 100);
+      }, index * 200);
     });
   }, []);
+
+  useEffect(() => {
+    if (visibleLogos.length === positions.length) {
+      setTimeout(() => {
+        setExpand(true);
+        setHideText(true);
+      }, 600);
+      setTimeout(() => {
+        setShrink(true);
+      }, 4000);
+    }
+  }, [visibleLogos]);
 
   return (
     <S.Layout>
@@ -32,13 +47,19 @@ const OctopusInk = () => {
             top: pos.top,
             left: pos.left,
             opacity: visibleLogos.includes(pos.id) ? 1 : 0,
-            transition: "opacity 0.5s ease-in",
+            transform: expand ? (shrink ? "scale(0)" : "scale(3)") : "scale(1)", // 축소 및 확대
+            transition: "transform 2s ease-in-out, opacity 0.5s ease-in",
           }}
         >
           <InkLogo />
         </S.LogoContainer>
       ))}
-      <S.NoShildText>
+      <S.NoShildText
+        style={{
+          opacity: hideText ? 0 : 1,
+          transition: "opacity 0.5s ease-in-out",
+        }}
+      >
         <S.BigText>🐙</S.BigText> 방어실패
       </S.NoShildText>
     </S.Layout>
