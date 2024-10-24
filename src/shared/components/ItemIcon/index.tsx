@@ -4,7 +4,7 @@ interface ItemProps {
   name: string;
 }
 
-const Item = ({ name }: ItemProps) => {
+const ItemIcon = ({ name }: ItemProps) => {
   const itemDetail = [
     {
       logo: "🪞",
@@ -56,4 +56,4 @@ const Item = ({ name }: ItemProps) => {
   );
 };
 
-export default Item;
+export default ItemIcon;
