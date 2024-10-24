@@ -17,12 +17,13 @@ const OctopusInk = () => {
   const [expand, setExpand] = useState(false);
   const [hideText, setHideText] = useState(false);
   const [shrink, setShrink] = useState(false);
+  const [textHidden, setTextHidden] = useState(false);
 
   useEffect(() => {
     positions.forEach((pos, index) => {
       setTimeout(() => {
         setVisibleLogos((prev) => [...prev, pos.id]);
-      }, index * 200);
+      }, index * 250);
     });
   }, []);
 
@@ -32,9 +33,14 @@ const OctopusInk = () => {
         setExpand(true);
         setHideText(true);
       }, 600);
+
       setTimeout(() => {
         setShrink(true);
       }, 4000);
+
+      setTimeout(() => {
+        setTextHidden(true);
+      }, 1600);
     }
   }, [visibleLogos]);
 
@@ -47,21 +53,29 @@ const OctopusInk = () => {
             top: pos.top,
             left: pos.left,
             opacity: visibleLogos.includes(pos.id) ? 1 : 0,
-            transform: expand ? (shrink ? "scale(0)" : "scale(3)") : "scale(1)", // 축소 및 확대
-            transition: "transform 2s ease-in-out, opacity 0.5s ease-in",
+            transform: visibleLogos.includes(pos.id)
+              ? expand
+                ? shrink
+                  ? "scale(0)"
+                  : "scale(3)"
+                : "scale(1)"
+              : "scale(0)",
+            transition: "transform 1s ease-in-out",
           }}
         >
           <InkLogo />
         </S.LogoContainer>
       ))}
-      <S.NoShildText
-        style={{
-          opacity: hideText ? 0 : 1,
-          transition: "opacity 0.5s ease-in-out",
-        }}
-      >
-        <S.BigText>🐙</S.BigText> 방어실패
-      </S.NoShildText>
+      {!textHidden && (
+        <S.NoShildText
+          style={{
+            transform: hideText ? "translateY(90px)" : "translateY(0)",
+            transition: "transform 1s ease-in-out",
+          }}
+        >
+          <S.BigText>🐙</S.BigText> 방어실패
+        </S.NoShildText>
+      )}
     </S.Layout>
   );
 };
