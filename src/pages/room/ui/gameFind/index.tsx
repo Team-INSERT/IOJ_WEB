@@ -13,6 +13,7 @@ interface RoomData {
   minDifficulty: number;
   maxDifficulty: number;
   time: number;
+  onClick?: () => void;
 }
 
 export const GameFind = () => {
@@ -70,7 +71,7 @@ export const GameFind = () => {
             roomNumber={index + 1}
             onClick={() => {
               setSelectedRoomId(room.id);
-              navigate(`/game/waiting`);
+              navigate(`/game/waiting/${room.id}`);
             }}
           />
         ))}
