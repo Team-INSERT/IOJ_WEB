@@ -62,11 +62,12 @@ export const GameFind = () => {
         </Button>
       </S.FindCreateGame>
       <S.GameList>
-        {rooms.map((room) => (
+        {rooms.map((room, index) => (
           <Room
             key={room.id}
             {...room}
             currentPeople={0}
+            roomNumber={index + 1}
             onClick={() => {
               setSelectedRoomId(room.id);
               navigate(`/game/waiting`);

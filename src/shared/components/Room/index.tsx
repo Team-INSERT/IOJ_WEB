@@ -13,6 +13,7 @@ interface RoomProps {
   currentPeople?: number;
   category?: string;
   onClick?: () => void;
+  roomNumber: number; // 새로 추가된 prop
 }
 
 const Room = ({
@@ -26,8 +27,9 @@ const Room = ({
   currentPeople = 0,
   category = "customization",
   onClick,
+  roomNumber, // 새로 추가된 prop
 }: RoomProps) => {
-  const formattedRoomNumber = id.slice(0, 8).padStart(3, "0");
+  const formattedRoomNumber = roomNumber.toString().padStart(3, "0");
   const backgroundImage = category === "contest" ? Contest : Customization;
 
   return (
