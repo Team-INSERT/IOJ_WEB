@@ -5,9 +5,11 @@ import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
 const Devil = () => {
-  const [textHidden, setTextHidden] = useState(false);
-  const [hideText, setHideText] = useState(false);
-  const [iconsHidden, setIconsHidden] = useState(false);
+  const [textHidden, setTextHidden] = useState<boolean>(false);
+  const [hideText, setHideText] = useState<boolean>(false);
+  const [iconsHidden, setIconsHidden] = useState<boolean>(false);
+  // const [text, setText] = useState<string>("스페이스 백스페이스 테스트");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setHideText(true);
@@ -21,10 +23,23 @@ const Devil = () => {
       setIconsHidden(true);
     }, 7000);
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        event.preventDefault();
+        // setText((prevText) => prevText.slice(0, -1));
+      } else if (event.key === "Backspace") {
+        event.preventDefault();
+        // setText((prevText) => `${prevText} `);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
       clearTimeout(iconsTimer);
+      window.removeEventListener("keydown", handleKeyDown); 
     };
   }, []);
 
