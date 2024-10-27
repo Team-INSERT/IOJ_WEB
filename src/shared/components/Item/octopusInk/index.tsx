@@ -1,6 +1,7 @@
 import InkLogo from "@/assets/inkLogo";
 import { useEffect, useState } from "react";
 import * as S from "./style";
+import ItemStatusText from "../../ItemStatusText";
 
 const positions = [
   { id: 1, top: "4%", left: "17%" },
@@ -73,7 +74,7 @@ const OctopusInk = () => {
             transition: "transform 1s ease-in-out",
           }}
         >
-          <S.BigText>🐙</S.BigText> 방어실패
+          <ItemStatusText status="공격 성공" title="문어먹물" />
         </S.NoShildText>
       )}
     </S.Layout>
