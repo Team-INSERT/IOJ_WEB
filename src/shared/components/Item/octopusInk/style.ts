@@ -17,5 +17,3 @@ export const NoShildText = styled.span`
   top: 30%;
   left: 81%;
 `;
-
-export const BigText = styled.span``;
