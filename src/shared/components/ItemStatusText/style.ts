@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 export const Layout = styled.div`
   ${flex.FLEX}
-  background-color: black;
   gap: 7px;
 `;
 export const Icon = styled.span`
