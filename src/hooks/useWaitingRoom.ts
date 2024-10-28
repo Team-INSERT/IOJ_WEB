@@ -16,11 +16,16 @@ interface RoomEvent {
   ready?: boolean;
 }
 
-export const useWaitingRoom = (roomId: number) => {
+export const useWaitingRoom = (roomId: string) => {
   const [users, setUsers] = useState<User[]>([]);
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [roomStatus, setRoomStatus] = useState<
+    "waiting" | "started" | "deleted"
+  >("waiting");
   const clientRef = useRef<Client | null>(null);
+
   const processEvent = useCallback((event: RoomEvent) => {
+    console.log("Received event:", event); // 이벤트 로그 확인
     switch (event.type) {
       case "JOIN":
         setUsers((prev) => [
@@ -43,13 +48,13 @@ export const useWaitingRoom = (roomId: number) => {
         );
         break;
       case "START":
-        // 게임 시작 로직
+        setRoomStatus("started");
         break;
       case "DELETE":
-        // 방 삭제 로직
+        setRoomStatus("deleted");
         break;
       default:
-        console.warn(`알 수 없는 이벤트 타입: ${event.type}`);
+        console.warn(`Unknown event type: ${event.type}`);
     }
   }, []);
 
@@ -59,7 +64,7 @@ export const useWaitingRoom = (roomId: number) => {
     const stompClient = new Client({
       webSocketFactory: () => socket,
       debug(str: string) {
-        console.log(str);
+        console.log("STOMP debug:", str); // 연결 확인용 로그
       },
       onConnect: () => {
         console.log("Connected to WebSocket");
@@ -100,6 +105,7 @@ export const useWaitingRoom = (roomId: number) => {
   return {
     users,
     isConnected,
+    roomStatus,
     connectWebSocket,
     disconnectWebSocket,
     sendEvent,
