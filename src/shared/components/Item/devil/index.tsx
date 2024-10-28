@@ -8,7 +8,6 @@ const Devil = () => {
   const [textHidden, setTextHidden] = useState<boolean>(false);
   const [hideText, setHideText] = useState<boolean>(false);
   const [iconsHidden, setIconsHidden] = useState<boolean>(false);
-  // const [text, setText] = useState<string>("스페이스 백스페이스 테스트");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,10 +25,8 @@ const Devil = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === " ") {
         event.preventDefault();
-        // setText((prevText) => prevText.slice(0, -1));
       } else if (event.key === "Backspace") {
         event.preventDefault();
-        // setText((prevText) => `${prevText} `);
       }
     };
 
@@ -45,11 +42,11 @@ const Devil = () => {
 
   return (
     <S.ModalWrapper>
-      <S.DevilModalContainer>
-        <DevilModal />
-      </S.DevilModalContainer>
       {!iconsHidden && (
         <>
+          <S.DevilModalContainer>
+            <DevilModal />
+          </S.DevilModalContainer>
           <S.LeftDevil>
             <DevilIcon />
           </S.LeftDevil>
@@ -59,13 +56,7 @@ const Devil = () => {
         </>
       )}
       {!textHidden && (
-        <S.NoShildText
-          style={{
-            transform: hideText ? "translateY(90px)" : "translateY(0)",
-            transition: "transform 1s ease-in-out, opacity 1s ease-in-out",
-            opacity: hideText ? 0 : 1,
-          }}
-        >
+        <S.NoShildText hidden={hideText}>
           <ItemStatusText status="방어 실패" title="대마왕" />
         </S.NoShildText>
       )}
