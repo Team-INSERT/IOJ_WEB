@@ -7,17 +7,17 @@ export const ModalWrapper = styled.div`
   overflow: hidden;
 `;
 
-const slideInAndStay = keyframes`
+const slideInAndOut = keyframes`
   0% {
     transform: translateX(-100%);
     opacity: 1;
   }
-  25% {
+  40% {
     transform: translateX(0);
     opacity: 1;
   }
-  50% {
-    transform: translateX(0);
+  60% {
+    transform: translateX(70%);
     opacity: 1;
   }
   100% {
@@ -29,7 +29,7 @@ const slideInAndStay = keyframes`
 export const DevilModalContainer = styled.div`
   width: 100%;
   margin-top: 102px;
-  animation: ${slideInAndStay} 4s ease-in-out forwards;
+  animation: ${slideInAndOut} 4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
   position: absolute;
   left: 35%;
   transform: translateX(-50%);

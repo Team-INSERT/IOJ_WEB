@@ -39,7 +39,7 @@ const Devil = () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
       clearTimeout(iconsTimer);
-      window.removeEventListener("keydown", handleKeyDown); 
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
