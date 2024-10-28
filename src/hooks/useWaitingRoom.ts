@@ -7,6 +7,7 @@ interface User {
   nickname: string;
   color: string;
   ready: boolean;
+  host: boolean;
 }
 
 interface RoomEvent {
@@ -14,6 +15,7 @@ interface RoomEvent {
   nickname?: string;
   color?: string;
   ready?: boolean;
+  host?: boolean;
 }
 
 export const useWaitingRoom = (roomId: string) => {
@@ -24,28 +26,54 @@ export const useWaitingRoom = (roomId: string) => {
   >("waiting");
   const clientRef = useRef<Client | null>(null);
 
+  // 초기 유저 상태 설정
+  const initializeUsers = useCallback((initialUsers: User[]) => {
+    console.log("Initializing users with:", initialUsers);
+    setUsers(initialUsers);
+  }, []);
+
   const processEvent = useCallback((event: RoomEvent) => {
-    console.log("Received event:", event); // 이벤트 로그 확인
+    console.log("Received event:", event);
     switch (event.type) {
       case "JOIN":
-        setUsers((prev) => [
-          ...prev,
-          { nickname: event.nickname!, color: event.color!, ready: false },
-        ]);
+        setUsers((prev) => {
+          console.log("Previous users:", prev);
+          console.log("Adding user:", event.nickname);
+          if (prev.some((user) => user.nickname === event.nickname)) {
+            return prev;
+          }
+          const newUsers = [
+            ...prev,
+            {
+              nickname: event.nickname!,
+              color: event.color!,
+              ready: false,
+              host: event.host || false,
+            },
+          ];
+          console.log("New users state:", newUsers);
+          return newUsers;
+        });
         break;
       case "LEAVE":
-        setUsers((prev) =>
-          prev.filter((user) => user.nickname !== event.nickname),
-        );
+        setUsers((prev) => {
+          const newUsers = prev.filter(
+            (user) => user.nickname !== event.nickname,
+          );
+          console.log("User left. New users state:", newUsers);
+          return newUsers;
+        });
         break;
       case "READY":
-        setUsers((prev) =>
-          prev.map((user) =>
+        setUsers((prev) => {
+          const newUsers = prev.map((user) =>
             user.nickname === event.nickname
               ? { ...user, ready: event.ready! }
               : user,
-          ),
-        );
+          );
+          console.log("Ready status changed. New users state:", newUsers);
+          return newUsers;
+        });
         break;
       case "START":
         setRoomStatus("started");
@@ -64,12 +92,13 @@ export const useWaitingRoom = (roomId: string) => {
     const stompClient = new Client({
       webSocketFactory: () => socket,
       debug(str: string) {
-        console.log("STOMP debug:", str); // 연결 확인용 로그
+        console.log("STOMP debug:", str);
       },
       onConnect: () => {
         console.log("Connected to WebSocket");
         setIsConnected(true);
         stompClient.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {
+          console.log("Received message:", message.body);
           const event: RoomEvent = JSON.parse(message.body);
           processEvent(event);
         });
@@ -93,6 +122,7 @@ export const useWaitingRoom = (roomId: string) => {
 
   const sendEvent = useCallback((destination: string, body: any) => {
     if (clientRef.current && clientRef.current.connected) {
+      console.log("Sending event:", { destination, body });
       clientRef.current.publish({
         destination,
         body: JSON.stringify(body),
@@ -109,5 +139,6 @@ export const useWaitingRoom = (roomId: string) => {
     connectWebSocket,
     disconnectWebSocket,
     sendEvent,
+    initializeUsers,
   };
 };

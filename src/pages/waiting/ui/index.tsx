@@ -31,14 +31,19 @@ interface RoomData {
 }
 
 export const Waiting: React.FC = () => {
-  const { roomNumber } = useParams<{ roomNumber: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const roomId = location.state?.roomId;
 
   const [room, setRoom] = useState<RoomData | null>(null);
-  const { isConnected, connectWebSocket, disconnectWebSocket, sendEvent } =
-    useWaitingRoom(roomId || "");
+  const {
+    users: websocketUsers,
+    isConnected,
+    connectWebSocket,
+    disconnectWebSocket,
+    sendEvent,
+    initializeUsers,
+  } = useWaitingRoom(roomId || "");
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
 
@@ -47,8 +52,10 @@ export const Waiting: React.FC = () => {
       try {
         if (roomId) {
           const roomDetails = await roomDetail(roomId);
-          console.log("Room Details:", roomDetails);
+          console.log("Initial Room Details:", roomDetails);
           setRoom(roomDetails);
+
+          initializeUsers(roomDetails.users);
 
           const hostUser = roomDetails.users.find(
             (user: { host: boolean }) => user.host === true,
@@ -57,8 +64,23 @@ export const Waiting: React.FC = () => {
           const currentUser = await fetchUserData();
           setIsHost(hostUser?.nickname === currentUser.nickname);
 
+          const currentUserInRoom = roomDetails.users.find(
+            (user: { nickname: any }) => user.nickname === currentUser.nickname,
+          );
+          if (currentUserInRoom) {
+            setIsReady(currentUserInRoom.ready);
+          }
+
           connectWebSocket();
-          await enter(roomId);
+          const enterResponse = await enter(roomId);
+          console.log("Enter response:", enterResponse);
+
+          sendEvent("/app/join", {
+            roomId,
+            nickname: currentUser.nickname,
+            color: enterResponse.color,
+            ready: currentUserInRoom?.ready || false,
+          });
         }
       } catch (error) {
         console.error("방 정보를 가져오는데 실패했습니다:", error);
@@ -73,13 +95,62 @@ export const Waiting: React.FC = () => {
         disconnectWebSocket();
       }
     };
-  }, [roomId, connectWebSocket, disconnectWebSocket]);
+  }, [roomId, connectWebSocket, disconnectWebSocket, initializeUsers]);
+
+  useEffect(() => {
+    if (websocketUsers.length > 0) {
+      console.log("Updating room with websocket users:", websocketUsers);
+      setRoom((prev) =>
+        prev
+          ? {
+              ...prev,
+              users: websocketUsers,
+            }
+          : null,
+      );
+    }
+  }, [websocketUsers]);
+
+  useEffect(() => {
+    if (room) {
+      const currentUserNickname = localStorage.getItem("nickname");
+      const currentUser = room.users.find(
+        (user) => user.nickname === currentUserNickname,
+      );
+      if (currentUser) {
+        console.log("Current user ready state:", currentUser.ready);
+        setIsReady(currentUser.ready);
+      }
+    }
+  }, [room?.users]);
 
   const handleReady = async () => {
     if (room && roomId) {
-      await ready(roomId);
-      setIsReady(!isReady);
-      sendEvent("/app/ready", { roomId, ready: !isReady });
+      try {
+        await ready(roomId);
+        const newReadyState = !isReady;
+        setIsReady(newReadyState);
+        sendEvent("/app/ready", {
+          roomId,
+          ready: newReadyState,
+          nickname: localStorage.getItem("nickname"),
+        });
+
+        setRoom((prev) => {
+          if (!prev) return null;
+          const currentUserNickname = localStorage.getItem("nickname");
+          return {
+            ...prev,
+            users: prev.users.map((user) =>
+              user.nickname === currentUserNickname
+                ? { ...user, ready: newReadyState }
+                : user,
+            ),
+          };
+        });
+      } catch (error) {
+        console.error("준비 상태 변경 중 에러 발생:", error);
+      }
     }
   };
 
@@ -124,7 +195,13 @@ export const Waiting: React.FC = () => {
       </S.TitleBox>
       <S.UserCompartmentContainer>
         {Array.from({ length: 8 }).map((_, index) => {
-          const user = room.users[index];
+          const sortedUsers = [...room.users].sort((a, b) => {
+            if (a.host) return -1;
+            if (b.host) return 1;
+            return 0;
+          });
+
+          const user = sortedUsers[index];
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
               <WaitingUser

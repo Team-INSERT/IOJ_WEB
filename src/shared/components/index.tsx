@@ -16,3 +16,4 @@ export { default as Submit } from "./Submit";
 export { default as level } from "./level";
 export { default as ErrorModal } from "./ErrorModal";
 export { default as Modal } from "./Modal/index";
+export { default as WaitingUser } from "./InGame/WaitingUser";
