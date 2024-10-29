@@ -168,12 +168,23 @@ export const Waiting: React.FC = () => {
       navigate("/game/find");
     }
   };
-
   const handleLeave = async () => {
     if (room && roomId) {
-      await leave(roomId);
-      sendEvent("/app/leave", { roomId });
-      navigate("/game/find");
+      try {
+        await leave(roomId);
+
+        sendEvent("/app/leave", {
+          roomId,
+          nickname: localStorage.getItem("nickname"),
+        });
+
+        disconnectWebSocket();
+
+        navigate("/game/find");
+      } catch (error) {
+        console.error("방 나가기 실패:", error);
+        navigate("/game/find");
+      }
     }
   };
 

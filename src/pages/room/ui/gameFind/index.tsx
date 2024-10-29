@@ -1,9 +1,9 @@
 import { Button, Room } from "@/shared/components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 import { CreateRoomModal } from "../createRoomModal";
-import { roomList, roomDetail } from "../../api/roomApi";
+import { roomList } from "../../api/roomApi";
 
 interface RoomData {
   id: string;
@@ -13,7 +13,6 @@ interface RoomData {
   minDifficulty: number;
   maxDifficulty: number;
   time: number;
-  onClick?: () => void;
 }
 
 export const GameFind = () => {
@@ -23,35 +22,27 @@ export const GameFind = () => {
   const [rooms, setRooms] = useState<RoomData[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await roomList();
-        setRooms(res);
-        if (res.length > 0) {
-          setSelectedRoomId(res[0].id);
-        }
-      } catch (err) {
-        console.error("방 목록을 가져오는 데 실패했습니다:", err);
+  const fetchRooms = useCallback(async () => {
+    try {
+      const res = await roomList();
+      setRooms(res);
+      if (res.length > 0) {
+        setSelectedRoomId(res[0].id);
       }
-    })();
+    } catch (err) {
+      console.error("방 목록을 가져오는 데 실패했습니다:", err);
+    }
   }, []);
 
   useEffect(() => {
-    if (selectedRoomId) {
-      (async () => {
-        try {
-          const res = await roomDetail(selectedRoomId);
-          console.log("Room detail:", res);
-        } catch (err) {
-          console.error("방 상세 정보를 가져오는 데 실패했습니다:", err);
-        }
-      })();
-    }
-  }, [selectedRoomId]);
+    fetchRooms();
+  }, [fetchRooms]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const formatRoomNumber = (index: number) =>
+    (index + 1).toString().padStart(3, "0");
 
   return (
     <S.GameFindLayout>
@@ -68,10 +59,15 @@ export const GameFind = () => {
             key={room.id}
             {...room}
             currentPeople={0}
-            roomNumber={index + 1}
+            roomNumber={formatRoomNumber(index)}
             onClick={() => {
               setSelectedRoomId(room.id);
-              navigate(`/game/waiting/${room.id}`);
+              navigate(`/game/waiting/${index + 1}`, {
+                state: {
+                  roomNumber: formatRoomNumber(index),
+                  roomId: room.id,
+                },
+              });
             }}
           />
         ))}

@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Stars from "@/shared/components/Stars";
 import { ReactComponent as XBold } from "@/assets/XBold.svg";
-import { createRoomApi } from "../../api/roomApi";
+import { createRoomApi, roomList } from "../../api/roomApi";
 import * as S from "./style";
 
 interface CreateRoomModalProps {
@@ -18,12 +19,16 @@ export interface createRoomProps {
 }
 
 export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [maxPeople, setMaxPeople] = useState(0);
   const [problem, setProblem] = useState(0);
   const [minDifficulty, setMinDifficulty] = useState(0);
   const [maxDifficulty, setMaxDifficulty] = useState(0);
   const [time, setTime] = useState(3);
+
+  const formatRoomNumber = (index: number) =>
+    (index + 1).toString().padStart(3, "0");
 
   const onCreateRoomClick = async () => {
     const createRoomData: createRoomProps = {
@@ -37,6 +42,19 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
 
     try {
       await createRoomApi(createRoomData);
+      const rooms = await roomList();
+      const roomIndex = rooms.length - 1;
+
+      if (roomIndex >= 0) {
+        navigate(`/game/waiting/${roomIndex + 1}`, {
+          state: {
+            roomNumber: formatRoomNumber(roomIndex),
+            roomId: rooms[roomIndex].id,
+          },
+        });
+      } else {
+        console.error("방 목록이 비어 있습니다.");
+      }
       onClose();
     } catch (error) {
       console.error("방 생성 중 에러가 발생했습니다:", error);
