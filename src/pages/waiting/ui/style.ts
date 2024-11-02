@@ -61,3 +61,9 @@ export const ButtonBox = styled.div`
   gap: 20px;
   margin-top: 2%;
 `;
+
+export const Crown = styled.div`
+  position: absolute;
+  top: 0;
+  left: 7rem;
+`;

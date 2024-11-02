@@ -14,6 +14,7 @@ import { NotFound } from "@/pages/not-found/Not-found";
 import { Prepare } from "@/pages/prepare";
 import {
   GameHome,
+  GameFind,
   ContestList,
   ContestQuestion,
   ContestRank,
@@ -39,10 +40,7 @@ const App = () => {
   return (
     <>
       {isAlertShow && (
-        <ErrorModal
-          errorMessage={errorMessage}
-          onClose={modalClose}
-        />
+        <ErrorModal errorMessage={errorMessage} onClose={modalClose} />
       )}
       <Router>
         <Routes>
@@ -67,13 +65,14 @@ const App = () => {
             path="/game/contest/:contestId/code/:problemId"
             element={<Game />}
           />
-          <Route path="game/waiting" element={<Waiting />} />
           <Route path="/admin" element={<Start />} />
           <Route path="/admin/contest" element={<CreateContest />} />
           <Route path="/admin/question" element={<CreateQuestion />} />
           <Route path="/problem" element={<ProblemList />} />
           <Route path="/problem/:problemId" element={<ProblemDetail />} />
           <Route path="/google/callback" element={<Loading />} />
+          <Route path="/game/find" element={<GameFind />} />
+          <Route path="/game/waiting/:roomId" element={<Waiting />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </Router>

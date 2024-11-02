@@ -3,42 +3,55 @@ import Customization from "@/assets/Customization.svg";
 import * as S from "./style";
 
 interface RoomProps {
-  link: string;
-  category: string;
-  roomNumber: number;
-  roomTitle: string;
-  gameUserCount: string;
-  userCount: string;
+  id: string;
+  title: string;
+  maxPeople: number;
+  problem: number;
+  minDifficulty: number;
+  maxDifficulty: number;
   time: number;
-  level: string;
+  currentPeople?: number;
+  category?: string;
+  onClick?: () => void;
+  roomNumber: string;
 }
 
 const Room = ({
-  link,
-  category,
-  roomNumber,
-  roomTitle,
-  gameUserCount,
-  userCount,
+  id,
+  title,
+  maxPeople,
+  problem,
+  minDifficulty,
+  maxDifficulty,
   time,
-  level,
+  currentPeople = 0,
+  category = "customization",
+  onClick,
+  roomNumber,
 }: RoomProps) => {
-  const formattedRoomNumber = roomNumber.toString().padStart(3, "0");
   const backgroundImage = category === "contest" ? Contest : Customization;
 
   return (
-    <S.Layout backgroundImage={backgroundImage} category={category}>
-      <S.Number category={category}>{formattedRoomNumber}</S.Number>
+    <S.Layout
+      backgroundImage={backgroundImage}
+      category={category}
+      onClick={onClick}
+    >
+      <S.Number category={category}>{roomNumber}</S.Number>
       <S.Line />
       <S.Details>
-        <S.Title>{roomTitle}</S.Title>
+        <S.Title>{title}</S.Title>
         <S.CartegoryNumber>
-          <S.DarkGrayFont>{gameUserCount}</S.DarkGrayFont>/
-          <S.DarkGrayFont>{userCount}</S.DarkGrayFont>
+          <S.DarkGrayFont>{maxPeople}명</S.DarkGrayFont>/
+          <S.DarkGrayFont>
+            {maxPeople}명 중 {currentPeople}명
+          </S.DarkGrayFont>
         </S.CartegoryNumber>
         <S.TimeLevel>
           <S.DarkGrayFont>{time}분</S.DarkGrayFont>/
-          <S.DarkGrayFont>{level}⭐️</S.DarkGrayFont>
+          <S.DarkGrayFont>
+            {minDifficulty}-{maxDifficulty}⭐️
+          </S.DarkGrayFont>
         </S.TimeLevel>
       </S.Details>
     </S.Layout>
