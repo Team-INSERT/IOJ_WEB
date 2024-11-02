@@ -8,13 +8,13 @@ interface Details {
 }
 
 const colorMapping: { [key: string]: string } = {
-  BLUE: theme.BLUE, // "#6B71FF"
-  PINK: theme.PINK, // "#FF6AC3"
-  RED: theme.RED, // "#FF6B6B"
-  PURPLE: theme.PURPLE, // "#C446EE"
-  NEON: theme.NEON, // "#65EE83"
-  ORANGE: theme.ORANGE, // "#FF984D"
-  SKYBLUE: theme.SKYBLUE, // "#5CE2FF"
+  BLUE: theme.BLUE,
+  PINK: theme.PINK,
+  RED: theme.RED,
+  PURPLE: theme.PURPLE,
+  NEON: theme.NEON,
+  ORANGE: theme.ORANGE,
+  SKYBLUE: theme.SKYBLUE,
   gray: theme.grey200,
 };
 
