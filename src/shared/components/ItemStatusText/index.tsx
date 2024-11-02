@@ -19,7 +19,7 @@ const ItemStatusText = ({ status, title }: ItemStatusProps) => {
   return (
     <S.Layout>
       <S.Icon>{matchedItem ? matchedItem.icon : null}</S.Icon>
-      <S.Text>{status}</S.Text>
+      <S.Text status={status}>{status}</S.Text>
     </S.Layout>
   );
 };
