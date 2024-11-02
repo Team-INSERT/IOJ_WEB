@@ -26,7 +26,6 @@ export const useWaitingRoom = (roomId: string) => {
   >("waiting");
   const clientRef = useRef<Client | null>(null);
 
-  // 초기 유저 상태 설정
   const initializeUsers = useCallback((initialUsers: User[]) => {
     console.log("Initializing users with:", initialUsers);
     setUsers(initialUsers);

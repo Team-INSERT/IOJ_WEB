@@ -4,6 +4,7 @@ import { WaitingUser, Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import Ready from "@/assets/Ready.svg";
+import Crown from "@/assets/Crown";
 import { useWaitingRoom } from "@/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import {
@@ -215,11 +216,12 @@ export const Waiting: React.FC = () => {
           const user = sortedUsers[index];
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
+              <S.Crown>{user?.host && <Crown />}</S.Crown>
               <WaitingUser
                 UserName={user?.nickname || ""}
                 color={user?.color || "gray"}
               />
-              {user?.ready && <S.Ready src={Ready} />}
+              {!user?.host && user?.ready && <S.Ready src={Ready} />}
             </S.UserCompartmentBox>
           );
         })}
