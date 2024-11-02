@@ -27,17 +27,16 @@ export const useWaitingRoom = (roomId: string) => {
   const clientRef = useRef<Client | null>(null);
 
   const initializeUsers = useCallback((initialUsers: User[]) => {
-    console.log("Initializing users with:", initialUsers);
+    console.log(initialUsers);
     setUsers(initialUsers);
   }, []);
 
   const processEvent = useCallback((event: RoomEvent) => {
-    console.log("Received event:", event);
+    console.log(event);
     switch (event.type) {
       case "JOIN":
         setUsers((prev) => {
-          console.log("Previous users:", prev);
-          console.log("Adding user:", event.nickname);
+          console.log(event.nickname);
           if (prev.some((user) => user.nickname === event.nickname)) {
             return prev;
           }
@@ -50,7 +49,6 @@ export const useWaitingRoom = (roomId: string) => {
               host: event.host || false,
             },
           ];
-          console.log("New users state:", newUsers);
           return newUsers;
         });
         break;
@@ -59,7 +57,7 @@ export const useWaitingRoom = (roomId: string) => {
           const newUsers = prev.filter(
             (user) => user.nickname !== event.nickname,
           );
-          console.log("User left. New users state:", newUsers);
+          console.log(newUsers);
           return newUsers;
         });
         break;
@@ -81,7 +79,7 @@ export const useWaitingRoom = (roomId: string) => {
         setRoomStatus("deleted");
         break;
       default:
-        console.warn(`Unknown event type: ${event.type}`);
+        console.warn(`${event.type}`);
     }
   }, []);
 
@@ -90,20 +88,17 @@ export const useWaitingRoom = (roomId: string) => {
     const socket = new SockJS(`${baseURL}/ws`);
     const stompClient = new Client({
       webSocketFactory: () => socket,
-      debug(str: string) {
-        console.log("STOMP debug:", str);
-      },
       onConnect: () => {
         console.log("Connected to WebSocket");
         setIsConnected(true);
         stompClient.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {
-          console.log("Received message:", message.body);
+          console.log(message.body);
           const event: RoomEvent = JSON.parse(message.body);
           processEvent(event);
         });
       },
       onStompError: (frame) => {
-        console.error(`Broker reported error: ${frame.headers.message}`);
+        console.error(`${frame.headers.message}`);
         setIsConnected(false);
       },
     });
@@ -121,7 +116,7 @@ export const useWaitingRoom = (roomId: string) => {
 
   const sendEvent = useCallback((destination: string, body: any) => {
     if (clientRef.current && clientRef.current.connected) {
-      console.log("Sending event:", { destination, body });
+      console.log({ destination, body });
       clientRef.current.publish({
         destination,
         body: JSON.stringify(body),

@@ -5,7 +5,7 @@ import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import Ready from "@/assets/Ready.svg";
 import Crown from "@/assets/Crown";
-import { useWaitingRoom } from "@/hooks/useWaitingRoom";
+import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import {
   roomDetail,

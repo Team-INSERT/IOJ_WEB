@@ -1,6 +1,6 @@
 import WaitingCharacter from "@/assets/WaitingCharacter";
-import * as S from "./style";
 import { theme } from "@/shared/style";
+import * as S from "./style";
 
 interface Details {
   UserName: string;
