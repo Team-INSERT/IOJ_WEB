@@ -13,6 +13,7 @@ const WaterBalloon = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [textVisible, setTextVisible] = useState(false);
   const [textTranslate, setTextTranslate] = useState(0);
+  const [boomAnimationComplete, setBoomAnimationComplete] = useState(false);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code === "Space") {
@@ -36,8 +37,14 @@ const WaterBalloon = () => {
   };
 
   const handleAnimationEnd = () => {
-    setIsVisible(false);
+    setBoomAnimationComplete(true);
   };
+
+  useEffect(() => {
+    if (boomAnimationComplete) {
+      setIsVisible(false);
+    }
+  }, [boomAnimationComplete]);
 
   useEffect(() => {
     const translateDown = setTimeout(() => {
@@ -100,7 +107,17 @@ const WaterBalloon = () => {
           <Balloon width={width} />
         </S.AnimatedBalloon>
       ) : null}
-      {hasBurst && <S.BoomImage id="boomImage" src={Boom} alt="Boom!" />}
+      {hasBurst && (
+        <S.BoomImage
+          id="boomImage"
+          src={Boom}
+          alt="Boom!"
+          style={{
+            opacity: boomAnimationComplete ? 0 : 1,
+            transition: "opacity 1s ease",
+          }}
+        />
+      )}
       {!hasBurst && (
         <>
           <S.Space isPressed={isSpacePressed}>SPACE!!</S.Space>
