@@ -13,6 +13,7 @@ export interface problemInfoProps {
   memoryLimit: number;
   testcases: testcaseType[];
   timeLimit: number;
+  source: string;
 }
 
 export interface problemType {
@@ -47,6 +48,7 @@ export interface TestBoxProps {
   submissionResults: string[];
   disconnectWebSocket: () => void; // 새로 추가된 속성
   isInputDisabled: boolean;
+  errorMessage: string | null;
 }
 
 export interface TestBoxHandles {

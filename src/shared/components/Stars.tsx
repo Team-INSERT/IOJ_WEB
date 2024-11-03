@@ -6,9 +6,15 @@ interface StarsProps {
   read?: boolean;
   value?: number;
   setting?: boolean;
+  onChange?: (value: number) => void;
 }
 
-const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
+const Stars = ({
+  read = false,
+  value = 0,
+  setting = false,
+  onChange,
+}: StarsProps) => {
   const [currentStarsValue, setCurrentStarsValue] = useState(value);
 
   useEffect(() => {
@@ -17,9 +23,14 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
 
   const handleClick = (index: number) => {
     if (setting) {
-      setCurrentStarsValue(index + 1);
+      const newValue = index + 1;
+      setCurrentStarsValue(newValue);
+      if (onChange) {
+        onChange(newValue); // 부모 컴포넌트로 값 전달
+      }
     }
   };
+
   const colorMap: { [key: number]: string } = {
     1: `${theme.blueNormal}`,
     2: `${theme.blueNormalHover}`,
@@ -34,8 +45,11 @@ const Stars = ({ read = false, value = 0, setting = false }: StarsProps) => {
       {[0, 1, 2, 3, 4].map((_, index) => (
         <span
           onClick={() => handleClick(index)}
-          style={{ cursor: setting ? "pointer" : "default", display: "flex", alignItems: "center" }}
-          key={_}
+          style={{
+            cursor: setting ? "pointer" : "default",
+            display: "flex",
+            alignItems: "center",
+          }}
         >
           {index < currentStarsValue ? (
             <Star color={getColor(index)} />

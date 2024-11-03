@@ -9,10 +9,8 @@ const MainHeader = () => {
   const MenusDetails = [
     { id: 1, name: "홈", navigate: "/" },
     { id: 2, name: "게임하기", navigate: "/game" },
-    { id: 3, name: "랭킹", navigate: "/ranking" },
+    { id: 3, name: "대회", navigate: "/contest/list" },
     { id: 4, name: "문제", navigate: "/problem" },
-    { id: 5, name: "게임소개", navigate: "/introduce" },
-    { id: 6, name: "가이드", navigate: "/guide" },
   ];
 
   const navigate = useNavigate();
@@ -25,12 +23,12 @@ const MainHeader = () => {
   const refreshToken = getCookie("refreshToken");
 
   const headerItemClick = (url: string, id: number) => {
-    if (id === 2) {
+    if (id === 2 || id === 3) {
       if (!isLogin) {
         setIsModalOpen(true);
         return;
       }
-      navigate(url)
+      navigate(url);
     } else {
       navigate(url);
     }

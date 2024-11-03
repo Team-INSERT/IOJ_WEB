@@ -53,7 +53,8 @@ export const ProblemLayout = styled.div`
 `;
 export const Problem = styled.p`
   ${Pretendard.BigText}
-  font-weight: 5;
+  color: ${theme.grey800};
+  font-weight: 500;
   border-bottom: 2px solid ${theme.insertBlue};
   z-index: 1;
 `;
@@ -68,9 +69,10 @@ export const SubTitleLayout = styled.div`
   ${flex.FLEX}
   position: relative;
 `;
-export const ProblemInfo = styled.p`
-  color: ${theme.grey900};
+export const ProblemInfo = styled.p<{ isSource: boolean }>`
+  color: ${({ isSource }) => (isSource ? theme.grey700 : theme.black)};
   ${Pretendard.Text};
+  font-weight: 500;
   white-space: pre-line;
 `;
 export const ExampleLayout = styled.div`
@@ -93,7 +95,7 @@ export const ExampleContent = styled.div`
 export const ExampleList = styled.div`
   ${flex.COLUMN_VERTICAL}
   gap: 20px;
-`
+`;
 export const InputText = styled.pre<{ isScrolling: boolean }>`
   ${RobotoMono.Text}
   width: 100%;

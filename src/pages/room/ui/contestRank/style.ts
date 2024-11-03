@@ -10,24 +10,17 @@ interface RankColorProps {
 
 export const Layout = styled.div`
   width: 100%;
+  min-height: 100vh;
   ${flex.HORIZONTAL}
+  position: relative;
 `;
 export const Content = styled.div`
-  ${flex.COLUMN_CENTER}
+  ${flex.COLUMN_VERTICAL}
   gap: 3.75rem;
-  padding-top: 6.25rem;
-  padding-bottom: 12rem;
-`;
-export const BlueBg = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
-export const GreyBg = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 607px;
+  padding-top: 52px;
+  margin-bottom: 12rem;
+  position: relative;
+  width: 100%;
 `;
 export const Title = styled.p`
   ${Pretendard.Title}
@@ -133,4 +126,16 @@ export const RedQuestion = styled.div<QuestionSumProps>`
 export const QuestionSolveRank = styled.p`
   ${NexonFont.NexonBigText}
   color: ${theme.white};
+`;
+export const TitleLayout = styled.div`
+  width: 100%;
+  ${flex.CENTER};
+  background-color: ${theme.grey100};
+  padding: 24px 0;
+`;
+export const Buttons = styled.div`
+  position: absolute;
+  right: 7.5rem;
+  ${flex.CENTER};
+  gap: 0.25rem;
 `;

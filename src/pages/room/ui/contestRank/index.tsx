@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import GameRankBlue from "@/assets/GameRankBlue";
-import GameRankGrey from "@/assets/GameRankGrey";
 import { gameRakingList } from "@/pages/room/api/roomApi";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/shared/components";
+import { Loading } from "@/pages/loading";
+import ScoreStandard from "@/shared/components/ScoreStandard";
 import * as S from "./style";
 
 interface ProblemStatuses {
@@ -15,9 +16,11 @@ interface Player {
   problemStatuses: ProblemStatuses[];
 }
 
-export const ContestRanking = () => {
+export const ContestRank = () => {
+  const navigate = useNavigate();
   const [playerDetail, setPlayerDetail] = useState<Player[]>([]);
   const [rankedPlayers, setRankedPlayers] = useState<Player[][]>([]);
+  const [isStandardShow, setIsStandardShow] = useState<boolean>(false);
   const { contestId } = useParams<{ contestId: string }>();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -64,16 +67,30 @@ export const ContestRanking = () => {
     };
     playerList();
   }, [contestId]);
-  return (
+  return rankedPlayers.length ? (
     <S.Layout>
-      <S.BlueBg>
-        <GameRankBlue />
-      </S.BlueBg>
-      <S.GreyBg>
-        <GameRankGrey />
-      </S.GreyBg>
       <S.Content>
-        <S.Title>{title}</S.Title>
+        <S.TitleLayout>
+          <S.Title>{title}</S.Title>
+          <S.Buttons>
+            <Button
+              mode="small"
+              color="gray"
+              font="pretendard"
+              onClick={() => setIsStandardShow(true)}
+            >
+              채점기준
+            </Button>
+            <Button
+              mode="small"
+              color="red"
+              font="pretendard"
+              onClick={() => navigate(-1)}
+            >
+              나가기
+            </Button>
+          </S.Buttons>
+        </S.TitleLayout>
         <S.Chart>
           <S.Attribute>
             <S.PropertyText>순위</S.PropertyText>
@@ -135,6 +152,11 @@ export const ContestRanking = () => {
           </S.RankingLayout>
         </S.Chart>
       </S.Content>
+      {isStandardShow && (
+        <ScoreStandard setIsStandardShow={setIsStandardShow} />
+      )}
     </S.Layout>
+  ) : (
+    <Loading />
   );
 };

@@ -4,7 +4,7 @@ import { Pretendard, theme, flex, RobotoMono } from "@/shared/style";
 export const ProblemLayout = styled.div`
   ${flex.COLUMN_FLEX};
   background-color: ${theme.white};
-  width: 50%;
+  width: 100%;
   height: 100%;
   padding: 76px 45px 50px 55px;
   overflow: auto;
@@ -64,7 +64,7 @@ export const Problem = styled.p`
 export const ProblemContent = styled.p`
   ${Pretendard.Text};
   color: ${theme.grey900};
-  margin: 2% 0 4% 0;
+  margin: 2% 0 8% 0;
   white-space: pre-line;
 `;
 

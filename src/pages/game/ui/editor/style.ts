@@ -4,8 +4,8 @@ import { Pretendard, theme, flex } from "@/shared/style";
 export const EditorLayout = styled.div`
   background-color: #1e1e1e;
   ${flex.COLUMN_FLEX};
-  width: 50%;
-  height: 100%;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
 `;
 
@@ -35,7 +35,6 @@ export const TestBoxLayout = styled.div`
   background-color: ${theme.black};
   height: 16rem;
   overflow: auto;
-  position: fixed;
-  bottom: 0;
-  width: 50%;
+  z-index: 20;
+  width: 100%;
 `;

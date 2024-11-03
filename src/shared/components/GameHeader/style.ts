@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { NexonFont, Pretendard, flex, theme } from "@/shared/style";
 
 export const Layout = styled.div`
+  z-index: 1000;
   padding: 14px 0;
   width: 100%;
   background-color: #333333;

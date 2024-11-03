@@ -22,11 +22,11 @@ export const ContestQuestion = () => {
   const navigate = useNavigate();
   const [contestDetail, setContestDetail] = useState<Contest | null>(null);
   const [remainingTime, setRemainingTime] = useState<string>("");
-  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { contestId } = useParams<{ contestId: string }>();
 
   useEffect(() => {
-    const list = async () => {
+    (async () => {
       if (!contestId) {
         console.error("Contest ID가 제공되지 않았습니다.");
         return;
@@ -36,13 +36,12 @@ export const ContestQuestion = () => {
         setContestDetail(res);
       } catch (err: any) {
         if (err.response) {
-          setErrorCode(err.response.data.code);
+          setErrorMessage(err.response.data.message);
         } else {
-          setErrorCode("UNKNOWN");
+          setErrorMessage("UNKNOWN");
         }
       }
-    };
-    list();
+    })();
   }, [contestId]);
 
   const calculateRemainingTime = (endTime: string) => {
@@ -51,33 +50,37 @@ export const ContestQuestion = () => {
     const distance = end - now;
 
     if (distance < 0) {
-      setRemainingTime("종료되었습니다");
-      return;
+      return "종료되었습니다";
     }
 
     const hours = Math.floor(distance / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    setRemainingTime(`${hours}시간 ${minutes}분 ${seconds}초`);
+    return `${hours}시간 ${minutes}분 ${seconds}초`;
   };
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
+    let intervalId: NodeJS.Timeout;
+
     if (contestDetail) {
-      const interval = setInterval(() => {
-        calculateRemainingTime(contestDetail.endTime);
+      setRemainingTime(calculateRemainingTime(contestDetail.endTime));
+
+      intervalId = setInterval(() => {
+        setRemainingTime(calculateRemainingTime(contestDetail.endTime));
       }, 1000);
-      return () => clearInterval(interval);
     }
-    return undefined;
+
+    return () => clearInterval(intervalId);
   }, [contestDetail]);
 
   const getQuestionNumber = (index: number) => String.fromCharCode(65 + index);
 
-  if (errorCode) {
+  if (errorMessage) {
     return (
       <ErrorModal
-        errorCode={errorCode}
+        errorMessage={errorMessage}
         onClose={() => navigate("/game/contest")}
       />
     );
@@ -110,7 +113,7 @@ export const ContestQuestion = () => {
             color="blue"
             onClick={() => {
               const url = `/game/contest/ranking/${contestId}?title=${encodeURIComponent(contestDetail.title)}`;
-              window.open(url, "_blank");
+              navigate(url);
             }}
           >
             순위보러가기

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import Button from "./Button";
 import { NexonFont, theme } from "../style";
 
 const DropdownContainer = styled.div`
@@ -54,6 +53,7 @@ const BaseButton = styled.button`
 interface DropdownProps {
   onSelectLanguage: (language: string, file: string) => void;
   problemId: string;
+  contestId: string;
 }
 
 const extensions: { [key: string]: string } = {
@@ -63,12 +63,18 @@ const extensions: { [key: string]: string } = {
   cpp: "cpp",
 };
 
-const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  onSelectLanguage,
+  problemId,
+  contestId,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("PYTHON");
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem(`language_${problemId}`);
+    const savedLanguage = localStorage.getItem(
+      `language_${contestId}_${problemId}`,
+    );
     if (savedLanguage) {
       const uppercaseLanguage = savedLanguage.toUpperCase();
       setSelectedItem(uppercaseLanguage);
@@ -77,16 +83,12 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
       const file = `Main.${extension}`;
       onSelectLanguage(language, file);
     }
-  }, [problemId, onSelectLanguage]);
+  }, [problemId, onSelectLanguage, contestId]);
 
   const handleItemClick = useCallback(
     (item: string) => {
       const uppercaseItem = item.toUpperCase();
-      let language = uppercaseItem.toLowerCase();
-
-      if (language === "c++") {
-        language = "cpp";
-      }
+      const language = uppercaseItem.toLowerCase();
 
       const extension = extensions[language];
       const file = `Main.${extension}`;
@@ -94,10 +96,10 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
       setSelectedItem(uppercaseItem);
       setIsOpen(false);
 
-      localStorage.setItem(`language_${problemId}`, uppercaseItem);
+      localStorage.setItem(`language_${contestId}_${problemId}`, language);
       onSelectLanguage(language, file);
     },
-    [problemId, onSelectLanguage],
+    [contestId, problemId, onSelectLanguage],
   );
 
   const toggleDropdown = () => {
@@ -117,7 +119,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelectLanguage, problemId }) => {
         <DropdownItem onClick={() => handleItemClick("PYTHON")}>
           PYTHON
         </DropdownItem>
-        <DropdownItem onClick={() => handleItemClick("C++")}>C++</DropdownItem>
+        <DropdownItem onClick={() => handleItemClick("CPP")}>C++</DropdownItem>
         <DropdownItem onClick={() => handleItemClick("C")}>C</DropdownItem>
       </DropdownContent>
     </DropdownContainer>

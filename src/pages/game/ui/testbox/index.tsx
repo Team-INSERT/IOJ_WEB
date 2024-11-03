@@ -6,7 +6,11 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { theme } from "@/shared/style";
+<<<<<<< HEAD
 import { Terminal } from "xterm";
+=======
+import { useTerminal } from "@/shared/hooks/useTerminal";
+>>>>>>> da6b507d52523db173d4870fa07e376900b1d16c
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
 import {
@@ -27,8 +31,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       onSubmit,
       isExecutionActive,
       submissionResults,
-      disconnectWebSocket,
       isInputDisabled,
+      errorMessage,
     },
     ref,
   ) => {
@@ -38,10 +42,28 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     const [acceptCount, setAcceptCount] = useState(0);
     const [problemDetail, setProblemDetail] = useState<problemInfoProps>();
     const terminalRef = useRef<HTMLDivElement | null>(null);
-    const terminalInstance = useRef<Terminal | null>(null);
-    const inputBuffer = useRef<string>("");
-    const [isProcessFinished, setIsProcessFinished] = useState(false);
     const inputDisableRef = useRef(isInputDisabled);
+    const { initializeTerminal, resetAndEnableTerminal, writeToTerminal } =
+      useTerminal();
+    const previousOutputRef = useRef<string>("");
+
+    useEffect(() => {
+      if (consoleOutput && consoleOutput !== previousOutputRef.current) {
+        let newOutput;
+        if (previousOutputRef.current.length > consoleOutput.length) {
+          newOutput = consoleOutput;
+        } else {
+          newOutput = consoleOutput.slice(previousOutputRef.current.length);
+        }
+
+        if (newOutput.trim() !== "") {
+          writeToTerminal(newOutput);
+        } else {
+          console.error("빈 메시지 수신: 출력할 내용이 없습니다.");
+        }
+        previousOutputRef.current = consoleOutput;
+      }
+    }, [consoleOutput, writeToTerminal]);
 
     useEffect(() => {
       const countAcceptedTestCases = testResult.filter(
@@ -49,22 +71,19 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
       ).length;
       setAcceptCount(countAcceptedTestCases);
     }, [testResult]);
-
     useEffect(() => {
       window.scrollTo(0, 0);
     }, [activeTab, testResult]);
-
     useEffect(() => {
       (async () => {
         try {
           const res = await gameDetail(problemNum);
           setProblemDetail(res);
         } catch (err) {
-          /**/
+          console.error(err);
         }
       })();
     }, [problemNum]);
-
     const translateVerdict = (verdict: string) => {
       const verdictMapping: Record<string, React.ReactNode> = {
         WRONG_ANSWER: "불일치",
@@ -74,10 +93,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         TIME_LIMIT_EXCEEDED: "시간초과",
         RUNTIME_ERROR: "런타임 에러",
       };
-
       return verdictMapping[verdict] || "알 수 없는 결과";
     };
-
     const translateSubmissionResult = (result: string) => {
       const resultMapping: Record<string, string> = {
         WRONG_ANSWER: "오답입니다.",
@@ -88,10 +105,8 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         RUNTIME_ERROR: "런타임 에러",
         "처리중...": "처리 중...",
       };
-
       return resultMapping[result] || "알 수 없는 결과";
     };
-
     const isErrorOutput = (verdict: string) =>
       [
         "COMPILATION_ERROR",
@@ -99,7 +114,6 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         "OUT_OF_MEMORY",
         "TIME_LIMIT_EXCEEDED",
       ].includes(verdict);
-
     const errorOutput = testResult
       .filter((testCase) => isErrorOutput(testCase.verdict))
       .map(
@@ -111,75 +125,30 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     useEffect(() => {
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
-
-    // 외부에서 호출할 수 있게 메소드를 노출
-    useImperativeHandle(ref, () => ({
-      resetAndEnableTerminal: () => {
-        if (terminalInstance.current) {
-          terminalInstance.current.reset();
-          terminalInstance.current?.writeln("프로세스가 실행됩니다.");
-          terminalInstance.current?.writeln("");
-          setIsProcessFinished(false);
-        }
-      },
-    }));
-
     useEffect(() => {
-      const initializeTerminal = () => {
-        if (terminalRef.current && !terminalInstance.current) {
-          terminalInstance.current = new Terminal({
-            cursorBlink: true,
-            scrollback: 1000,
-            tabStopWidth: 4,
-          });
-          terminalInstance.current.open(terminalRef.current);
-          terminalInstance.current.writeln("프로세스가 실행됩니다.");
-          terminalInstance.current.writeln("");
-
-          terminalInstance.current.onData((data) => {
-            if (inputDisableRef.current || isProcessFinished) {
-              console.log("Input is disabled.");
-              return;
-            }
-            if (!isProcessFinished) {
-              if (data === "\r" || data === "\n") {
-                if (inputBuffer.current.trim() !== "") {
-                  terminalInstance.current?.writeln("");
-                  onSubmit(inputBuffer.current);
-                  inputBuffer.current = "";
-                }
-              } else if (data === "\u007F") {
-                if (inputBuffer.current.length > 0) {
-                  inputBuffer.current = inputBuffer.current.slice(0, -1);
-                  terminalInstance.current?.write("\b \b");
-                }
-              } else {
-                inputBuffer.current += data;
-                terminalInstance.current?.write(data);
-              }
-            }
-          });
-        }
-      };
       if (isExecutionActive) {
-        initializeTerminal();
-        setIsProcessFinished(false);
+        initializeTerminal({
+          terminalRef,
+          inputDisableRef,
+          isProcessFinished: false,
+          onSubmit,
+        });
       }
-    }, [isExecutionActive, onSubmit, isProcessFinished]);
-
-    useEffect(() => {
-      if (consoleOutput && terminalInstance.current) {
-        if (!consoleOutput.includes("Process finished with exit code 0")) {
-          terminalInstance.current.writeln(consoleOutput);
-        } else {
-          terminalInstance.current.writeln("Process finished with exit code 0");
-          disconnectWebSocket();
-          setIsProcessFinished(true);
-          inputDisableRef.current = true;
-        }
-      }
-    }, [consoleOutput]);
-
+    }, [isExecutionActive, onSubmit, initializeTerminal]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        resetAndEnableTerminal: () => {
+          resetAndEnableTerminal({
+            terminalRef,
+            inputDisableRef,
+            isProcessFinished: false,
+            onSubmit,
+          });
+        },
+      }),
+      [resetAndEnableTerminal, onSubmit],
+    );
     return (
       <S.Container>
         <S.TabContainer>
@@ -204,14 +173,13 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
                 ref={terminalRef}
                 style={{
                   width: "100%",
-                  height: "fit-content",
+                  height: "50vh",
                   backgroundColor: "#000",
                   marginTop: "10px",
                 }}
               />
             </S.ExecuteResult>
           )}
-
           {activeTab === "testCases" &&
             (isErrorOutput(testResult[0]?.verdict) && !isTestLoading ? (
               <>
@@ -295,11 +263,13 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
             ))}
           {activeTab === "results" && (
             <S.ResultBoxContainer>
-              {submissionResults.map((result) => (
-                <S.ResultBox>
-                  <p>{translateSubmissionResult(result)}</p>
-                </S.ResultBox>
-              ))}
+              {submissionResults.map((result) =>
+                !errorMessage ? (
+                  <S.ResultBox>
+                    <p>{translateSubmissionResult(result)}</p>
+                  </S.ResultBox>
+                ) : null,
+              )}
             </S.ResultBoxContainer>
           )}
         </S.Content>
