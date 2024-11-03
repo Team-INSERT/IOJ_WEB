@@ -87,7 +87,7 @@ export const BoomImage = styled.img`
   top: 10%;
   left: 15%;
   width: 1300px;
-  animation: ${boomAnimation} 0.5s forwards;
+  animation: ${boomAnimation} 2s forwards;
 `;
 
 export const White = styled.div`
