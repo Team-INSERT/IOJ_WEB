@@ -79,7 +79,7 @@ export const Bar = styled.div`
   flex-direction: column;
   width: 80px;
   padding: 5px 5px 0 5px;
-  background-color: black;
+  background-color: white;
 `;
 
 export const BoomImage = styled.img`
