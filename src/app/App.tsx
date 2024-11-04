@@ -19,6 +19,7 @@ import {
   ContestQuestion,
   ContestRank,
 } from "@/pages/room";
+import { Result } from "@/pages/result";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
@@ -73,6 +74,7 @@ const App = () => {
           <Route path="/google/callback" element={<Loading />} />
           <Route path="/game/find" element={<GameFind />} />
           <Route path="/game/waiting/:roomId" element={<Waiting />} />
+          <Route path="/result" element={<Result />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </Router>

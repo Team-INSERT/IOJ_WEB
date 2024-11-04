@@ -5,6 +5,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+import { Terminal } from "xterm";
 import { theme } from "@/shared/style";
 import { useTerminal } from "@/shared/hooks/useTerminal";
 import * as S from "./style";
