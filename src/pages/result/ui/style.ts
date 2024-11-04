@@ -4,6 +4,7 @@ import { theme, flex, NexonFont } from "@/shared/style";
 export const ResultBox = styled.div`
   width: 100%;
   ${flex.FLEX};
+  margin-top: 5%;
   overflow: hidden;
 `;
 
@@ -31,7 +32,13 @@ export const GameInfo = styled.div`
   ${flex.BETWEEN};
 `;
 
-export const GameTitle = styled.p`
+const TextStyle = styled.p`
+  ${NexonFont.NexonText};
+  color: ${theme.grey800};
+  text-align: left;
+`;
+
+export const GameTitle = styled(TextStyle)`
   ${NexonFont.NexonSmallTitle};
 `;
 
@@ -49,37 +56,15 @@ export const RankHeader = styled.div`
   color: ${theme.grey800};
 `;
 
-export const RankHeaderItem = styled.div`
-  text-align: left;
-`;
-
+export const RankHeaderItem = styled(TextStyle)``;
 export const RankRow = styled.div`
   display: contents;
 `;
 
-export const RankRank = styled.div`
-  ${NexonFont.NexonText};
-  color: ${theme.grey800};
-  text-align: left;
-`;
-
-export const RankName = styled.div`
-  ${NexonFont.NexonText};
-  color: ${theme.grey800};
-  text-align: left;
-`;
-
-export const RankScore = styled.div`
-  ${NexonFont.NexonText};
-  color: ${theme.grey800};
-  text-align: left;
-`;
-
-export const RankTime = styled.div`
-  ${NexonFont.NexonText};
-  color: ${theme.grey800};
-  text-align: left;
-`;
+export const RankRank = styled(TextStyle)``;
+export const RankName = styled(TextStyle)``;
+export const RankScore = styled(TextStyle)``;
+export const RankTime = styled(TextStyle)``;
 
 export const PodiumImg = styled.img`
   width: auto;
@@ -100,10 +85,11 @@ export const CharacterPosition = styled.div`
 
 export const Flash = styled.img`
   position: absolute;
-  width: 10rem;
+  width: 12rem;
   height: auto;
-  top: -50px;
-  left: 95%;
+  top: -1rem;
+  left: 4.8rem;
+  z-index: 0;
   transform: translateX(-50%);
 `;
 
@@ -113,26 +99,26 @@ export const CrownPosition = styled.div`
   width: 30px;
   height: auto;
   top: -30px;
-  left: 85%;
+  left: 4.5rem;
   transform: translateX(-50%);
 `;
 
 export const FirstPlaceCharacter = styled(CharacterPosition)`
   bottom: 15.5rem;
-  left: 45%;
+  left: 40%;
   transform: translateX(-50%);
   z-index: 5;
 `;
 
 export const SecondPlaceCharacter = styled(CharacterPosition)`
   bottom: 12.5rem;
-  left: 12.5%;
+  left: 8%;
   transform: translateX(-50%);
 `;
 
 export const ThirdPlaceCharacter = styled(CharacterPosition)`
   bottom: 10.5rem;
-  right: 21%;
+  right: 26%;
   transform: translateX(50%);
 `;
 

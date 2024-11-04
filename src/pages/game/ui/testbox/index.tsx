@@ -5,12 +5,9 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { theme } from "@/shared/style";
-<<<<<<< HEAD
 import { Terminal } from "xterm";
-=======
+import { theme } from "@/shared/style";
 import { useTerminal } from "@/shared/hooks/useTerminal";
->>>>>>> da6b507d52523db173d4870fa07e376900b1d16c
 import * as S from "./style";
 import { gameDetail } from "../../api/gameDetail";
 import {
