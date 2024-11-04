@@ -103,7 +103,7 @@ export const Red = styled.div`
 `;
 
 export const Orange = styled.div`
-  background-color: ${theme.characterOrange};
+  background-color: ${theme.ORANGE};
   height: 25px;
   margin-bottom: 5px;
 `;
