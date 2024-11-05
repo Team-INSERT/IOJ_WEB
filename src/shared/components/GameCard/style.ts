@@ -29,7 +29,7 @@ export const Layout = styled.div<LayoutProps>`
     bottom: 0;
     border-radius: 15px;
     background-image: ${(props) =>
-      props.id === 1 || props.id === 3 ? `url(${GameCardHover})` : "none"};
+      props.id === 1 ? `url(${GameCardHover})` : "none"};
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

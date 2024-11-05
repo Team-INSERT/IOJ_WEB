@@ -36,7 +36,7 @@ const GameCard = ({ mode }: Modetype) => {
     {
       id: 3,
       markup: CustomMarkUp,
-      mode: "사용자 지정",
+      mode: "아이템전",
       subtitle1: "게임을 만들어서",
       subtitle2: "여러가지 게임을 즐겨봐요",
     },
@@ -82,7 +82,7 @@ const GameCard = ({ mode }: Modetype) => {
       </S.ImgContainer>
       <S.Details $bgImage={background}>
         {mode === "대회" && <ContestLogo />}
-        {mode === "사용자 지정" || mode === "경쟁전" ? <CustomLogo /> : null}
+        {mode === "아이템전" || mode === "경쟁전" ? <CustomLogo /> : null}
         {mode === "문제 모아보기" && <AllQuestionsLogo />}
         {mode === "역대 전적" && <HistoryLogo />}
         <S.Title>{detail.mode}</S.Title>
