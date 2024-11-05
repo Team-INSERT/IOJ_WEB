@@ -10,6 +10,7 @@ const MainHeader = () => {
     { id: 1, name: "홈", navigate: "/" },
     { id: 2, name: "게임하기", navigate: "/game" },
     { id: 3, name: "대회", navigate: "/contest/list" },
+    { id: 5, name: "아이템", navigate: "/game/find" },
     { id: 4, name: "문제", navigate: "/problem" },
   ];
 
