@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import Ready from "@/assets/Ready.svg";
 import Crown from "@/assets/Crown";
+import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import {
@@ -74,7 +75,7 @@ export const Waiting = () => {
             setIsReady(currentUserInRoom.ready);
           }
 
-          // `isHost`가 false일 때만 join 요청을 보냄
+          // 호스트가 아닌 경우에만 join 요청
           if (!hostUser || hostUser.nickname !== currentUser.nickname) {
             connectWebSocket();
             const enterResponse = await enter(roomId);
@@ -85,6 +86,8 @@ export const Waiting = () => {
               color: enterResponse.color,
               ready: currentUserInRoom?.ready || false,
             });
+          } else {
+            connectWebSocket(); // 호스트는 단순히 WebSocket만 연결
           }
         }
       } catch (error: any) {
@@ -231,18 +234,28 @@ export const Waiting = () => {
           });
 
           const user = sortedUsers[index];
+          const isUserSlot = index < room.maxPeople;
+
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
               <S.Crown>{user?.host && <Crown />}</S.Crown>
-              <WaitingUser
-                UserName={user?.nickname || ""}
-                color={user?.color || "gray"}
-              />
-              {!user?.host && user?.ready && <S.Ready src={Ready} />}
+              {isUserSlot ? (
+                user ? (
+                  <>
+                    <WaitingUser UserName={user.nickname} color={user.color} />
+                    {!user.host && user.ready && <S.Ready src={Ready} />}
+                  </>
+                ) : (
+                  <WaitingUser UserName="" color="" />
+                )
+              ) : (
+                <S.Close src={Close} alt="close" />
+              )}
             </S.UserCompartmentBox>
           );
         })}
       </S.UserCompartmentContainer>
+
       <S.ButtonBox>
         {isHost ? (
           <>
