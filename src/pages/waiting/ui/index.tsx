@@ -52,7 +52,7 @@ export const Waiting: React.FC = () => {
   const [problemId, setProblemId] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchRoom = async () => {
+  (async () => {
       try {
         if (roomId) {
           const roomDetails = await roomDetail(roomId);
@@ -86,10 +86,8 @@ export const Waiting: React.FC = () => {
         }
       } catch (error) {
         console.error("방 정보를 가져오는데 실패했습니다:", error);
-      }
-    };
-
-    fetchRoom();
+        }
+      })();
 
     return () => {
       if (room && roomId) {

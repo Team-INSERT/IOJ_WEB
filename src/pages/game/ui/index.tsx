@@ -95,21 +95,20 @@ export const Game = () => {
 
   useEffect(() => {
     if (problemId) {
-      const fetchProblem = async () => {
+      (async () => {
         try {
           const res = await gameDetail(parseInt(problemId, 10));
           setProblem(res);
         } catch (err) {
           console.error(err);
         }
-      };
-      fetchProblem();
+      })();
     }
   }, [problemId]);
 
   useEffect(() => {
     if (contestId) {
-      const fetchContestProblems = async () => {
+      (async () => {
         try {
           const res = await contestProblems(parseInt(contestId, 10));
           setAllProblems(res.problems);
@@ -118,9 +117,7 @@ export const Game = () => {
         } catch (err) {
           console.error(err);
         }
-      };
-
-      fetchContestProblems();
+      })();
     }
   }, [contestId]);
 
