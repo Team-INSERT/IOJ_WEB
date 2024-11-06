@@ -16,7 +16,9 @@ export const GameHome = () => {
           <div onClick={() => navigate("/game/contest")}>
             <GameCard mode="대회" />
           </div>
-          <GameCard mode="사용자 지정" />
+          <div onClick={() => navigate("/game/find")}>
+            <GameCard mode="아이템전" />
+          </div>
         </S.ChooseGameMode>
       </S.Layout>
     </>

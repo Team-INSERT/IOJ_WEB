@@ -16,7 +16,11 @@ export const MainLayout = styled.div<{ name: string }>`
   width: 65px;
   border: 2px solid transparent;
   background-image: linear-gradient(white, white),
-    linear-gradient(180deg, ${({ name }) => (name === "쉴드" ? "#ADFFCE" : "#fff2af")} , ${({ name }) => (name === "쉴드" ? "#007CFF" : "#ff48ab")});
+    linear-gradient(
+      180deg,
+      ${({ name }) => (name === "쉴드" ? "#ADFFCE" : "#fff2af")},
+      ${({ name }) => (name === "쉴드" ? "#007CFF" : "#ff48ab")}
+    );
   background-origin: border-box;
   background-clip: padding-box, border-box;
   position: relative;
