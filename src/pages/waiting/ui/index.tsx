@@ -7,6 +7,7 @@ import Ready from "@/assets/Ready.svg";
 import Crown from "@/assets/Crown";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
+import { getGameDetails } from "@/pages/game/api/getGameDetails";
 import {
   roomDetail,
   enter,
@@ -48,9 +49,10 @@ export const Waiting: React.FC = () => {
   } = useWaitingRoom(roomId || "");
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
+  const [problemId, setProblemId] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchRoom = async () => {
+  (async () => {
       try {
         if (roomId) {
           const roomDetails = await roomDetail(roomId);
@@ -84,10 +86,8 @@ export const Waiting: React.FC = () => {
         }
       } catch (error) {
         console.error("방 정보를 가져오는데 실패했습니다:", error);
-      }
-    };
-
-    fetchRoom();
+        }
+      })();
 
     return () => {
       if (room && roomId) {
@@ -124,11 +124,20 @@ export const Waiting: React.FC = () => {
   }, [room?.users]);
 
   useEffect(() => {
-    if (roomStatus === "started") {
-      navigate(`/game/${roomId}`);
+    if (roomStatus === "started" && roomId) {
+      (async () => {
+        const gameDetails = await getGameDetails(roomId);
+        const firstProblem = gameDetails.problems[0];
+        setProblemId(firstProblem);
+      })();
     }
-  }, [roomStatus, navigate, roomId]);
+  }, [roomStatus, roomId]);
 
+  useEffect(() => {
+    if (problemId) {
+      navigate(`/game/${roomId}/code/${problemId}`);
+    }
+  }, [problemId, roomId, navigate]);
   const handleReady = async () => {
     if (room && roomId) {
       try {
