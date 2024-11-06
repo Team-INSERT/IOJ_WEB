@@ -113,7 +113,6 @@ export const Game = () => {
           const res = await contestProblems(parseInt(contestId, 10));
           setAllProblems(res.problems);
           setProblemsCount(res.problems.length);
-          console.log("성공2");
         } catch (err) {
           console.error(err);
         }
