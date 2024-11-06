@@ -54,7 +54,6 @@ export const Waiting: React.FC = () => {
       try {
         if (roomId) {
           const roomDetails = await roomDetail(roomId);
-          console.log("Initial Room Details:", roomDetails);
           setRoom(roomDetails);
 
           initializeUsers(roomDetails.users);
@@ -75,7 +74,6 @@ export const Waiting: React.FC = () => {
 
           connectWebSocket();
           const enterResponse = await enter(roomId);
-          console.log("Enter response:", enterResponse);
 
           sendEvent("/app/join", {
             roomId,
@@ -101,7 +99,7 @@ export const Waiting: React.FC = () => {
 
   useEffect(() => {
     if (websocketUsers.length > 0) {
-      console.log("Updating room with websocket users:", websocketUsers);
+      console.log(websocketUsers);
       setRoom((prev) =>
         prev
           ? {
@@ -120,7 +118,6 @@ export const Waiting: React.FC = () => {
         (user) => user.nickname === currentUserNickname,
       );
       if (currentUser) {
-        console.log("Current user ready state:", currentUser.ready);
         setIsReady(currentUser.ready);
       }
     }
@@ -138,6 +135,7 @@ export const Waiting: React.FC = () => {
         await ready(roomId);
         const newReadyState = !isReady;
         setIsReady(newReadyState);
+
         sendEvent("/app/ready", {
           roomId,
           ready: newReadyState,
@@ -176,6 +174,7 @@ export const Waiting: React.FC = () => {
       navigate("/game/find");
     }
   };
+
   const handleLeave = async () => {
     if (room && roomId) {
       try {
