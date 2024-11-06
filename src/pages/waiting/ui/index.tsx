@@ -74,15 +74,18 @@ export const Waiting = () => {
             setIsReady(currentUserInRoom.ready);
           }
 
-          connectWebSocket();
-          const enterResponse = await enter(roomId);
+          // `isHost`가 false일 때만 join 요청을 보냄
+          if (!hostUser || hostUser.nickname !== currentUser.nickname) {
+            connectWebSocket();
+            const enterResponse = await enter(roomId);
 
-          sendEvent("/app/join", {
-            roomId,
-            nickname: currentUser.nickname,
-            color: enterResponse.color,
-            ready: currentUserInRoom?.ready || false,
-          });
+            sendEvent("/app/join", {
+              roomId,
+              nickname: currentUser.nickname,
+              color: enterResponse.color,
+              ready: currentUserInRoom?.ready || false,
+            });
+          }
         }
       } catch (error: any) {
         setErrorMessage(error.response.data.message);

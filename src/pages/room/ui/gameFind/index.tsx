@@ -17,18 +17,13 @@ interface RoomData {
 
 export const GameFind = () => {
   const navigate = useNavigate();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState<RoomData[]>([]);
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
   const fetchRooms = useCallback(async () => {
     try {
       const res = await roomList();
       setRooms(res);
-      if (res.length > 0) {
-        setSelectedRoomId(res[0].id);
-      }
     } catch (err) {
       console.error("방 목록을 가져오는 데 실패했습니다:", err);
     }
@@ -39,7 +34,10 @@ export const GameFind = () => {
   }, [fetchRooms]);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    fetchRooms();
+  };
 
   const formatRoomNumber = (index: number) =>
     (index + 1).toString().padStart(3, "0");
@@ -61,8 +59,7 @@ export const GameFind = () => {
             currentPeople={0}
             roomNumber={formatRoomNumber(index)}
             onClick={() => {
-              setSelectedRoomId(room.id);
-              navigate(`/game/waiting/${index + 1}`, {
+              navigate(`/game/waiting/${room.id}`, {
                 state: {
                   roomNumber: formatRoomNumber(index),
                   roomId: room.id,
