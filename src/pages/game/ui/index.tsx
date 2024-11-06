@@ -4,7 +4,7 @@ import { flex } from "@/shared/style";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Split from "react-split";
-// import Warning from "@/shared/components/Item/warning";
+import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
@@ -114,10 +114,12 @@ export const Game = () => {
           const res = await contestProblems(parseInt(contestId, 10));
           setAllProblems(res.problems);
           setProblemsCount(res.problems.length);
+          console.log("성공2");
         } catch (err) {
           console.error(err);
         }
       };
+
       fetchContestProblems();
     }
   }, [contestId]);
