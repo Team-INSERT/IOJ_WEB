@@ -11,7 +11,6 @@ import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
-import { getItemList } from "../api/getItemList";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -97,17 +96,8 @@ export const Game = () => {
           console.error(err);
         }
       };
-      const getItem = async () => {
-        try {
-          const itemResult = await getItemList(parseInt(contestId, 10));
-          console.log("성공");
-          console.log(itemResult);
-        } catch (err) {
-          console.error(err);
-        }
-      };
+
       fetchContestProblems();
-      getItem();
     }
   }, [contestId]);
 
