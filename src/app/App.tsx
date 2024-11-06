@@ -75,6 +75,7 @@ const App = () => {
           <Route path="/game/find" element={<GameFind />} />
           <Route path="/game/waiting/:roomId" element={<Waiting />} />
           <Route path="/result" element={<Result />} />
+          <Route path="/game/:roomId" element={<Game />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </Router>
