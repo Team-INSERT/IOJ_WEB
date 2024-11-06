@@ -31,7 +31,6 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   const segments = pathname.split("/");
   const contestId = parseInt(segments[segments.length - 3], 10);
   const roomId = segments[segments.length - 3];
-  console.log(problemsCount);
 
   const [problemList, setProblemList] = useState<problemsType[]>([]);
   const [remainingTime, setRemainingTime] = useState("00 : 00 : 00");
@@ -83,6 +82,30 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
     } catch (err) {
       console.error(err);
     }
+  }, [roomId]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    let intervalId: NodeJS.Timeout;
+
+    (async () => {
+      try {
+        const res: ContestDetails = await getGameDetails(roomId);
+        setProblemList(res.problems);
+
+        setRemainingTime(calculateRemainingTime(res.endTime));
+
+        intervalId = setInterval(() => {
+          setRemainingTime(calculateRemainingTime(res.endTime));
+        }, 1000);
+      } catch (err) {
+        /**/
+      }
+    })();
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [roomId]);
 
   useEffect(() => {
