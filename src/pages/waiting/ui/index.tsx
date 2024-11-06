@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { WaitingUser, Button } from "@/shared/components";
+import { useNavigate, useLocation } from "react-router-dom";
+import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import Ready from "@/assets/Ready.svg";
@@ -31,11 +31,13 @@ interface RoomData {
   users: User[];
 }
 
-export const Waiting: React.FC = () => {
+export const Waiting = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const roomId = location.state?.roomId;
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
     users: websocketUsers,
@@ -82,7 +84,8 @@ export const Waiting: React.FC = () => {
             ready: currentUserInRoom?.ready || false,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("방 정보를 가져오는데 실패했습니다:", error);
       }
     };
@@ -154,7 +157,8 @@ export const Waiting: React.FC = () => {
             ),
           };
         });
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("준비 상태 변경 중 에러 발생:", error);
       }
     }
@@ -169,9 +173,13 @@ export const Waiting: React.FC = () => {
 
   const handleDelete = async () => {
     if (isHost && room && roomId) {
-      await deleteRoom(roomId);
-      sendEvent("/app/delete", { roomId });
-      navigate("/game/find");
+      try {
+        await deleteRoom(roomId);
+        sendEvent("/app/delete", { roomId });
+        navigate("/game/find");
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
+      }
     }
   };
 
@@ -188,9 +196,9 @@ export const Waiting: React.FC = () => {
         disconnectWebSocket();
 
         navigate("/game/find");
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("방 나가기 실패:", error);
-        navigate("/game/find");
       }
     }
   };
@@ -268,6 +276,12 @@ export const Waiting: React.FC = () => {
           </>
         )}
       </S.ButtonBox>
+      {errorMessage && (
+        <ErrorModal
+          errorMessage={errorMessage}
+          onClose={() => navigate(`/game/find`)}
+        />
+      )}
     </S.Layout>
   );
 };
