@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { contestProblem } from "@/pages/room/api/roomApi";
 import Clock from "@/assets/Clock";
+import { getGameDetails } from "@/pages/game/api/getGameDetails";
+import { gameDetail } from "@/pages/game/api/gameDetail";
 import Button from "../Button";
 import * as S from "./style";
 
@@ -12,9 +14,9 @@ interface gameHeaderProps {
 
 interface problemsType {
   id: number;
-  level: number;
-  status: string;
-  title: string;
+  level?: number;
+  status?: string;
+  title?: string;
 }
 
 interface ContestDetails {
@@ -28,6 +30,8 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   const navigate = useNavigate();
   const segments = pathname.split("/");
   const contestId = parseInt(segments[segments.length - 3], 10);
+  const roomId = segments[segments.length - 3];
+  console.log(problemsCount);
 
   const [problemList, setProblemList] = useState<problemsType[]>([]);
   const [remainingTime, setRemainingTime] = useState("00 : 00 : 00");
@@ -52,9 +56,34 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
 
     return `${String(hours).padStart(2, "0")} : ${String(minutes).padStart(
       2,
-      "0"
+      "0",
     )} : ${String(seconds).padStart(2, "0")}`;
   };
+
+  useEffect(() => {
+    try {
+      (async () => {
+        try {
+          const problems = await getGameDetails(roomId);
+          const problemIds = problems.problems;
+
+          if (problemIds && problemIds.length > 0) {
+            const problemsData = await Promise.all(
+              problemIds.map(async (id: number) => {
+                const problemDetail = await gameDetail(id);
+                return { id, ...problemDetail };
+              }),
+            );
+            setProblemList(problemsData);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [roomId]);
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -81,7 +110,6 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   }, [contestId]);
 
   const onNextClick = (mode: string) => {
-
     if (mode === "next") {
       if (problemIndex < problemsCount - 1) {
         const nextProblemId = problemList[problemIndex + 1]?.id;
