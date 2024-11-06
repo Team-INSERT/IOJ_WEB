@@ -11,6 +11,7 @@ import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
+import { getGameDetails } from "../api/getGameDetails";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -44,7 +45,7 @@ export const ItemListWrapper = styled.div`
 `;
 
 export const Game = () => {
-  const { problemId, contestId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
+  const { problemId, contestId, roomId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
     level: 0,
@@ -67,37 +68,82 @@ export const Game = () => {
     allProblems,
     parseInt(problemId || "0", 10),
   );
+  useEffect(() => {
+    console.log(problemIndex);
+  }, [problemIndex]);
 
-  // 문제 데이터를 가져오는 useEffect
+  useEffect(() => {
+    if (roomId) {
+      (async () => {
+        try {
+          const res = await getGameDetails(roomId);
+          const problemIds = res.problems;
+
+          if (problemIds && problemIds.length > 0) {
+            const problemsData = await Promise.all(
+              problemIds.map(async (id: number) => {
+                const problemDetail = await gameDetail(id);
+                return { id, ...problemDetail };
+              }),
+            );
+            setAllProblems(problemsData);
+            setProblemsCount(problemsData.length);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    if (roomId) {
+      (async () => {
+        try {
+          const res = await getGameDetails(roomId);
+          const problemIds = res.problems;
+
+          if (problemIds && problemIds.length > 0) {
+            const problemsData = await Promise.all(
+              problemIds.map(async (id: number) => {
+                const problemDetail = await gameDetail(id);
+                return { id, ...problemDetail };
+              }),
+            );
+            setAllProblems(problemsData);
+            setProblemsCount(problemsData.length);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    }
+  }, [roomId]);
+
   useEffect(() => {
     if (problemId) {
-      const fetchProblem = async () => {
+      (async () => {
         try {
           const res = await gameDetail(parseInt(problemId, 10));
           setProblem(res);
         } catch (err) {
           console.error(err);
         }
-      };
-      fetchProblem();
+      })();
     }
   }, [problemId]);
 
-  // 모든 문제 리스트 가져오는 useEffect
   useEffect(() => {
     if (contestId) {
-      const fetchContestProblems = async () => {
+      (async () => {
         try {
           const res = await contestProblems(parseInt(contestId, 10));
           setAllProblems(res.problems);
           setProblemsCount(res.problems.length);
-          console.log("성공2");
         } catch (err) {
           console.error(err);
         }
-      };
-
-      fetchContestProblems();
+      })();
     }
   }, [contestId]);
 
