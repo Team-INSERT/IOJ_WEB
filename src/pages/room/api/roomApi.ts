@@ -12,5 +12,6 @@ export const gameRakingList = async (contestid: number) =>
 export const roomList = async () => (await customAxios.get(`/room`)).data;
 
 export const createRoomApi = async (createRoom: createRoomProps) => {
-  await customAxios.post("/room", createRoom);
+  const response = await customAxios.post("/room", createRoom);
+  return response.data;
 };
