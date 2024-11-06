@@ -1,18 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserCompartment } from "@/shared/components";
+import { attackUser } from "../../api/gameApi";
 import * as S from "./style";
 
-export const ChooseAttackModal = () => {
+interface User {
+  targetId: number;
+  nickname: string;
+  color: string;
+}
+
+interface ChooseAttackModalProps {
+  roomId: string;
+}
+
+export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  const users = [
-    { id: 1, username: "예", color: "skyblue" },
-    { id: 2, username: "예예", color: "orange" },
-    { id: 3, username: "예예예", color: "neon" },
-    { id: 4, username: "예예예예", color: "purple" },
-    { id: 5, username: "예예예예예", color: "red" },
-    { id: 6, username: "예예예예예예", color: "pink" },
-    { id: 7, username: "예이이", color: "blue" },
-  ];
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchAttackUser = async () => {
+      try {
+        const fetchedUsers = await attackUser(roomId);
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching attackable users:", error);
+      }
+    };
+
+    fetchAttackUser();
+  }, [roomId]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -25,19 +41,19 @@ export const ChooseAttackModal = () => {
       <S.Layout>
         <S.Title>공격할 대상을 선택하세요!!</S.Title>
         <S.MemberContainer itemCount={users.length}>
-          {users.map((detail) => (
-            <S.UserConpartment key={detail.id}>
+          {users.map((user) => (
+            <S.UserConpartment key={user.targetId}>
               <UserCompartment
                 layoutWidth={140}
-                UserName={detail.username}
-                color={detail.color}
+                UserName={user.nickname}
+                color={user.color}
                 width={95}
                 smallFontSize
               />
             </S.UserConpartment>
           ))}
         </S.MemberContainer>
-        <S.CancelBtn onClick={handleClose}>취소하기</S.CancelBtn>{" "}
+        <S.CancelBtn onClick={handleClose}>취소하기</S.CancelBtn>
       </S.Layout>
     </S.Overlay>
   );
