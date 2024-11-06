@@ -4,17 +4,19 @@ import { flex } from "@/shared/style";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Split from "react-split";
-import Warning from "@/shared/components/Item/warning"
+import Warning from "@/shared/components/Item/warning";
+import ItemIconList from "@/shared/components/ItemIconList";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
+import { getItemList } from "../api/getItemList";
 
 export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
-  position: fixed;
+  position: relative;
   overflow: hidden;
 `;
 
@@ -33,6 +35,13 @@ export const ProblemWrapper = styled.div`
 export const CodeEditorWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
+`;
+
+export const ItemListWrapper = styled.div`
+  position: absolute;
+  top: 20%;
+  right: 20px;
+  z-index: 1;
 `;
 
 export const Game = () => {
@@ -83,17 +92,28 @@ export const Game = () => {
           const res = await contestProblems(parseInt(contestId, 10));
           setAllProblems(res.problems);
           setProblemsCount(res.problems.length);
+          console.log("성공2");
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      const getItem = async () => {
+        try {
+          const itemResult = await getItemList(parseInt(contestId, 10));
+          console.log("성공");
+          console.log(itemResult);
         } catch (err) {
           console.error(err);
         }
       };
       fetchContestProblems();
+      getItem();
     }
   }, [contestId]);
 
   return (
     <>
-      <Warning />
+      {/* <Warning /> */}
       <GameLayout>
         <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
         <Split
@@ -131,6 +151,9 @@ export const Game = () => {
           <CodeEditorWrapper>
             <CodeEditor />
           </CodeEditorWrapper>
+          <ItemListWrapper>
+            <ItemIconList />
+          </ItemListWrapper>
         </Split>
       </GameLayout>
     </>
