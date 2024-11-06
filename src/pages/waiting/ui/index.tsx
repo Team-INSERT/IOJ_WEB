@@ -140,7 +140,6 @@ export const Waiting: React.FC = () => {
       navigate(`/game/${roomId}/code/${problemId}`);
     }
   }, [problemId, roomId, navigate]);
-
   const handleReady = async () => {
     if (room && roomId) {
       try {
