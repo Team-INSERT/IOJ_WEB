@@ -27,9 +27,6 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
   const [maxDifficulty, setMaxDifficulty] = useState(0);
   const [time, setTime] = useState(3);
 
-  const formatRoomNumber = (index: number) =>
-    (index + 1).toString().padStart(3, "0");
-
   const onCreateRoomClick = async () => {
     const createRoomData: createRoomProps = {
       title,
@@ -41,26 +38,23 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
     };
 
     try {
-      await createRoomApi(createRoomData);
-      const rooms = await roomList();
-      const roomIndex = rooms.length - 1;
+      const roomId = await createRoomApi(createRoomData);
 
-      if (roomIndex >= 0) {
-        navigate(`/game/waiting/${roomIndex + 1}`, {
+      if (roomId) {
+        navigate(`/game/waiting/${roomId}`, {
           state: {
-            roomNumber: formatRoomNumber(roomIndex),
-            roomId: rooms[roomIndex].id,
+            roomNumber: roomId,
+            roomId,
           },
         });
       } else {
-        console.error("방 목록이 비어 있습니다.");
+        console.error("방 생성에 실패했습니다.");
       }
       onClose();
     } catch (error) {
       console.error("방 생성 중 에러가 발생했습니다:", error);
     }
   };
-
   const container = [
     {
       id: 1,
