@@ -44,6 +44,7 @@ export const Waiting: React.FC = () => {
     disconnectWebSocket,
     sendEvent,
     initializeUsers,
+    roomStatus,
   } = useWaitingRoom(roomId || "");
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
@@ -124,6 +125,12 @@ export const Waiting: React.FC = () => {
       }
     }
   }, [room?.users]);
+
+  useEffect(() => {
+    if (roomStatus === "started") {
+      navigate(`/game/${roomId}`);
+    }
+  }, [roomStatus, navigate, roomId]);
 
   const handleReady = async () => {
     if (room && roomId) {
