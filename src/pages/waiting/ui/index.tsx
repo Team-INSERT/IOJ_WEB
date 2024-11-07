@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { WaitingUser, Button } from "@/shared/components";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import Ready from "@/assets/Ready.svg";
 import Crown from "@/assets/Crown";
+import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
@@ -32,11 +33,13 @@ interface RoomData {
   users: User[];
 }
 
-export const Waiting: React.FC = () => {
+export const Waiting = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const roomId = location.state?.roomId;
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
     users: websocketUsers,
@@ -75,16 +78,19 @@ export const Waiting: React.FC = () => {
           }
 
           connectWebSocket();
-          const enterResponse = await enter(roomId);
 
-          sendEvent("/app/join", {
-            roomId,
-            nickname: currentUser.nickname,
-            color: enterResponse.color,
-            ready: currentUserInRoom?.ready || false,
-          });
+          if (!currentUserInRoom) {
+            const enterResponse = await enter(roomId);
+            sendEvent("/app/join", {
+              roomId,
+              nickname: currentUser.nickname,
+              color: enterResponse.color,
+              ready: currentUserInRoom?.ready || false,
+            });
+          }
         }
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("방 정보를 가져오는데 실패했습니다:", error);
         }
       })();
@@ -163,7 +169,8 @@ export const Waiting: React.FC = () => {
             ),
           };
         });
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("준비 상태 변경 중 에러 발생:", error);
       }
     }
@@ -178,9 +185,13 @@ export const Waiting: React.FC = () => {
 
   const handleDelete = async () => {
     if (isHost && room && roomId) {
-      await deleteRoom(roomId);
-      sendEvent("/app/delete", { roomId });
-      navigate("/game/find");
+      try {
+        await deleteRoom(roomId);
+        sendEvent("/app/delete", { roomId });
+        navigate("/game/find");
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
+      }
     }
   };
 
@@ -197,9 +208,9 @@ export const Waiting: React.FC = () => {
         disconnectWebSocket();
 
         navigate("/game/find");
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
         console.error("방 나가기 실패:", error);
-        navigate("/game/find");
       }
     }
   };
@@ -229,18 +240,28 @@ export const Waiting: React.FC = () => {
           });
 
           const user = sortedUsers[index];
+          const isUserSlot = index < room.maxPeople;
+
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
               <S.Crown>{user?.host && <Crown />}</S.Crown>
-              <WaitingUser
-                UserName={user?.nickname || ""}
-                color={user?.color || "gray"}
-              />
-              {!user?.host && user?.ready && <S.Ready src={Ready} />}
+              {isUserSlot ? (
+                user ? (
+                  <>
+                    <WaitingUser UserName={user.nickname} color={user.color} />
+                    {!user.host && user.ready && <S.Ready src={Ready} />}
+                  </>
+                ) : (
+                  <WaitingUser UserName="" color="" />
+                )
+              ) : (
+                <S.Close src={Close} alt="close" />
+              )}
             </S.UserCompartmentBox>
           );
         })}
       </S.UserCompartmentContainer>
+
       <S.ButtonBox>
         {isHost ? (
           <>
@@ -277,6 +298,12 @@ export const Waiting: React.FC = () => {
           </>
         )}
       </S.ButtonBox>
+      {errorMessage && (
+        <ErrorModal
+          errorMessage={errorMessage}
+          onClose={() => navigate(`/game/find`)}
+        />
+      )}
     </S.Layout>
   );
 };

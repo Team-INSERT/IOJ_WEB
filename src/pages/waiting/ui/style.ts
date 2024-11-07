@@ -67,3 +67,8 @@ export const Crown = styled.div`
   top: 0;
   left: 7rem;
 `;
+
+export const Close = styled.img`
+  width: 240px;
+  height: 240px;
+`;
