@@ -68,33 +68,6 @@ export const Game = () => {
     allProblems,
     parseInt(problemId || "0", 10),
   );
-  useEffect(() => {
-    console.log(problemIndex);
-  }, [problemIndex]);
-
-  useEffect(() => {
-    if (roomId) {
-      (async () => {
-        try {
-          const res = await getGameDetails(roomId);
-          const problemIds = res.problems;
-
-          if (problemIds && problemIds.length > 0) {
-            const problemsData = await Promise.all(
-              problemIds.map(async (id: number) => {
-                const problemDetail = await gameDetail(id);
-                return { id, ...problemDetail };
-              }),
-            );
-            setAllProblems(problemsData);
-            setProblemsCount(problemsData.length);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })();
-    }
-  }, [roomId]);
 
   useEffect(() => {
     if (roomId) {

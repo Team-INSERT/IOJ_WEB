@@ -60,49 +60,31 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
   };
 
   useEffect(() => {
-    try {
-      (async () => {
-        try {
-          const problems = await getGameDetails(roomId);
-          const problemIds = problems.problems;
-
-          if (problemIds && problemIds.length > 0) {
-            const problemsData = await Promise.all(
-              problemIds.map(async (id: number) => {
-                const problemDetail = await gameDetail(id);
-                return { id, ...problemDetail };
-              }),
-            );
-            setProblemList(problemsData);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })();
-    } catch (err) {
-      console.error(err);
-    }
-  }, [roomId]);
-
-  useEffect(() => {
     // eslint-disable-next-line no-undef
     let intervalId: NodeJS.Timeout;
-
     (async () => {
       try {
-        const res: ContestDetails = await getGameDetails(roomId);
-        setProblemList(res.problems);
+        const problems = await getGameDetails(roomId);
+        const problemIds = problems.problems;
 
-        setRemainingTime(calculateRemainingTime(res.endTime));
+        if (problemIds && problemIds.length > 0) {
+          const problemsData = await Promise.all(
+            problemIds.map(async (id: number) => {
+              const problemDetail = await gameDetail(id);
+              return { id, ...problemDetail };
+            }),
+          );
+          setProblemList(problemsData);
+          setRemainingTime(calculateRemainingTime(problems.endTime));
 
-        intervalId = setInterval(() => {
-          setRemainingTime(calculateRemainingTime(res.endTime));
-        }, 1000);
+          intervalId = setInterval(() => {
+            setRemainingTime(calculateRemainingTime(problems.endTime));
+          }, 1000);
+        }
       } catch (err) {
-        /**/
+        console.error(err);
       }
     })();
-
     return () => {
       clearInterval(intervalId);
     };
