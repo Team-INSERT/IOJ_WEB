@@ -69,13 +69,10 @@ export const Game = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Game.tsx
   const openModal = () => {
     setIsModalOpen(true);
-    console.log("isModalOpen", true); // 상태 변경 확인
   };
 
-  // 모달 닫기
   const closeModal = () => {
     setIsModalOpen(false);
   };

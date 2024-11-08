@@ -17,7 +17,7 @@ export const ChooseAttackModal = ({
   roomId,
   closeModal,
 }: ChooseAttackModalProps & { closeModal: () => void }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -32,10 +32,6 @@ export const ChooseAttackModal = ({
 
     fetchAttackUser();
   }, [roomId]);
-  // ChooseAttackModal.tsx
-  useEffect(() => {
-    console.log("ChooseAttackModal 렌더링");
-  }, []);
 
   if (!isOpen) return null;
   return (
