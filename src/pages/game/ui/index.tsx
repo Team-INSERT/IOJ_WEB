@@ -161,7 +161,7 @@ export const Game = () => {
             <CodeEditor />
           </CodeEditorWrapper>
           <ItemListWrapper>
-            <ItemIconList />
+            <ItemIconList roomId={roomId} />
           </ItemListWrapper>
         </Split>
       </GameLayout>

@@ -23,7 +23,7 @@ export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
         const fetchedUsers = await attackUser(roomId);
         setUsers(fetchedUsers);
       } catch (error) {
-        console.error("Error fetching attackable users:", error);
+        console.error(error);
       }
     };
 

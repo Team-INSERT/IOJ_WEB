@@ -124,6 +124,7 @@ export const CodeEditor = () => {
     window.addEventListener("resize", updateEditorHeight);
     return () => window.removeEventListener("resize", updateEditorHeight);
   }, []);
+
   const handleExecution = useCallback(async () => {
     if (isExecuteLoading) {
       setIsModalOpen(true);

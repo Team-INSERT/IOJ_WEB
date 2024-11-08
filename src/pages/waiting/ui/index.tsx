@@ -55,7 +55,7 @@ export const Waiting = () => {
   const [problemId, setProblemId] = useState<number | null>(null);
 
   useEffect(() => {
-  (async () => {
+    (async () => {
       try {
         if (roomId) {
           const roomDetails = await roomDetail(roomId);
@@ -92,8 +92,8 @@ export const Waiting = () => {
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
         console.error("방 정보를 가져오는데 실패했습니다:", error);
-        }
-      })();
+      }
+    })();
 
     return () => {
       if (room && roomId) {
@@ -178,8 +178,12 @@ export const Waiting = () => {
 
   const handleStart = async () => {
     if (isHost && room && roomId) {
-      await start(roomId);
-      sendEvent("/app/start", { roomId });
+      try {
+        await start(roomId);
+        sendEvent("/app/start", { roomId });
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message);
+      }
     }
   };
 
