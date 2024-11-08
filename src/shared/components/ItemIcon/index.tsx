@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { ChooseAttackModal } from "@/pages/game/ui/chooseAttackModal";
+import { roomIdAtom } from "@/shared/utils/atom/roomAtom";
+import { useAtom } from "jotai";
 import * as S from "./style";
 
 interface ItemProps {
@@ -6,8 +9,8 @@ interface ItemProps {
 }
 
 const ItemIcon = ({ name }: ItemProps) => {
-  const [isVisible, setIsVisible] = useState(true);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [roomId] = useAtom(roomIdAtom);
   const itemDetail = [
     {
       logo: "🪞",
@@ -49,21 +52,32 @@ const ItemIcon = ({ name }: ItemProps) => {
   const sameItem = itemDetail.find((detail) => detail.item === name);
 
   const handleLayoutClick = () => {
-    setIsVisible(false);
+    setIsModalOpen(true);
   };
 
-  return sameItem && isVisible ? (
-    <S.Layout onClick={handleLayoutClick}>
-      <S.MainLayout name={sameItem.itemName}>
-        <S.Description className="description">
-          <p>{sameItem.description1}</p>
-          <p>{sameItem.description2}</p>
-        </S.Description>
-        <S.Logo>{sameItem.logo}</S.Logo>
-        <S.Name>{sameItem.itemName}</S.Name>
-      </S.MainLayout>
-    </S.Layout>
-  ) : null;
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <>
+      {sameItem ? (
+        <S.Layout onClick={handleLayoutClick}>
+          <S.MainLayout name={sameItem.itemName}>
+            <S.Description className="description">
+              <p>{sameItem.description1}</p>
+              <p>{sameItem.description2}</p>
+            </S.Description>
+            <S.Logo>{sameItem.logo}</S.Logo>
+            <S.Name>{sameItem.itemName}</S.Name>
+          </S.MainLayout>
+        </S.Layout>
+      ) : null}
+      {isModalOpen && (
+        <ChooseAttackModal roomId={roomId} onClose={handleCloseModal} />
+      )}
+    </>
+  );
 };
 
 export default ItemIcon;

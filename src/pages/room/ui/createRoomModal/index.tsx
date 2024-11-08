@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Stars from "@/shared/components/Stars";
 import { ReactComponent as XBold } from "@/assets/XBold.svg";
+import { useAtom } from "jotai";
+import { roomIdAtom } from "@/shared/utils/atom/roomAtom";
 import { createRoomApi, roomList } from "../../api/roomApi";
 import * as S from "./style";
 
@@ -26,7 +28,7 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
   const [minDifficulty, setMinDifficulty] = useState(0);
   const [maxDifficulty, setMaxDifficulty] = useState(0);
   const [time, setTime] = useState(3);
-
+  const [, setRoomId] = useAtom(roomIdAtom); // roomId 전역 상태
   const onCreateRoomClick = async () => {
     const createRoomData: createRoomProps = {
       title,
@@ -41,6 +43,8 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
       const roomId = await createRoomApi(createRoomData);
 
       if (roomId) {
+        setRoomId(roomId); // roomIdAtom에 설정
+        console.log("Navigating to room with ID:", roomId); // newRoomId 확인
         navigate(`/game/waiting/${roomId}`, {
           state: {
             roomNumber: roomId,
