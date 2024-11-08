@@ -6,10 +6,11 @@ import ItemIcon from "../ItemIcon";
 interface Item {
   item: string;
 }
-const ItemIconList = (roomId: string) => {
+const ItemIconList = ({ roomId }: { roomId: string | undefined }) => {
   const [isItemList, setItemList] = useState<Item[] | null>(null);
 
   useEffect(() => {
+    if (!roomId) return;
     (async () => {
       try {
         const itemList = await getItemList(roomId);
