@@ -1,16 +1,30 @@
-import React from "react";
+import { getItemList } from "@/pages/game/api/getItemList";
+import { useEffect, useState } from "react";
 import * as S from "./style";
 import ItemIcon from "../ItemIcon";
 
-const ItemIconList = () => {
-  const a = 1;
+interface Item {
+  item: string;
+}
+const ItemIconList = (roomId: string) => {
+  const [isItemList, setItemList] = useState<Item[] | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const itemList = await getItemList(roomId);
+        setItemList(itemList);
+      } catch (error: any) {
+        console.error("에러 발생:", error);
+      }
+    })();
+  }, [roomId]);
+
   return (
     <S.Layout>
-      <ItemIcon name="MIRROR" />
-      <ItemIcon name="INK" />
-      <ItemIcon name="DEVIL" />
-      <ItemIcon name="BUBBLE" />
-      <ItemIcon name="SHIELD" />
+      {isItemList
+        ? isItemList.map((item) => <ItemIcon name={item.item} />)
+        : ""}
     </S.Layout>
   );
 };
