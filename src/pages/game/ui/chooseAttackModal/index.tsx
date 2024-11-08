@@ -19,7 +19,7 @@ interface ChooseAttackModalProps {
 interface itemAttackProps {
   roomId: string;
   targetUserId: number;
-  item: string;
+  attackItem: string;
 }
 
 export const ChooseAttackModal = ({
@@ -46,7 +46,7 @@ export const ChooseAttackModal = ({
     const itemAttackData: itemAttackProps = {
       roomId,
       targetUserId: userId,
-      item,
+      attackItem: item,
     };
     try {
       const res = await getItemAttack(itemAttackData);

@@ -68,8 +68,10 @@ export const Game = () => {
     source: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("");
 
-  const openModal = () => {
+  const openModal = (item: string) => {
+    setSelectedItem(item); // 아이템을 상태로 저장
     setIsModalOpen(true);
   };
 
@@ -181,12 +183,19 @@ export const Game = () => {
             <CodeEditor />
           </CodeEditorWrapper>
           <ItemListWrapper>
-            <ItemIconList roomId={roomId} openModal={openModal} />
+            <ItemIconList
+              roomId={roomId}
+              openModal={(item: string) => openModal(item)}
+            />
           </ItemListWrapper>
         </Split>
         {isModalOpen && roomId && (
           <ModalLayout>
-            <ChooseAttackModal roomId={roomId} closeModal={closeModal} />
+            <ChooseAttackModal
+              roomId={roomId}
+              closeModal={closeModal}
+              item={selectedItem}
+            />
           </ModalLayout>
         )}
       </GameLayout>

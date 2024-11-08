@@ -2,6 +2,7 @@ import * as S from "./style";
 
 interface ItemProps {
   name: string;
+  openModal: (item: string) => void;
 }
 
 const ItemIcon = ({
@@ -49,7 +50,9 @@ const ItemIcon = ({
   const sameItem = itemDetail.find((detail) => detail.item === name);
 
   const handleLayoutClick = () => {
-    openModal();
+    if (sameItem) {
+      openModal(sameItem.item); // 클릭된 아이템의 item 값을 전달
+    }
   };
 
   return (

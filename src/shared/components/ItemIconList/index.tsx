@@ -11,7 +11,7 @@ const ItemIconList = ({
   openModal,
 }: {
   roomId: string | undefined;
-  openModal: () => void;
+  openModal: (item: string) => void;
 }) => {
   const [isItemList, setItemList] = useState<Item[] | null>(null);
 
@@ -31,7 +31,7 @@ const ItemIconList = ({
     <S.Layout>
       {isItemList
         ? isItemList.map((item) => (
-            <ItemIcon key={item.item} name={item.item} openModal={openModal} />
+            <ItemIcon key={item.item} name={item.item} openModal={() => openModal(item.item)} />
           ))
         : ""}
     </S.Layout>
