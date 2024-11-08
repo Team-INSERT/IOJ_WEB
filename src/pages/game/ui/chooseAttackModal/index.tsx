@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserCompartment } from "@/shared/components";
 import { attackUser } from "../../api/gameApi";
+import { getItemAttack } from "../../api/itemAttack";
 import * as S from "./style";
 
 interface User {
@@ -11,15 +12,23 @@ interface User {
 
 interface ChooseAttackModalProps {
   roomId: string;
+  closeModal: () => void;
+  item: string;
+}
+
+interface itemAttackProps {
+  roomId: string;
+  targetUserId: number;
+  item: string;
 }
 
 export const ChooseAttackModal = ({
   roomId,
   closeModal,
-}: ChooseAttackModalProps & { closeModal: () => void }) => {
+  item,
+}: ChooseAttackModalProps) => {
   const [isOpen] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
-
   useEffect(() => {
     const fetchAttackUser = async () => {
       try {
@@ -33,6 +42,20 @@ export const ChooseAttackModal = ({
     fetchAttackUser();
   }, [roomId]);
 
+  const onClickItemAttack = async (userId: number) => {
+    const itemAttackData: itemAttackProps = {
+      roomId,
+      targetUserId: userId,
+      item,
+    };
+    try {
+      const res = await getItemAttack(itemAttackData);
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!isOpen) return null;
   return (
     <S.Overlay>
@@ -40,12 +63,15 @@ export const ChooseAttackModal = ({
         <S.Title>공격할 대상을 선택하세요!!</S.Title>
         <S.MemberContainer itemCount={users.length}>
           {users.map((user) => (
-            <S.UserConpartment key={user.targetId}>
+            <S.UserConpartment
+              key={user.targetId}
+              onClick={() => onClickItemAttack(user.targetId)}
+            >
               <UserCompartment
-                layoutWidth={140}
+                layoutWidth={150}
                 UserName={user.nickname}
                 color={user.color}
-                width={95}
+                width={100}
                 smallFontSize
               />
             </S.UserConpartment>
