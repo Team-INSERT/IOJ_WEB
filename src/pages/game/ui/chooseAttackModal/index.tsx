@@ -13,7 +13,10 @@ interface ChooseAttackModalProps {
   roomId: string;
 }
 
-export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
+export const ChooseAttackModal = ({
+  roomId,
+  closeModal,
+}: ChooseAttackModalProps & { closeModal: () => void }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
 
@@ -29,13 +32,12 @@ export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
 
     fetchAttackUser();
   }, [roomId]);
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  // ChooseAttackModal.tsx
+  useEffect(() => {
+    console.log("ChooseAttackModal 렌더링");
+  }, []);
 
   if (!isOpen) return null;
-
   return (
     <S.Overlay>
       <S.Layout>
@@ -53,7 +55,7 @@ export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
             </S.UserConpartment>
           ))}
         </S.MemberContainer>
-        <S.CancelBtn onClick={handleClose}>취소하기</S.CancelBtn>
+        <S.CancelBtn onClick={closeModal}>취소하기</S.CancelBtn>
       </S.Layout>
     </S.Overlay>
   );

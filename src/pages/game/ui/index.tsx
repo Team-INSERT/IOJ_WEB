@@ -12,6 +12,7 @@ import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 import { getGameDetails } from "../api/getGameDetails";
+import { ChooseAttackModal } from "./chooseAttackModal";
 
 export const GameLayout = styled.div`
   width: 100%;
@@ -44,6 +45,15 @@ export const ItemListWrapper = styled.div`
   z-index: 1;
 `;
 
+export const ModalLayout = styled.div`
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
+
 export const Game = () => {
   const { problemId, contestId, roomId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
   const [problem, setProblem] = useState<problemInfoProps>({
@@ -57,6 +67,19 @@ export const Game = () => {
     timeLimit: 0,
     source: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Game.tsx
+  const openModal = () => {
+    setIsModalOpen(true);
+    console.log("isModalOpen", true); // 상태 변경 확인
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
@@ -161,9 +184,14 @@ export const Game = () => {
             <CodeEditor />
           </CodeEditorWrapper>
           <ItemListWrapper>
-            <ItemIconList roomId={roomId} />
+            <ItemIconList roomId={roomId} openModal={openModal} />
           </ItemListWrapper>
         </Split>
+        {isModalOpen && roomId && (
+          <ModalLayout>
+            <ChooseAttackModal roomId={roomId} closeModal={closeModal} />
+          </ModalLayout>
+        )}
       </GameLayout>
     </>
   );

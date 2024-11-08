@@ -1,16 +1,13 @@
-import React, { useState } from "react";
-import { ChooseAttackModal } from "@/pages/game/ui/chooseAttackModal";
-import { roomIdAtom } from "@/shared/utils/atom/roomAtom";
-import { useAtom } from "jotai";
 import * as S from "./style";
 
 interface ItemProps {
   name: string;
 }
 
-const ItemIcon = ({ name }: ItemProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [roomId] = useAtom(roomIdAtom);
+const ItemIcon = ({
+  name,
+  openModal,
+}: ItemProps & { openModal: () => void }) => {
   const itemDetail = [
     {
       logo: "🪞",
@@ -52,15 +49,11 @@ const ItemIcon = ({ name }: ItemProps) => {
   const sameItem = itemDetail.find((detail) => detail.item === name);
 
   const handleLayoutClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    openModal();
   };
 
   return (
-    <>
+    <div>
       {sameItem ? (
         <S.Layout onClick={handleLayoutClick}>
           <S.MainLayout name={sameItem.itemName}>
@@ -73,10 +66,7 @@ const ItemIcon = ({ name }: ItemProps) => {
           </S.MainLayout>
         </S.Layout>
       ) : null}
-      {isModalOpen && (
-        <ChooseAttackModal roomId={roomId} onClose={handleCloseModal} />
-      )}
-    </>
+    </div>
   );
 };
 

@@ -6,7 +6,13 @@ import ItemIcon from "../ItemIcon";
 interface Item {
   item: string;
 }
-const ItemIconList = ({ roomId }: { roomId: string | undefined }) => {
+const ItemIconList = ({
+  roomId,
+  openModal,
+}: {
+  roomId: string | undefined;
+  openModal: () => void;
+}) => {
   const [isItemList, setItemList] = useState<Item[] | null>(null);
 
   useEffect(() => {
@@ -24,7 +30,9 @@ const ItemIconList = ({ roomId }: { roomId: string | undefined }) => {
   return (
     <S.Layout>
       {isItemList
-        ? isItemList.map((item) => <ItemIcon name={item.item} />)
+        ? isItemList.map((item) => (
+            <ItemIcon key={item.item} name={item.item} openModal={openModal} />
+          ))
         : ""}
     </S.Layout>
   );
