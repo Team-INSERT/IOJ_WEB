@@ -1,13 +1,14 @@
-import React, { useState } from "react";
 import * as S from "./style";
 
 interface ItemProps {
   name: string;
+  openModal: (item: string) => void;
 }
 
-const ItemIcon = ({ name }: ItemProps) => {
-  const [isVisible, setIsVisible] = useState(true);
-
+const ItemIcon = ({
+  name,
+  openModal,
+}: ItemProps & { openModal: () => void }) => {
   const itemDetail = [
     {
       logo: "🪞",
@@ -49,21 +50,27 @@ const ItemIcon = ({ name }: ItemProps) => {
   const sameItem = itemDetail.find((detail) => detail.item === name);
 
   const handleLayoutClick = () => {
-    setIsVisible(false);
+    if (sameItem) {
+      openModal(sameItem.item); // 클릭된 아이템의 item 값을 전달
+    }
   };
 
-  return sameItem && isVisible ? (
-    <S.Layout onClick={handleLayoutClick}>
-      <S.MainLayout name={sameItem.itemName}>
-        <S.Description className="description">
-          <p>{sameItem.description1}</p>
-          <p>{sameItem.description2}</p>
-        </S.Description>
-        <S.Logo>{sameItem.logo}</S.Logo>
-        <S.Name>{sameItem.itemName}</S.Name>
-      </S.MainLayout>
-    </S.Layout>
-  ) : null;
+  return (
+    <div>
+      {sameItem ? (
+        <S.Layout onClick={handleLayoutClick}>
+          <S.MainLayout name={sameItem.itemName}>
+            <S.Description className="description">
+              <p>{sameItem.description1}</p>
+              <p>{sameItem.description2}</p>
+            </S.Description>
+            <S.Logo>{sameItem.logo}</S.Logo>
+            <S.Name>{sameItem.itemName}</S.Name>
+          </S.MainLayout>
+        </S.Layout>
+      ) : null}
+    </div>
+  );
 };
 
 export default ItemIcon;

@@ -23,22 +23,20 @@ export const Title = styled.span`
 `;
 
 export const MemberContainer = styled.div<{ itemCount: number }>`
-  display: flex;
+  ${flex.CENTER}
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px 90px;
-  justify-content: center;
-  align-items: center;
-  & > div {
+  /* & > div {
     flex: 1 1 calc(25% - 50px);
     max-width: calc(25% - 20px);
-  }
+  } */
 `;
 
 export const UserConpartment = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flex.CENTER};
+  width: fit-content;
+  height: fit-content;
 `;
 
 export const CancelBtn = styled.button`

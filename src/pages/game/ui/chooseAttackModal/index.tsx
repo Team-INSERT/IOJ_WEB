@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserCompartment } from "@/shared/components";
 import { attackUser } from "../../api/gameApi";
+import { getItemAttack } from "../../api/itemAttack";
 import * as S from "./style";
 
 interface User {
@@ -11,12 +12,25 @@ interface User {
 
 interface ChooseAttackModalProps {
   roomId: string;
+  closeModal: () => void;
+  item: string;
+  refreshItemList: () => void;
 }
 
-export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
+interface itemAttackProps {
+  roomId: string;
+  targetUserId: number;
+  attackItem: string;
+}
 
+export const ChooseAttackModal = ({
+  roomId,
+  closeModal,
+  item,
+  refreshItemList
+}: ChooseAttackModalProps) => {
+  const [isOpen] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     const fetchAttackUser = async () => {
       try {
@@ -30,30 +44,43 @@ export const ChooseAttackModal = ({ roomId }: ChooseAttackModalProps) => {
     fetchAttackUser();
   }, [roomId]);
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const onClickItemAttack = async (userId: number) => {
+    const itemAttackData: itemAttackProps = {
+      roomId,
+      targetUserId: userId,
+      attackItem: item,
+    };
+    try {
+      await getItemAttack(itemAttackData);
+      refreshItemList()
+      closeModal();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (!isOpen) return null;
-
   return (
     <S.Overlay>
       <S.Layout>
         <S.Title>공격할 대상을 선택하세요!!</S.Title>
         <S.MemberContainer itemCount={users.length}>
           {users.map((user) => (
-            <S.UserConpartment key={user.targetId}>
+            <S.UserConpartment
+              key={user.targetId}
+              onClick={() => onClickItemAttack(user.targetId)}
+            >
               <UserCompartment
-                layoutWidth={140}
+                layoutWidth={150}
                 UserName={user.nickname}
                 color={user.color}
-                width={95}
+                width={100}
                 smallFontSize
               />
             </S.UserConpartment>
           ))}
         </S.MemberContainer>
-        <S.CancelBtn onClick={handleClose}>취소하기</S.CancelBtn>
+        <S.CancelBtn onClick={closeModal}>취소하기</S.CancelBtn>
       </S.Layout>
     </S.Overlay>
   );

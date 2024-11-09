@@ -6,25 +6,39 @@ import ItemIcon from "../ItemIcon";
 interface Item {
   item: string;
 }
-const ItemIconList = ({ roomId }: { roomId: string | undefined }) => {
+const ItemIconList = ({
+  roomId,
+  openModal,
+}: {
+  roomId: string | undefined;
+  openModal: (item: string) => void;
+}) => {
   const [isItemList, setItemList] = useState<Item[] | null>(null);
 
-  useEffect(() => {
+  const refreshItemList = async () => {
     if (!roomId) return;
-    (async () => {
-      try {
-        const itemList = await getItemList(roomId);
-        setItemList(itemList);
-      } catch (error: any) {
-        console.error("에러 발생:", error);
-      }
-    })();
+    try {
+      const itemList = await getItemList(roomId);
+      setItemList(itemList);
+    } catch (error: any) {
+      console.error("에러 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshItemList();
   }, [roomId]);
 
   return (
     <S.Layout>
       {isItemList
-        ? isItemList.map((item) => <ItemIcon name={item.item} />)
+        ? isItemList.map((item) => (
+            <ItemIcon
+              key={item.item}
+              name={item.item}
+              openModal={() => openModal(item.item)}
+            />
+          ))
         : ""}
     </S.Layout>
   );
