@@ -16,7 +16,7 @@ interface GameEvent {
   attackUser?: number;
 }
 
-export const useGameInfo = (roomId: string, userId: number) => {
+export const useGameInfo = (roomId: string, userId: number, refreshItemList: () => void) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isItemAnimation, setIsAnimation] = useState<boolean>(false);
   const [attackInfo, setAttackInfo] = useState<AttackInfo | null>(null);
@@ -27,7 +27,12 @@ export const useGameInfo = (roomId: string, userId: number) => {
     (event: GameEvent) => {
       console.log("Received event:", event); // 전체 이벤트 출력
 
-      if (event.type === "ATTACK" && event.item && event.targetUser !== undefined && event.attackUser !== undefined) {
+      if (
+        event.type === "ATTACK" &&
+        event.item &&
+        event.targetUser !== undefined &&
+        event.attackUser !== undefined
+      ) {
         const attackData: AttackInfo = {
           item: event.item,
           targetUser: event.targetUser,
@@ -42,13 +47,14 @@ export const useGameInfo = (roomId: string, userId: number) => {
         setIsAnimation(true);
         setAttackInfo(attackData);
       } else if (event.type === "ITEM") {
-        console.log("아이템 추가 이벤트");
         setIsAddItem(true);
+        console.log("아이템 추가 이벤트");
+        refreshItemList();
       } else {
         console.warn("알 수 없는 이벤트 타입:", event.type);
       }
     },
-    [userId],
+    [userId, refreshItemList],
   );
 
   const connectWebSocket = useCallback(async () => {

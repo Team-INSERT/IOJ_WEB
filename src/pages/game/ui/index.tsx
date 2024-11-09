@@ -29,8 +29,7 @@ const OverlayItem = styled.div<{ isInkVisible: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: ${({ isInkVisible }) =>
-    isInkVisible ? "none" : "auto"};
+  pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
 `;
 export const GameLayout = styled.div`
   width: 100%;
@@ -100,7 +99,7 @@ export const Game = () => {
     isAddItem,
     connectWebSocket,
     disconnectWebSocket,
-  } = useGameInfo(roomId || "", userId);
+  } = useGameInfo(roomId || "", userId, refreshItemList);
 
   useEffect(() => {
     connectWebSocket();
@@ -205,6 +204,22 @@ export const Game = () => {
     }
   }, [attackInfo, isItemAnimation]);
 
+  useEffect(() => {
+    if (attackInfo?.item === "MIRROR" && isItemAnimation) {
+      setRotationState((prev) => {
+        if (prev === "none") return "first";
+        if (prev === "first") return "second";
+        return "none";
+      });
+    }
+  }, [attackInfo, isItemAnimation]);
+
+  useEffect(() => {
+    if (isAddItem) {
+      refreshItemList();
+    }
+  }, [isAddItem, refreshItemList]);
+
   return (
     <>
       {isItemAnimation && attackInfo?.targetUser === userId && (
@@ -218,7 +233,7 @@ export const Game = () => {
           {attackInfo?.item === "MIRROR" && (
             <OverlayItem isInkVisible={isInkVisible}>
               <RotatableContainer rotationState={rotationState}>
-                <Mirror trigger={isItemAnimation} />
+                {/* <Mirror /> */}
               </RotatableContainer>
             </OverlayItem>
           )}
