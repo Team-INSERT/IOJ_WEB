@@ -14,6 +14,7 @@ interface ChooseAttackModalProps {
   roomId: string;
   closeModal: () => void;
   item: string;
+  refreshItemList: () => void;
 }
 
 interface itemAttackProps {
@@ -26,6 +27,7 @@ export const ChooseAttackModal = ({
   roomId,
   closeModal,
   item,
+  refreshItemList
 }: ChooseAttackModalProps) => {
   const [isOpen] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
@@ -49,8 +51,9 @@ export const ChooseAttackModal = ({
       attackItem: item,
     };
     try {
-      const res = await getItemAttack(itemAttackData);
-      console.log(res);
+      await getItemAttack(itemAttackData);
+      refreshItemList()
+      closeModal();
     } catch (err) {
       console.error(err);
     }

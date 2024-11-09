@@ -69,6 +69,8 @@ export const Game = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refreshItemList = () => setRefreshKey((prev) => prev + 1);
 
   const openModal = (item: string) => {
     setSelectedItem(item); // 아이템을 상태로 저장
@@ -186,6 +188,7 @@ export const Game = () => {
             <ItemIconList
               roomId={roomId}
               openModal={(item: string) => openModal(item)}
+              key={refreshKey}
             />
           </ItemListWrapper>
         </Split>
@@ -195,6 +198,7 @@ export const Game = () => {
               roomId={roomId}
               closeModal={closeModal}
               item={selectedItem}
+              refreshItemList={refreshItemList}
             />
           </ModalLayout>
         )}
