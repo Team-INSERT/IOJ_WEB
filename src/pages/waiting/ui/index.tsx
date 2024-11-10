@@ -103,6 +103,13 @@ export const Waiting = () => {
     };
   }, [roomId, connectWebSocket, disconnectWebSocket, initializeUsers]);
 
+  useEffect(
+    () => () => {
+      disconnectWebSocket();
+    },
+    [disconnectWebSocket],
+  );
+
   useEffect(() => {
     if (websocketUsers.length > 0) {
       console.log(websocketUsers);

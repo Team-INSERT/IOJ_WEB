@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import Split from "react-split";
 import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
+import { useGameInfo } from "@/shared/hooks/useGameInfo";
+import OctopusInk from "@/shared/components/Item/octopusInk";
+import { RotatableContainer } from "@/shared/components/Item/Mirror";
+import Devil from "@/shared/components/Item/devil";
+import WaterBalloon from "@/shared/components/Item/waterBalloon";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -14,6 +19,18 @@ import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 import { getGameDetails } from "../api/getGameDetails";
 import { ChooseAttackModal } from "./chooseAttackModal";
 
+const OverlayItem = styled.div<{ isInkVisible: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
+`;
 export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
@@ -70,7 +87,23 @@ export const Game = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [userId, setUserId] = useState(0);
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
+  const {
+    isItemAnimation,
+    attackInfo,
+    isAddItem,
+    setIsAddItem,
+    connectWebSocket,
+    disconnectWebSocket,
+  } = useGameInfo(roomId || "", userId, refreshItemList);
+
+  useEffect(() => {
+    connectWebSocket();
+    return () => {
+      disconnectWebSocket();
+    };
+  }, []);
 
   const openModal = (item: string) => {
     setSelectedItem(item); // 아이템을 상태로 저장
@@ -80,7 +113,6 @@ export const Game = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
@@ -99,6 +131,7 @@ export const Game = () => {
         try {
           const res = await getGameDetails(roomId);
           const problemIds = res.problems;
+          setUserId(res.userId);
 
           if (problemIds && problemIds.length > 0) {
             const problemsData = await Promise.all(
@@ -144,10 +177,71 @@ export const Game = () => {
     }
   }, [contestId]);
 
+  const [isVisible, setIsVisible] = useState(false);
+  const [isWarningVisible, setIsWarningVisible] = useState(true);
+
+  useEffect(() => {
+    if (isAddItem) {
+      refreshItemList();
+      setIsAddItem(false);
+    }
+  }, [isAddItem, refreshItemList]);
+
+  const [rotationState, setRotationState] = useState<
+    "none" | "first" | "second"
+  >("none");
+
+  useEffect(() => {
+    if (isItemAnimation && attackInfo?.targetUser === userId) {
+      setIsWarningVisible(true);
+      setIsVisible(false);
+
+      setTimeout(() => {
+        setIsWarningVisible(false);
+        setIsVisible(true);
+      }, 2000);
+
+      if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
+        setRotationState("first");
+        setTimeout(() => {
+          setRotationState("second");
+          setTimeout(() => {
+            setRotationState("none");
+          }, 600);
+        }, 5000);
+      }
+    }
+  }, [attackInfo, isItemAnimation, userId]);
+
   return (
-    <>
-      {/* <Warning /> */}
-      <GameLayout>
+    <GameLayout>
+      <RotatableContainer rotationState={rotationState}>
+        {isItemAnimation && attackInfo?.targetUser === userId && (
+          <>
+            <Warning />
+            {attackInfo?.item === "INK" && isVisible && (
+              <OverlayItem isInkVisible={isVisible}>
+                <OctopusInk />
+              </OverlayItem>
+            )}
+            {attackInfo?.item === "MIRROR" && isVisible && (
+              <OverlayItem isInkVisible={isVisible}>
+                <RotatableContainer rotationState={rotationState} />
+              </OverlayItem>
+            )}
+            {attackInfo?.item === "DEVIL" && isVisible && (
+              <OverlayItem isInkVisible={isVisible}>
+                <Devil />
+              </OverlayItem>
+            )}
+            {attackInfo?.item === "BUBBLE" && isVisible && (
+              <OverlayItem isInkVisible={isVisible}>
+                <WaterBalloon />
+              </OverlayItem>
+            )}
+          </>
+        )}
+
         <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
         <Split
           sizes={[50, 50]}
@@ -192,17 +286,17 @@ export const Game = () => {
             />
           </ItemListWrapper>
         </Split>
-        {isModalOpen && roomId && (
-          <ModalLayout>
-            <ChooseAttackModal
-              roomId={roomId}
-              closeModal={closeModal}
-              item={selectedItem}
-              refreshItemList={refreshItemList}
-            />
-          </ModalLayout>
-        )}
-      </GameLayout>
-    </>
+      </RotatableContainer>
+      {isModalOpen && roomId && (
+        <ModalLayout>
+          <ChooseAttackModal
+            roomId={roomId}
+            closeModal={closeModal}
+            item={selectedItem}
+            refreshItemList={refreshItemList}
+          />
+        </ModalLayout>
+      )}
+    </GameLayout>
   );
 };
