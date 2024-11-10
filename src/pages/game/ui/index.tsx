@@ -179,6 +179,7 @@ export const Game = () => {
   }, [contestId]);
 
   const [isVisible, setIsVisible] = useState(false);
+  const [isWarningVisible, setIsWarningVisible] = useState(true);
 
   useEffect(() => {
     if (isAddItem) {
@@ -190,26 +191,28 @@ export const Game = () => {
   const [rotationState, setRotationState] = useState<
     "none" | "first" | "second"
   >("none");
+
   useEffect(() => {
-    if (isItemAnimation) {
-      setIsVisible(true);
-    } else {
+    if (isItemAnimation && attackInfo?.targetUser === userId) {
+      setIsWarningVisible(true);
       setIsVisible(false);
-    }
-    if (
-      attackInfo?.item === "MIRROR" &&
-      attackInfo?.targetUser === userId &&
-      isItemAnimation
-    ) {
-      setRotationState("first");
+
       setTimeout(() => {
-        setRotationState("second");
+        setIsWarningVisible(false);
+        setIsVisible(true);
+      }, 2000);
+
+      if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
+        setRotationState("first");
         setTimeout(() => {
-          setRotationState("none");
-        }, 600);
-      }, 5000);
+          setRotationState("second");
+          setTimeout(() => {
+            setRotationState("none");
+          }, 600);
+        }, 5000);
+      }
     }
-  }, [attackInfo, isItemAnimation]);
+  }, [attackInfo, isItemAnimation, userId]);
 
   return (
     <GameLayout>
@@ -217,22 +220,22 @@ export const Game = () => {
         {isItemAnimation && attackInfo?.targetUser === userId && (
           <>
             <Warning />
-            {attackInfo?.item === "INK" && (
+            {attackInfo?.item === "INK" && isVisible && (
               <OverlayItem isInkVisible={isVisible}>
                 <OctopusInk />
               </OverlayItem>
             )}
-            {attackInfo?.item === "MIRROR" && (
+            {attackInfo?.item === "MIRROR" && isVisible && (
               <OverlayItem isInkVisible={isVisible}>
                 <RotatableContainer rotationState={rotationState} />
               </OverlayItem>
             )}
-            {attackInfo?.item === "DEVIL" && (
+            {attackInfo?.item === "DEVIL" && isVisible && (
               <OverlayItem isInkVisible={isVisible}>
                 <Devil />
               </OverlayItem>
             )}
-            {attackInfo?.item === "BUBBLE" && (
+            {attackInfo?.item === "BUBBLE" && isVisible && (
               <OverlayItem isInkVisible={isVisible}>
                 <WaterBalloon />
               </OverlayItem>
