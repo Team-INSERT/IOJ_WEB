@@ -223,6 +223,7 @@ export const Game = () => {
         setIsWarningVisible(false);
         setIsVisible(true);
       }, 2000);
+
       if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
         setRotationState("first");
         setTimeout(() => {
