@@ -16,7 +16,11 @@ interface GameEvent {
   attackUser?: number;
 }
 
-export const useGameInfo = (roomId: string, userId: number, refreshItemList: () => void) => {
+export const useGameInfo = (
+  roomId: string,
+  userId: number,
+  refreshItemList: () => void,
+) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isItemAnimation, setIsAnimation] = useState<boolean>(false);
   const [attackInfo, setAttackInfo] = useState<AttackInfo | null>(null);
@@ -96,6 +100,7 @@ export const useGameInfo = (roomId: string, userId: number, refreshItemList: () 
     isItemAnimation,
     attackInfo,
     isAddItem,
+    setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
   };

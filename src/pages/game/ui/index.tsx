@@ -89,14 +89,12 @@ export const Game = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [userId, setUserId] = useState(0);
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
-  useEffect(() => {
-    console.log(userId);
-  });
   const {
     isConnected,
     isItemAnimation,
     attackInfo,
     isAddItem,
+    setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
   } = useGameInfo(roomId || "", userId, refreshItemList);
@@ -106,7 +104,7 @@ export const Game = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [connectWebSocket, disconnectWebSocket]);
+  }, []);
 
   const openModal = (item: string) => {
     setSelectedItem(item); // 아이템을 상태로 저장
@@ -217,6 +215,7 @@ export const Game = () => {
   useEffect(() => {
     if (isAddItem) {
       refreshItemList();
+      setIsAddItem(false); // 상태 초기화로 추가 호출 방지
     }
   }, [isAddItem, refreshItemList]);
 
