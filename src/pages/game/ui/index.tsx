@@ -192,13 +192,13 @@ export const Game = () => {
     }
   }, [attackInfo, isItemAnimation]);
 
-  const [isInkVisible, setIsInkVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (attackInfo?.item === "INK" && isItemAnimation) {
-      setIsInkVisible(true);
+    if (isItemAnimation) {
+      setIsVisible(true);
     } else {
-      setIsInkVisible(false);
+      setIsVisible(false);
     }
   }, [attackInfo, isItemAnimation]);
 
@@ -225,24 +225,24 @@ export const Game = () => {
         <>
           <Warning />
           {attackInfo?.item === "INK" && (
-            <OverlayItem isInkVisible={isInkVisible}>
+            <OverlayItem isInkVisible={isVisible}>
               <OctopusInk />
             </OverlayItem>
           )}
           {attackInfo?.item === "MIRROR" && (
-            <OverlayItem isInkVisible={isInkVisible}>
+            <OverlayItem isInkVisible={isVisible}>
               <RotatableContainer rotationState={rotationState}>
                 {/* <Mirror /> */}
               </RotatableContainer>
             </OverlayItem>
           )}
           {attackInfo?.item === "DEVIL" && (
-            <OverlayItem isInkVisible={isInkVisible}>
+            <OverlayItem isInkVisible={isVisible}>
               <Devil />
             </OverlayItem>
           )}
           {attackInfo?.item === "BUBBLE" && (
-            <OverlayItem isInkVisible={isInkVisible}>
+            <OverlayItem isInkVisible={isVisible}>
               <WaterBalloon />
             </OverlayItem>
           )}

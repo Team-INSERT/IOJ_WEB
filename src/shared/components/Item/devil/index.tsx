@@ -9,6 +9,22 @@ const Devil = () => {
   const [hideText, setHideText] = useState<boolean>(false);
   const [iconsHidden, setIconsHidden] = useState<boolean>(false);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === " ") {
+      event.preventDefault();
+      const activeElement = document.activeElement as HTMLInputElement | null;
+      if (activeElement) {
+        activeElement.value = activeElement.value.slice(0, -1);
+      }
+    } else if (event.key === "Backspace") {
+      event.preventDefault();
+      const activeElement = document.activeElement as HTMLInputElement | null;
+      if (activeElement) {
+        activeElement.value += " ";
+      }
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setHideText(true);
@@ -20,15 +36,8 @@ const Devil = () => {
 
     const iconsTimer = setTimeout(() => {
       setIconsHidden(true);
+      window.removeEventListener("keydown", handleKeyDown);
     }, 7000);
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === " ") {
-        event.preventDefault();
-      } else if (event.key === "Backspace") {
-        event.preventDefault();
-      }
-    };
 
     window.addEventListener("keydown", handleKeyDown);
 
