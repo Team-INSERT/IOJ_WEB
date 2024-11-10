@@ -8,6 +8,7 @@ import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
 import { useGameInfo } from "@/shared/hooks/useGameInfo";
 import OctopusInk from "@/shared/components/Item/octopusInk";
+import Shield from "@/shared/components/Item/shield";
 import { RotatableContainer } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
@@ -17,6 +18,7 @@ import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 import { getGameDetails } from "../api/getGameDetails";
+import { itemDefense } from "../api/itemDefense";
 import { ChooseAttackModal } from "./chooseAttackModal";
 
 const OverlayItem = styled.div<{ isInkVisible: boolean }>`
@@ -31,6 +33,7 @@ const OverlayItem = styled.div<{ isInkVisible: boolean }>`
   align-items: center;
   pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
 `;
+
 export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
@@ -72,7 +75,7 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
-  const { problemId, contestId, roomId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
+  const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
     level: 0,
@@ -88,6 +91,8 @@ export const Game = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [isShieldActive, setIsShieldActive] = useState(false);
+
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
     isItemAnimation,
@@ -105,18 +110,36 @@ export const Game = () => {
     };
   }, []);
 
-  const openModal = (item: string) => {
-    setSelectedItem(item); // 아이템을 상태로 저장
-    setIsModalOpen(true);
+  const handleShieldDefense = async () => {
+    const response = await itemDefense({
+      roomId: roomId || "",
+      item: attackInfo?.item || "",
+      attackUser: attackInfo?.attackUser || 0,
+    });
+
+    if (response === true) {
+      setIsShieldActive(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const openModal = (item: string) => {
+    setSelectedItem(item);
+    if (item === "SHIELD") {
+      handleShieldDefense();
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
-  // 문제 인덱스 찾기
   const findProblemIndexById = (problems: problemType[], id: number) =>
     problems.findIndex((item) => item.id === id);
 
@@ -200,7 +223,6 @@ export const Game = () => {
         setIsWarningVisible(false);
         setIsVisible(true);
       }, 2000);
-
       if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
         setRotationState("first");
         setTimeout(() => {
@@ -287,6 +309,8 @@ export const Game = () => {
           </ItemListWrapper>
         </Split>
       </RotatableContainer>
+
+      {isShieldActive && <Shield />}
       {isModalOpen && roomId && (
         <ModalLayout>
           <ChooseAttackModal
