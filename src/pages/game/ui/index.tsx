@@ -90,7 +90,6 @@ export const Game = () => {
   const [userId, setUserId] = useState(0);
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
-    isConnected,
     isItemAnimation,
     attackInfo,
     isAddItem,
