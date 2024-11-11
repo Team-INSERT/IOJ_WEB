@@ -95,6 +95,7 @@ export const Game = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
+  const [isMirrorOpen, setIsMirrorOpen] = useState(false); // MIRROR 상태 관리
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -223,19 +224,26 @@ export const Game = () => {
       setTimeout(() => {
         setIsWarningVisible(false);
         setIsVisible(true);
-      }, 2000);
 
-      if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
-        setRotationState("first");
-        setTimeout(() => {
-          setRotationState("second");
-          setTimeout(() => {
-            setRotationState("none");
-          }, 600);
-        }, 5000);
-      }
+        if (attackInfo?.item === "MIRROR") {
+          setIsMirrorOpen(true);
+        }
+      }, 2000);
     }
   }, [attackInfo, isItemAnimation, userId]);
+
+  useEffect(() => {
+    if (isMirrorOpen) {
+      setRotationState("first");
+      setTimeout(() => {
+        setRotationState("second");
+        setTimeout(() => {
+          setRotationState("none");
+          setIsMirrorOpen(false);
+        }, 4000);
+      }, 5000);
+    }
+  }, [isMirrorOpen]);
 
   return (
     <GameLayout>
@@ -252,7 +260,7 @@ export const Game = () => {
                 </OverlayItem>
               )}
             {!isShieldActive &&
-              !isWarningVisible &&
+              isMirrorOpen &&
               attackInfo?.item === "MIRROR" &&
               isVisible && (
                 <OverlayItem isInkVisible={isVisible}>
