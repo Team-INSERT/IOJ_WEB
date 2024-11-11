@@ -324,7 +324,11 @@ export const Game = () => {
         </Split>
       </RotatableContainer>
 
-      {isShieldActive && <Shield />}
+      {isShieldActive && (
+        <OverlayItem isInkVisible={isVisible}>
+          <Shield />
+        </OverlayItem>
+      )}
       {isModalOpen && roomId && (
         <ModalLayout>
           <ChooseAttackModal
