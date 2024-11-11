@@ -8,6 +8,7 @@ import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
 import { useGameInfo } from "@/shared/hooks/useGameInfo";
 import OctopusInk from "@/shared/components/Item/octopusInk";
+import Shield from "@/shared/components/Item/shield";
 import { RotatableContainer } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
@@ -17,6 +18,7 @@ import { gameDetail } from "../api/gameDetail";
 import { contestProblems } from "../api/contestDetail";
 import { problemInfoProps, problemType } from "../interfaces/gameInterfaces";
 import { getGameDetails } from "../api/getGameDetails";
+import { itemDefense } from "../api/itemDefense";
 import { ChooseAttackModal } from "./chooseAttackModal";
 
 const OverlayItem = styled.div<{ isInkVisible: boolean }>`
@@ -31,6 +33,7 @@ const OverlayItem = styled.div<{ isInkVisible: boolean }>`
   align-items: center;
   pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
 `;
+
 export const GameLayout = styled.div`
   width: 100%;
   height: 100vh;
@@ -72,7 +75,7 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
-  const { problemId, contestId, roomId } = useParams(); // URL 경로에서 problemId와 contestId 가져오기
+  const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
     level: 0,
@@ -88,6 +91,12 @@ export const Game = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [isShieldActive, setIsShieldActive] = useState(false);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [isWarningVisible, setIsWarningVisible] = useState(false);
+  const [isMirrorOpen, setIsMirrorOpen] = useState(false); // MIRROR 상태 관리
+
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
     isItemAnimation,
@@ -105,18 +114,37 @@ export const Game = () => {
     };
   }, []);
 
-  const openModal = (item: string) => {
-    setSelectedItem(item); // 아이템을 상태로 저장
-    setIsModalOpen(true);
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleShieldDefense = async () => {
+    const response = await itemDefense({
+      roomId: roomId || "",
+      item: attackInfo?.item || "",
+      attackUser: attackInfo?.attackUser || 0,
+    });
+
+    if (response === true) {
+      setIsShieldActive(true);
+      setIsVisible(false);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const openModal = (item: string) => {
+    setSelectedItem(item);
+    if (item === "SHIELD") {
+      handleShieldDefense();
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
-  // 문제 인덱스 찾기
   const findProblemIndexById = (problems: problemType[], id: number) =>
     problems.findIndex((item) => item.id === id);
 
@@ -177,9 +205,6 @@ export const Game = () => {
     }
   }, [contestId]);
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [isWarningVisible, setIsWarningVisible] = useState(true);
-
   useEffect(() => {
     if (isAddItem) {
       refreshItemList();
@@ -199,46 +224,65 @@ export const Game = () => {
       setTimeout(() => {
         setIsWarningVisible(false);
         setIsVisible(true);
-      }, 2000);
 
-      if (attackInfo?.item === "MIRROR" && attackInfo?.targetUser === userId) {
-        setRotationState("first");
-        setTimeout(() => {
-          setRotationState("second");
-          setTimeout(() => {
-            setRotationState("none");
-          }, 600);
-        }, 5000);
-      }
+        if (attackInfo?.item === "MIRROR") {
+          setIsMirrorOpen(true);
+        }
+      }, 2000);
     }
   }, [attackInfo, isItemAnimation, userId]);
+
+  useEffect(() => {
+    if (isMirrorOpen) {
+      setRotationState("first");
+      setTimeout(() => {
+        setRotationState("second");
+        setTimeout(() => {
+          setRotationState("none");
+          setIsMirrorOpen(false);
+        }, 4000);
+      }, 5000);
+    }
+  }, [isMirrorOpen]);
 
   return (
     <GameLayout>
       <RotatableContainer rotationState={rotationState}>
         {isItemAnimation && attackInfo?.targetUser === userId && (
           <>
-            <Warning />
-            {attackInfo?.item === "INK" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <OctopusInk />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "MIRROR" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <RotatableContainer rotationState={rotationState} />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "DEVIL" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <Devil />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "BUBBLE" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <WaterBalloon />
-              </OverlayItem>
-            )}
+            {isWarningVisible && <Warning />}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "INK" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <OctopusInk />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              isMirrorOpen &&
+              attackInfo?.item === "MIRROR" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <RotatableContainer rotationState={rotationState} />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "DEVIL" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <Devil />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "BUBBLE" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <WaterBalloon />
+                </OverlayItem>
+              )}
           </>
         )}
 
@@ -287,6 +331,12 @@ export const Game = () => {
           </ItemListWrapper>
         </Split>
       </RotatableContainer>
+
+      {isShieldActive && (
+        <OverlayItem isInkVisible={isVisible}>
+          <Shield />
+        </OverlayItem>
+      )}
       {isModalOpen && roomId && (
         <ModalLayout>
           <ChooseAttackModal

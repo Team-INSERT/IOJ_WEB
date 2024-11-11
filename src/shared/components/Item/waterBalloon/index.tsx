@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Balloon from "@/assets/Balloon";
 import Cursor from "@/assets/cursor.svg";
 import Boom from "@/assets/boom.svg";
@@ -132,7 +132,7 @@ const WaterBalloon = () => {
             transition: "transform 0.6s ease, opacity 0.6s ease",
           }}
         >
-          <ItemStatusText status="방어 성공" title="물풍선" />
+          <ItemStatusText status="방어 실패" title="물풍선" />
         </S.NoShieldText>
       )}
     </S.Layout>
