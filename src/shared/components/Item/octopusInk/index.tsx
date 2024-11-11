@@ -74,7 +74,7 @@ const OctopusInk = () => {
             transition: "transform 1s ease-in-out",
           }}
         >
-          <ItemStatusText status="공격 성공" title="문어먹물" />
+          <ItemStatusText status="방어 실패" title="문어먹물" />
         </S.NoShildText>
       )}
     </S.Layout>
