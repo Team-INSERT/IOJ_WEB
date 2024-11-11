@@ -15,3 +15,6 @@ export const createRoomApi = async (createRoom: createRoomProps) => {
   const response = await customAxios.post("/room", createRoom);
   return response.data;
 };
+
+export const roomJoin = async (roomId: string) =>
+  (await customAxios.get(`/room/${roomId}/join`)).data;
