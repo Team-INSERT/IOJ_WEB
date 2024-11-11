@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Balloon from "@/assets/Balloon";
 import Cursor from "@/assets/cursor.svg";
 import Boom from "@/assets/boom.svg";
