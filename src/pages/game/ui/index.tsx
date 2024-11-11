@@ -93,6 +93,9 @@ export const Game = () => {
   const [userId, setUserId] = useState(0);
   const [isShieldActive, setIsShieldActive] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(false);
+  const [isWarningVisible, setIsWarningVisible] = useState(false);
+
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
     isItemAnimation,
@@ -110,6 +113,10 @@ export const Game = () => {
     };
   }, []);
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleShieldDefense = async () => {
     const response = await itemDefense({
       roomId: roomId || "",
@@ -119,13 +126,10 @@ export const Game = () => {
 
     if (response === true) {
       setIsShieldActive(true);
+      setIsVisible(false);
     } else {
       setIsModalOpen(true);
     }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   const openModal = (item: string) => {
@@ -200,9 +204,6 @@ export const Game = () => {
     }
   }, [contestId]);
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [isWarningVisible, setIsWarningVisible] = useState(true);
-
   useEffect(() => {
     if (isAddItem) {
       refreshItemList();
@@ -241,27 +242,39 @@ export const Game = () => {
       <RotatableContainer rotationState={rotationState}>
         {isItemAnimation && attackInfo?.targetUser === userId && (
           <>
-            <Warning />
-            {attackInfo?.item === "INK" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <OctopusInk />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "MIRROR" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <RotatableContainer rotationState={rotationState} />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "DEVIL" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <Devil />
-              </OverlayItem>
-            )}
-            {attackInfo?.item === "BUBBLE" && isVisible && (
-              <OverlayItem isInkVisible={isVisible}>
-                <WaterBalloon />
-              </OverlayItem>
-            )}
+            {isWarningVisible && <Warning />}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "INK" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <OctopusInk />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "MIRROR" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <RotatableContainer rotationState={rotationState} />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "DEVIL" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <Devil />
+                </OverlayItem>
+              )}
+            {!isShieldActive &&
+              !isWarningVisible &&
+              attackInfo?.item === "BUBBLE" &&
+              isVisible && (
+                <OverlayItem isInkVisible={isVisible}>
+                  <WaterBalloon />
+                </OverlayItem>
+              )}
           </>
         )}
 
