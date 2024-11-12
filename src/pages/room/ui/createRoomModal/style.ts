@@ -1,20 +1,15 @@
 import { flex, Pretendard, theme } from "@/shared/style";
 import styled from "styled-components";
 
-export const Overlay = styled.div`
-  ${flex.CENTER}
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.27);
-`;
 export const ModalContainer = styled.div`
   width: 25%;
   background-color: ${theme.white};
   border-radius: 8px;
   padding: 24px 28px 26px 28px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 export const Header = styled.div`
   ${flex.FLEX}
