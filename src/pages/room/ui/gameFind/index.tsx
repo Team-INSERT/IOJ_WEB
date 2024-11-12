@@ -19,9 +19,15 @@ interface RoomData {
 
 export const GameFind = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [rooms, setRooms] = useState<RoomData[]>([]);
   const { ModalWrapper, openModal, closeModal } = useModal();
+  const {
+    ModalWrapper: CreateRoomModalWrapper,
+    openModal: openCreateRoomModal,
+    closeModal: closeCreateRoomModal,
+  } = useModal();
+
+  const [rooms, setRooms] = useState<RoomData[]>([]);
+  const [joinErrorMessage, setJoinErrorMessage] = useState<string>("");
 
   const fetchRooms = useCallback(async () => {
     try {
@@ -36,30 +42,21 @@ export const GameFind = () => {
     fetchRooms();
   }, [fetchRooms]);
 
-  const openCreateModal = () => setIsModalOpen(true);
-  const closeCreateModal = () => {
-    setIsModalOpen(false);
-    fetchRooms();
-  };
-
   const formatRoomNumber = (index: number) =>
     (index + 1).toString().padStart(3, "0");
 
   const handleRoomClick = async (room: RoomData, index: number) => {
     try {
-      const res = await roomJoin(room.id);
-      if (res.maxPeople === res.users.length) {
-        await openModal();
-      } else {
-        navigate(`/game/waiting/${room.id}`, {
-          state: {
-            roomNumber: formatRoomNumber(index),
-            roomId: room.id,
-          },
-        });
-      }
-    } catch (err) {
-      console.error(err);
+      await roomJoin(room.id);
+      navigate(`/game/waiting/${room.id}`, {
+        state: {
+          roomNumber: formatRoomNumber(index),
+          roomId: room.id,
+        },
+      });
+    } catch (err: any) {
+      setJoinErrorMessage(err.response?.data?.message);
+      await openModal();
     }
   };
 
@@ -68,7 +65,12 @@ export const GameFind = () => {
       <S.Title>게임찾기</S.Title>
       <S.FindCreateGame>
         <S.FindGame placeholder="방 제목을 입력하세요." />
-        <Button mode="small" color="blue" font="nexon" onClick={openCreateModal}>
+        <Button
+          mode="small"
+          color="blue"
+          font="nexon"
+          onClick={openCreateRoomModal}
+        >
           방 생성하기
         </Button>
       </S.FindCreateGame>
@@ -83,9 +85,16 @@ export const GameFind = () => {
           />
         ))}
       </S.GameList>
-      {isModalOpen && <CreateRoomModal onClose={closeCreateModal} />}
+      <CreateRoomModalWrapper>
+        <CreateRoomModal close={closeCreateRoomModal} />
+      </CreateRoomModalWrapper>
       <ModalWrapper>
-        <TestModal status="나쁨" mode="알림" title="테스트 모달입니다." close={closeModal} />
+        <TestModal
+          status="나쁨"
+          mode="알림"
+          title={joinErrorMessage}
+          close={closeModal}
+        />
       </ModalWrapper>
     </S.GameFindLayout>
   );

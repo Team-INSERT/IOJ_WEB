@@ -8,7 +8,7 @@ import { createRoomApi, roomList } from "../../api/roomApi";
 import * as S from "./style";
 
 interface CreateRoomModalProps {
-  onClose: () => void;
+  close: (value: null) => void;
 }
 
 export interface createRoomProps {
@@ -20,7 +20,7 @@ export interface createRoomProps {
   time: number;
 }
 
-export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
+export const CreateRoomModal = ({ close }: CreateRoomModalProps) => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [maxPeople, setMaxPeople] = useState(0);
@@ -54,7 +54,7 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
       } else {
         console.error("방 생성에 실패했습니다.");
       }
-      onClose();
+      close(null);
     } catch (error) {
       console.error("방 생성 중 에러가 발생했습니다:", error);
     }
@@ -122,22 +122,20 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
   ];
 
   return (
-    <S.Overlay>
-      <S.ModalContainer>
-        <S.Header>
-          <S.Title>방 생성하기</S.Title>
-          <S.No onClick={onClose}>
-            <XBold />
-          </S.No>
-        </S.Header>
-        {container.map((detail) => (
-          <S.InputContainer key={detail.id}>
-            <S.InputContainerTitle>{detail.title}</S.InputContainerTitle>
-            {detail.detail}
-          </S.InputContainer>
-        ))}
-        <S.CreateButton onClick={onCreateRoomClick}>생성하기</S.CreateButton>
-      </S.ModalContainer>
-    </S.Overlay>
+    <S.ModalContainer>
+      <S.Header>
+        <S.Title>방 생성하기</S.Title>
+        <S.No onClick={() => close(null)}>
+          <XBold />
+        </S.No>
+      </S.Header>
+      {container.map((detail) => (
+        <S.InputContainer key={detail.id}>
+          <S.InputContainerTitle>{detail.title}</S.InputContainerTitle>
+          {detail.detail}
+        </S.InputContainer>
+      ))}
+      <S.CreateButton onClick={onCreateRoomClick}>생성하기</S.CreateButton>
+    </S.ModalContainer>
   );
 };

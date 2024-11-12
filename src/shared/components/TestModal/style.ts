@@ -17,7 +17,6 @@ const slideDown = keyframes`
 export const ModalContainer = styled.div<{ animation?: boolean }>`
   margin-top: 20px;
   width: 440px;
-  height: 170px;
   border-radius: 8px;
   border: 1px solid ${theme.grey200};
   background-color: ${theme.white};
@@ -27,7 +26,6 @@ export const ModalContainer = styled.div<{ animation?: boolean }>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   ${(props) =>
     props.animation &&
     css`
@@ -37,7 +35,8 @@ export const ModalContainer = styled.div<{ animation?: boolean }>`
 `;
 
 export const Detail = styled.div`
-  ${flex.FLEX}
+  ${flex.FLEX};
+  align-items: center;
   padding: 24px 20px;
   gap: 12px;
 `;
@@ -52,7 +51,8 @@ export const Image = styled.div<{ status: string }>`
 `;
 
 export const Text = styled.div`
-  ${flex.COLUMN_FLEX}
+  ${flex.COLUMN_FLEX};
+  justify-content: center;
   gap: 6px;
 `;
 
@@ -73,9 +73,8 @@ export const BtnContainer = styled.footer`
   display: flex;
   justify-content: flex-end;
   background-color: ${theme.grey100};
-  padding: 8px 19px;
+  padding: 8px 20px;
   gap: 8px;
-  margin-top: auto;
   border-top: 1px solid ${theme.grey200};
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
