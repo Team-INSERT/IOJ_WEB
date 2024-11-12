@@ -5,7 +5,7 @@ import Boom from "@/assets/boom.svg";
 import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
-const WaterBalloon = () => {
+const WaterBalloon = ({ onBurstComplete }: { onBurstComplete: () => void }) => {
   const [width, setWidth] = useState(1200);
   const [spaceCount, setSpaceCount] = useState(0);
   const [isSpacePressed, setIsSpacePressed] = useState(false);
@@ -25,6 +25,7 @@ const WaterBalloon = () => {
         }
         if (spaceCount === 17) {
           setHasBurst(true);
+          onBurstComplete();
         }
       }
     }
