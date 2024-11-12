@@ -10,6 +10,7 @@ import * as S from "./style";
 interface gameHeaderProps {
   problemsCount: number;
   problemIndex: number;
+  noHeader?: boolean;
 }
 
 interface problemsType {
@@ -25,7 +26,11 @@ interface ContestDetails {
   endTime: string;
 }
 
-const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
+const GameHeader = ({
+  problemsCount,
+  problemIndex,
+  noHeader = false,
+}: gameHeaderProps) => {
   const { pathname } = window.location;
   const navigate = useNavigate();
   const segments = pathname.split("/");
@@ -159,9 +164,11 @@ const GameHeader = ({ problemsCount, problemIndex }: gameHeaderProps) => {
       </S.ClockContainer>
       <S.Setting>
         <S.LineContainer>{/* <S.Line /> */}</S.LineContainer>
-        <Button mode="small" color="red" font="nexon" onClick={handleExit}>
-          나가기
-        </Button>
+        {noHeader && (
+          <Button mode="small" color="red" font="nexon" onClick={handleExit}>
+            나가기
+          </Button>
+        )}
       </S.Setting>
     </S.Layout>
   );

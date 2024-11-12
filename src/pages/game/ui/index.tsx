@@ -286,7 +286,11 @@ export const Game = () => {
           </>
         )}
 
-        <GameHeader problemsCount={problemsCount} problemIndex={problemIndex} />
+        <GameHeader
+          problemsCount={problemsCount}
+          problemIndex={problemIndex}
+          noHeader={!roomId}
+        />
         <Split
           sizes={[50, 50]}
           minSize={200}
