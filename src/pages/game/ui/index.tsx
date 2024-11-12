@@ -128,6 +128,7 @@ export const Game = () => {
     if (response === true) {
       setIsShieldActive(true);
       setIsVisible(false);
+      refreshItemList();
     } else {
       setIsModalOpen(true);
     }
