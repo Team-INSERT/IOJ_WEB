@@ -24,7 +24,7 @@ const Shield = () => {
           newVisible[index] = false;
           return newVisible;
         });
-      }, 600);
+      }, 2500);
     };
 
     const timeout = setTimeout(() => {
@@ -40,7 +40,7 @@ const Shield = () => {
         leftTimeouts.forEach(clearTimeout);
         rightTimeouts.forEach(clearTimeout);
       };
-    }, 600);
+    }, 2500);
 
     setTimeout(() => {
       setTextVisible(true);
@@ -51,8 +51,8 @@ const Shield = () => {
 
         setTimeout(() => {
           setTextVisible(false);
-        }, 600);
-      }, 800);
+        }, 1500);
+      }, 2000);
     });
 
     return () => clearTimeout(timeout);
