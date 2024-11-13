@@ -23,7 +23,10 @@ interface TestCase {
   expectOutput: string;
   verdict: string;
 }
-export const CodeEditor = () => {
+interface CodeEditorProps {
+  isInputDisable: boolean;
+}
+export const CodeEditor = ({ isInputDisable }: CodeEditorProps) => {
   const navigate = useNavigate();
   const { contestId, problemId } = useParams<{
     contestId: string;
@@ -70,12 +73,14 @@ export const CodeEditor = () => {
     }
   }, [languages, contestId, problemId]);
   const handleCodeChange = (newCode: string) => {
-    setCode(newCode);
-    if (contestId && problemId) {
-      localStorage.setItem(
-        `code_${contestId}_${problemId}_${languages}`,
-        newCode,
-      );
+    if (!isInputDisable) {
+      setCode(newCode);
+      if (contestId && problemId) {
+        localStorage.setItem(
+          `code_${contestId}_${problemId}_${languages}`,
+          newCode,
+        );
+      }
     }
   };
   const handleResetCode = async () => {
@@ -356,6 +361,7 @@ export const CodeEditor = () => {
           initialCode={code}
           language={languages}
           onCodeChange={handleCodeChange}
+          isInputDisabled={isInputDisable}
         />
         <S.TestBoxLayout>
           <TestBox
@@ -370,7 +376,7 @@ export const CodeEditor = () => {
             isExecutionActive={executionActive}
             submissionResults={submissionResults}
             disconnectWebSocket={disconnectWebSocket}
-            isInputDisabled={isInputDisabled}
+            isInputDisabled={isInputDisable || executionActive}
             errorMessage={errorMessage}
           />
         </S.TestBoxLayout>
