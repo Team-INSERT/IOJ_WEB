@@ -95,7 +95,7 @@ export const Game = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
-  const [isMirrorOpen, setIsMirrorOpen] = useState(false); // MIRROR 상태 관리
+  const [isMirrorOpen, setIsMirrorOpen] = useState(false);
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -125,12 +125,10 @@ export const Game = () => {
       attackUser: attackInfo?.attackUser || 0,
     });
 
-    if (response === true) {
+    if (response === true && isWarningVisible) {
       setIsShieldActive(true);
       setIsVisible(false);
       refreshItemList();
-    } else {
-      setIsModalOpen(true);
     }
   };
 
