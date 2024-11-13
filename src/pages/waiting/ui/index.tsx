@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
-import Ready from "@/assets/Ready.svg";
-import Crown from "@/assets/Crown";
 import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
@@ -67,7 +65,7 @@ export const Waiting = () => {
           initializeUsers(roomDetails.users);
 
           const hostUser = roomDetails.users.find(
-            (user: { host: boolean }) => user.host === true,
+            (user: { host: boolean }) => user.host,
           );
 
           const currentUser = await fetchUserData();
@@ -259,15 +257,16 @@ export const Waiting = () => {
 
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
-              <S.Crown>{user?.host && <Crown />}</S.Crown>
               {isUserSlot ? (
                 user ? (
-                  <>
-                    <WaitingUser UserName={user.nickname} color={user.color} />
-                    {!user.host && user.ready && <S.Ready src={Ready} />}
-                  </>
+                  <WaitingUser
+                    UserName={user.nickname}
+                    color={user.color}
+                    isReady={!user.host && user.ready}
+                    isHost={user?.host}
+                  />
                 ) : (
-                  <WaitingUser UserName="" color="" />
+                  <WaitingUser UserName="" color="" isReady={false} isHost={false} />
                 )
               ) : (
                 <S.Close src={Close} alt="close" />
@@ -296,19 +295,19 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color={isReady ? "glowRed" : "blue"}
-              font="nexon"
-              onClick={handleReady}
-            >
-              {isReady ? "준비 취소" : "준비하기"}
-            </Button>
-            <Button
-              mode="big"
               color="glowRed"
               font="nexon"
               onClick={handleLeave}
             >
               방 나가기
+            </Button>
+            <Button
+              mode="big"
+              color={isReady ? "green" : "green"}
+              font="nexon"
+              onClick={handleReady}
+            >
+              {isReady ? "준비취소" : "준비하기"}
             </Button>
           </>
         )}

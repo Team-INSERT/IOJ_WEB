@@ -2,9 +2,9 @@ import { flex, NexonFont, Pretendard, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 140px 216px;
   width: 100%;
-  ${flex.COLUMN_FLEX}
+  height: 100vh;
+  ${flex.COLUMN_CENTER}
 `;
 export const BlueBg = styled.div`
   position: absolute;
@@ -19,6 +19,7 @@ export const GreyBg = styled.div`
 
 export const TitleBox = styled.div`
   ${flex.BETWEEN}
+  width: 1020px;
 `;
 
 export const Title = styled.p`
@@ -32,7 +33,6 @@ export const Content = styled.p`
 
 export const UserCompartmentContainer = styled.div`
   z-index: 3;
-  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
@@ -41,34 +41,21 @@ export const UserCompartmentContainer = styled.div`
 
 export const UserCompartmentBox = styled.div`
   position: relative;
+  ${flex.CENTER};
   width: 100%;
-  height: auto;
-  padding: 10px;
+  height: 100%;
   box-sizing: border-box;
-`;
-
-export const Ready = styled.img`
-  position: absolute;
-  bottom: 70px;
-  right: 20px;
-  z-index: 2;
-  width: auto;
-  height: 30px;
 `;
 
 export const ButtonBox = styled.div`
   ${flex.END};
   gap: 20px;
   margin-top: 2%;
-`;
-
-export const Crown = styled.div`
-  position: absolute;
-  top: 0;
-  left: 7rem;
+  width: 1020px;
 `;
 
 export const Close = styled.img`
   width: 240px;
   height: 240px;
+  box-shadow: 0 0 8px 0 rgba(75, 75, 75, 0.1);
 `;

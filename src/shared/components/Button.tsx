@@ -55,7 +55,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
         return css`
           background-color: transparent;
           color: ${theme.warningRed};
-          border: 1px solid ${theme.warningRed};
+          border: 2px solid ${theme.warningRed};
           &:hover {
             background-color: ${theme.warningRed};
             color: ${theme.white};
