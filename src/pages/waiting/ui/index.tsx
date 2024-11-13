@@ -10,6 +10,7 @@ import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
 import useModal from "@/shared/hooks/useModal";
+import { handleError } from "@/shared/helper/waitingErrorHelper";
 import {
   roomDetail,
   enter,
@@ -92,7 +93,7 @@ export const Waiting = () => {
           }
         }
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleError(error, setErrorMessage, navigate); // 에러 핸들러 사용
         console.error("방 정보를 가져오는데 실패했습니다:", error);
       }
     })();
@@ -153,6 +154,7 @@ export const Waiting = () => {
       navigate(`/game/${roomId}/code/${problemId}`);
     }
   }, [problemId, roomId, navigate]);
+
   const handleReady = async () => {
     if (room && roomId) {
       try {
@@ -179,7 +181,7 @@ export const Waiting = () => {
           };
         });
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleError(error, setErrorMessage, navigate); // 에러 핸들러 사용
         console.error("준비 상태 변경 중 에러 발생:", error);
       }
     }
@@ -191,7 +193,7 @@ export const Waiting = () => {
         await start(roomId);
         sendEvent("/app/start", { roomId });
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleError(error, setErrorMessage, navigate); // 에러 핸들러 사용
       }
     }
   };
@@ -203,7 +205,7 @@ export const Waiting = () => {
         sendEvent("/app/delete", { roomId });
         navigate("/game/find");
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleError(error, setErrorMessage, navigate); // 에러 핸들러 사용
       }
     }
   };
@@ -222,7 +224,7 @@ export const Waiting = () => {
 
         navigate("/game/find");
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleError(error, setErrorMessage, navigate); // 에러 핸들러 사용
         console.error("방 나가기 실패:", error);
       }
     }
