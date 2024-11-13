@@ -10,30 +10,48 @@ const Devil = () => {
   const [iconsHidden, setIconsHidden] = useState<boolean>(false);
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === " ") {
-      event.preventDefault();
-      const activeElement = document.activeElement as HTMLInputElement | null;
-      if (activeElement) {
-        activeElement.value = activeElement.value.slice(0, -1);
-      }
-    } else if (event.key === "Backspace") {
-      event.preventDefault();
-      const activeElement = document.activeElement as HTMLInputElement | null;
-      if (activeElement) {
-        activeElement.value += " ";
+    const activeElement = document.activeElement as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | null;
+
+    if (
+      activeElement &&
+      (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA")
+    ) {
+      const { selectionStart, selectionEnd, value } = activeElement;
+
+      if (event.key === " ") {
+        event.preventDefault();
+        if (
+          selectionStart !== null &&
+          selectionEnd !== null &&
+          selectionStart > 0
+        ) {
+          activeElement.value =
+            value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
+          activeElement.setSelectionRange(
+            selectionStart - 1,
+            selectionStart - 1,
+          );
+        }
+      } else if (event.key === "Backspace") {
+        event.preventDefault();
+        if (selectionStart !== null && selectionEnd !== null) {
+          activeElement.value = `${value.slice(0, selectionStart)} ${value.slice(selectionEnd)}`;
+          activeElement.setSelectionRange(
+            selectionStart + 1,
+            selectionStart + 1,
+          );
+        }
       }
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setHideText(true);
-    }, 1000);
-
-    const hideTimer = setTimeout(() => {
-      setTextHidden(true);
-    }, 3000);
-
+    const timer = setTimeout(() => setHideText(true), 1000);
+    const hideTimer = setTimeout(() => setTextHidden(true), 3000);
     const iconsTimer = setTimeout(() => {
       setIconsHidden(true);
       window.removeEventListener("keydown", handleKeyDown);
