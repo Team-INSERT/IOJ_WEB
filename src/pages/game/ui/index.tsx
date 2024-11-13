@@ -129,9 +129,10 @@ export const Game = () => {
     });
 
     if (response === true) {
+      refreshItemList();
       setIsShieldActive(true);
       setIsVisible(false);
-      refreshItemList();
+      setIsWarningVisible(false);
     } else {
       setIsModalOpen(true);
     }
@@ -139,13 +140,15 @@ export const Game = () => {
 
   const openModal = (item: string) => {
     setSelectedItem(item);
+
     if (item === "SHIELD") {
-      handleShieldDefense();
+      if (isWarningVisible) {
+        handleShieldDefense();
+      }
     } else {
       setIsModalOpen(true);
     }
   };
-
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
@@ -227,6 +230,7 @@ export const Game = () => {
   useEffect(() => {
     if (isItemAnimation && attackInfo?.targetUser === userId) {
       setIsWarningVisible(true);
+      setIsShieldActive(false);
       setIsVisible(false);
 
       setTimeout(() => {
@@ -243,7 +247,7 @@ export const Game = () => {
   }, [attackInfo, isItemAnimation, userId]);
 
   useEffect(() => {
-    if (isMirrorOpen) {
+    if (isMirrorOpen && !isShieldActive) {
       setRotationState("first");
       setTimeout(() => {
         setRotationState("second");
@@ -330,6 +334,7 @@ export const Game = () => {
             <ItemIconList
               roomId={roomId}
               openModal={(item: string) => openModal(item)}
+              isWarningVisible={isWarningVisible}
               key={refreshKey}
             />
           </ItemListWrapper>

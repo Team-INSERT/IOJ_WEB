@@ -1,14 +1,15 @@
+import { useState } from "react";
 import * as S from "./style";
 
 interface ItemProps {
   name: string;
   openModal: (item: string) => void;
+  isWarningVisible: boolean;
 }
 
-const ItemIcon = ({
-  name,
-  openModal,
-}: ItemProps & { openModal: () => void }) => {
+const ItemIcon = ({ name, openModal, isWarningVisible }: ItemProps) => {
+  const [isShaking, setIsShaking] = useState(false);
+
   const itemDetail = [
     {
       logo: "🪞",
@@ -51,14 +52,23 @@ const ItemIcon = ({
 
   const handleLayoutClick = () => {
     if (sameItem) {
-      openModal(sameItem.item); // 클릭된 아이템의 item 값을 전달
+      if (sameItem.item === "SHIELD" && !isWarningVisible) {
+        // Warning이 없을 때 흔들림 애니메이션
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 500); // 0.5초 동안 애니메이션 유지
+      } else {
+        openModal(sameItem.item); // Warning이 있을 때만 모달 오픈
+      }
     }
   };
 
   return (
     <div>
       {sameItem ? (
-        <S.Layout onClick={handleLayoutClick}>
+        <S.Layout
+          onClick={handleLayoutClick}
+          className={isShaking ? "shake" : ""}
+        >
           <S.MainLayout name={sameItem.itemName}>
             <S.Description className="description">
               <p>{sameItem.description1}</p>

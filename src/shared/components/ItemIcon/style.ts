@@ -1,10 +1,24 @@
 import { flex, NexonFont, theme } from "@/shared/style";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+// 흔들리는 애니메이션 정의
+const shakeAnimation = keyframes`
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+`;
 
 export const Layout = styled.div`
   position: relative;
   width: fit-content;
   display: flex;
+
+  &.shake {
+    /* 애니메이션 클래스 */
+    animation: ${shakeAnimation} 0.5s ease;
+  }
 `;
 
 export const MainLayout = styled.div<{ name: string }>`
