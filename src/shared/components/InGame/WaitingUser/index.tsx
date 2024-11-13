@@ -1,5 +1,6 @@
 import WaitingCharacter from "@/assets/WaitingCharacter";
 import { theme } from "@/shared/style";
+import Ready from "@/assets/Ready.svg"
 import * as S from "./style";
 
 interface Details {
@@ -25,6 +26,7 @@ const WaitingUser = ({ UserName, color = "gray" }: Details) => {
     <S.Layout>
       {UserName && <WaitingCharacter color={characterColor} />}
       <S.UserName>{UserName}</S.UserName>
+      <S.Ready src={Ready} />
     </S.Layout>
   );
 };

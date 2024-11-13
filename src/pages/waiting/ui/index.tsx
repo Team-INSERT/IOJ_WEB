@@ -260,7 +260,7 @@ export const Waiting = () => {
                 user ? (
                   <>
                     <WaitingUser UserName={user.nickname} color={user.color} />
-                    {!user.host && user.ready && <S.Ready src={Ready} />}
+                    {(!user.host && user.ready)}
                   </>
                 ) : (
                   <WaitingUser UserName="" color="" />

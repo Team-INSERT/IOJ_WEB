@@ -47,15 +47,6 @@ export const UserCompartmentBox = styled.div`
   box-sizing: border-box;
 `;
 
-export const Ready = styled.img`
-  position: absolute;
-  bottom: 70px;
-  right: 20px;
-  z-index: 2;
-  width: auto;
-  height: 30px;
-`;
-
 export const ButtonBox = styled.div`
   ${flex.END};
   gap: 20px;
