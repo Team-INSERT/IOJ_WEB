@@ -9,6 +9,7 @@ import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
+import useModal from "@/shared/hooks/useModal";
 import {
   roomDetail,
   enter,
@@ -17,6 +18,7 @@ import {
   start,
   deleteRoom,
 } from "../api/enter";
+
 import * as S from "./style";
 
 interface User {
@@ -35,11 +37,11 @@ interface RoomData {
 
 export const Waiting = () => {
   const navigate = useNavigate();
+  const { ModalWrapper, openModal, closeModal } = useModal();
   const location = useLocation();
   const roomId = location.state?.roomId;
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
     users: websocketUsers,

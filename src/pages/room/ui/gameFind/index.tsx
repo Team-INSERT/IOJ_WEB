@@ -1,4 +1,4 @@
-import { Button, Modal, Room } from "@/shared/components";
+import { Button, Room } from "@/shared/components";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import TestModal from "@/shared/components/TestModal";
