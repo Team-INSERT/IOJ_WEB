@@ -5,7 +5,10 @@ import Boom from "@/assets/boom.svg";
 import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
-const WaterBalloon = ({ onBurstComplete }: { onBurstComplete: () => void }) => {
+const WaterBalloon = (
+  { onBurstComplete }: { onBurstComplete: () => void },
+  { onAnimationComplete }: { onAnimationComplete: () => void },
+) => {
   const [width, setWidth] = useState(1200);
   const [spaceCount, setSpaceCount] = useState(0);
   const [isSpacePressed, setIsSpacePressed] = useState(false);
@@ -14,6 +17,11 @@ const WaterBalloon = ({ onBurstComplete }: { onBurstComplete: () => void }) => {
   const [textVisible, setTextVisible] = useState(false);
   const [textTranslate, setTextTranslate] = useState(0);
   const [boomAnimationComplete, setBoomAnimationComplete] = useState(false);
+
+  const handleAnimationEnd = () => {
+    setBoomAnimationComplete(true);
+    onAnimationComplete(); // 애니메이션 종료 후 호출
+  };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code === "Space") {
@@ -35,10 +43,6 @@ const WaterBalloon = ({ onBurstComplete }: { onBurstComplete: () => void }) => {
     if (event.code === "Space") {
       setIsSpacePressed(false);
     }
-  };
-
-  const handleAnimationEnd = () => {
-    setBoomAnimationComplete(true);
   };
 
   useEffect(() => {

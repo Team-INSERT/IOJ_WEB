@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 
 const rotate180Animation = keyframes`
@@ -21,9 +21,9 @@ const rotateBackToOriginalAnimation = keyframes`
 
 export const RotatableContainer = styled.div<{
   rotationState: "none" | "first" | "second";
+  onAnimationComplete?: () => void;
 }>`
   perspective: 1000px;
-  transition: transform 0.6s ease-in-out;
   width: 100%;
   height: 100%;
 
@@ -39,3 +39,40 @@ export const RotatableContainer = styled.div<{
       animation: ${rotateBackToOriginalAnimation} 0.6s forwards;
     `}
 `;
+
+const RotatableContainerWithAnimation = ({
+  rotationState,
+  onAnimationComplete,
+  children,
+}: {
+  rotationState: "none" | "first" | "second";
+  onAnimationComplete?: () => void;
+  // eslint-disable-next-line no-undef
+  children: React.ReactNode;
+}) => {
+  useEffect(() => {
+    const handleAnimationEnd = () => {
+      if (onAnimationComplete) {
+        onAnimationComplete();
+      }
+    };
+
+    const container = document.querySelector(".rotatable-container");
+    container?.addEventListener("animationend", handleAnimationEnd);
+
+    return () => {
+      container?.removeEventListener("animationend", handleAnimationEnd);
+    };
+  }, [rotationState, onAnimationComplete]);
+
+  return (
+    <RotatableContainer
+      className="rotatable-container"
+      rotationState={rotationState}
+    >
+      {children}
+    </RotatableContainer>
+  );
+};
+
+export default RotatableContainerWithAnimation;
