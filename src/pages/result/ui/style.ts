@@ -89,7 +89,7 @@ export const Flash = styled.img`
   height: auto;
   top: -1rem;
   left: 4.8rem;
-  z-index: 0;
+  z-index: -5;
   transform: translateX(-50%);
 `;
 

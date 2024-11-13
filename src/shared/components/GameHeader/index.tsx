@@ -11,6 +11,7 @@ interface gameHeaderProps {
   problemsCount: number;
   problemIndex: number;
   noHeader?: boolean;
+  onTimeEnd: () => void;
 }
 
 interface problemsType {
@@ -30,6 +31,7 @@ const GameHeader = ({
   problemsCount,
   problemIndex,
   noHeader = false,
+  onTimeEnd,
 }: gameHeaderProps) => {
   const { pathname } = window.location;
   const navigate = useNavigate();
@@ -99,20 +101,26 @@ const GameHeader = ({
     // eslint-disable-next-line no-undef
     let intervalId: NodeJS.Timeout;
 
-    (async () => {
+    const fetchContestDetails = async () => {
       try {
         const res: ContestDetails = await contestProblem(contestId);
-        setProblemList(res.problems);
-
         setRemainingTime(calculateRemainingTime(res.endTime));
 
         intervalId = setInterval(() => {
-          setRemainingTime(calculateRemainingTime(res.endTime));
+          const time = calculateRemainingTime(res.endTime);
+          setRemainingTime(time);
+
+          if (time === "00 : 00 : 00") {
+            clearInterval(intervalId); // 타이머 중지
+            onTimeEnd(); // 시간이 끝나면 콜백 호출
+          }
         }, 1000);
       } catch (err) {
-        /**/
+        console.error(err);
       }
-    })();
+    };
+
+    fetchContestDetails();
 
     return () => {
       clearInterval(intervalId);
