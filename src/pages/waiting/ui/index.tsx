@@ -290,19 +290,19 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color={isReady ? "glowRed" : "blue"}
-              font="nexon"
-              onClick={handleReady}
-            >
-              {isReady ? "준비 취소" : "준비하기"}
-            </Button>
-            <Button
-              mode="big"
               color="glowRed"
               font="nexon"
               onClick={handleLeave}
             >
               방 나가기
+            </Button>
+            <Button
+              mode="big"
+              color={isReady ? "green" : "green"}
+              font="nexon"
+              onClick={handleReady}
+            >
+              {isReady ? "준비취소" : "준비하기"}
             </Button>
           </>
         )}

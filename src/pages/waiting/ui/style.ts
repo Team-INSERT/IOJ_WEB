@@ -2,9 +2,9 @@ import { flex, NexonFont, Pretendard, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
-  padding: 140px 216px;
   width: 100%;
-  ${flex.COLUMN_FLEX}
+  height: 100vh;
+  ${flex.COLUMN_CENTER}
 `;
 export const BlueBg = styled.div`
   position: absolute;
@@ -19,6 +19,7 @@ export const GreyBg = styled.div`
 
 export const TitleBox = styled.div`
   ${flex.BETWEEN}
+  width: 1020px;
 `;
 
 export const Title = styled.p`
@@ -32,7 +33,6 @@ export const Content = styled.p`
 
 export const UserCompartmentContainer = styled.div`
   z-index: 3;
-  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
@@ -41,9 +41,9 @@ export const UserCompartmentContainer = styled.div`
 
 export const UserCompartmentBox = styled.div`
   position: relative;
+  ${flex.CENTER};
   width: 100%;
-  height: auto;
-  padding: 10px;
+  height: 100%;
   box-sizing: border-box;
 `;
 
@@ -51,6 +51,7 @@ export const ButtonBox = styled.div`
   ${flex.END};
   gap: 20px;
   margin-top: 2%;
+  width: 1020px;
 `;
 
 export const Close = styled.img`
