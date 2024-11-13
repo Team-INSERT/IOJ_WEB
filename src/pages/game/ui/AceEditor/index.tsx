@@ -11,12 +11,14 @@ interface AceEditorComponentProps {
   initialCode: string;
   language: string;
   onCodeChange: (newCode: string) => void;
+  isInputDisabled: boolean;
 }
 
 export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
   initialCode,
   language,
   onCodeChange,
+  isInputDisabled,
 }) => {
   const [code, setCode] = useState<string>(initialCode);
 
@@ -25,8 +27,10 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
   }, [initialCode]);
 
   const handleCodeChange = (newCode: string) => {
-    setCode(newCode);
-    onCodeChange(newCode);
+    if (!isInputDisabled) {
+      setCode(newCode);
+      onCodeChange(newCode);
+    }
   };
 
   const getEditorMode = (lang: string) =>
@@ -46,6 +50,7 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
         enableLiveAutocompletion: true,
       }}
       editorProps={{ $blockScrolling: true }}
+      readOnly={isInputDisabled}
     />
   );
 };

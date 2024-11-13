@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Split from "react-split";
 import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
@@ -99,6 +99,7 @@ export const Game = () => {
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const [isMirrorOpen, setIsMirrorOpen] = useState(false);
   const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
+  const codeEditorRef = useRef<HTMLDivElement>(null);
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -255,6 +256,12 @@ export const Game = () => {
     }
   }, [isMirrorOpen]);
 
+  useEffect(() => {
+    if (isWaterBalloonVisible && codeEditorRef.current) {
+      codeEditorRef.current.blur();
+    }
+  }, [isWaterBalloonVisible]);
+
   return (
     <GameLayout isWaterBalloonVisible={isWaterBalloonVisible}>
       <RotatableContainer rotationState={rotationState}>
@@ -323,8 +330,8 @@ export const Game = () => {
               source={problem.source}
             />
           </ProblemWrapper>
-          <CodeEditorWrapper>
-            <CodeEditor />
+          <CodeEditorWrapper ref={codeEditorRef}>
+            <CodeEditor isInputDisable={isWaterBalloonVisible} />
           </CodeEditorWrapper>
           <ItemListWrapper>
             <ItemIconList
