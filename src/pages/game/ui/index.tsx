@@ -303,18 +303,8 @@ export const Game = () => {
           sizes={[50, 50]}
           minSize={200}
           expandToMin={false}
-          gutterSize={10}
-          gutterAlign="center"
+          gutterSize={0}
           direction="horizontal"
-          cursor="col-resize"
-          gutter={(direction) => {
-            const gutter = document.createElement("div");
-            gutter.className = `gutter gutter-${direction}`;
-            gutter.onmouseenter = () => {
-              gutter.style.cursor = "col-resize";
-            };
-            return gutter;
-          }}
           style={{ display: "flex", width: "100%", height: "100%" }}
         >
           <ProblemWrapper>
