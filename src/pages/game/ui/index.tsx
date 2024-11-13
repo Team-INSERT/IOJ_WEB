@@ -334,6 +334,7 @@ export const Game = () => {
             <ItemIconList
               roomId={roomId}
               openModal={(item: string) => openModal(item)}
+              isWarningVisible={isWarningVisible}
               key={refreshKey}
             />
           </ItemListWrapper>
