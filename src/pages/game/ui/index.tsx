@@ -132,6 +132,7 @@ export const Game = () => {
       refreshItemList();
       setIsShieldActive(true);
       setIsVisible(false);
+      setIsWarningVisible(false);
     } else {
       setIsModalOpen(true);
     }
@@ -229,6 +230,7 @@ export const Game = () => {
   useEffect(() => {
     if (isItemAnimation && attackInfo?.targetUser === userId) {
       setIsWarningVisible(true);
+      setIsShieldActive(false);
       setIsVisible(false);
 
       setTimeout(() => {
