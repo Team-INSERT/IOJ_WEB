@@ -10,7 +10,7 @@ export const Layout = styled.div`
   ${flex.COLUMN_CENTER}
   cursor: pointer;
   position: relative;
-  box-shadow: 0px 0px 8px 0px rgba(75, 75, 75, 0.1);
+  box-shadow: 0 0 8px 0 rgba(75, 75, 75, 0.1);
 `;
 export const UserName = styled.div`
   ${NexonFont.NexonText}
@@ -23,4 +23,9 @@ export const Ready = styled.img`
   z-index: 2;
   width: auto;
   height: 30px;
+`;
+
+export const Crown = styled.div`
+  position: absolute;
+  top: 0;
 `;

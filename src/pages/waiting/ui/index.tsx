@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
-import Ready from "@/assets/Ready.svg";
-import Crown from "@/assets/Crown";
 import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
@@ -39,7 +37,6 @@ export const Waiting = () => {
   const roomId = location.state?.roomId;
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
     users: websocketUsers,
@@ -64,7 +61,7 @@ export const Waiting = () => {
           initializeUsers(roomDetails.users);
 
           const hostUser = roomDetails.users.find(
-            (user: { host: boolean }) => user.host === true,
+            (user: { host: boolean }) => user.host,
           );
 
           const currentUser = await fetchUserData();
@@ -255,16 +252,16 @@ export const Waiting = () => {
 
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
-              <S.Crown>{user?.host && <Crown />}</S.Crown>
               {isUserSlot ? (
                 user ? (
                   <WaitingUser
                     UserName={user.nickname}
                     color={user.color}
                     isReady={!user.host && user.ready}
+                    isHost={user?.host}
                   />
                 ) : (
-                  <WaitingUser UserName="" color="" isReady={false} />
+                  <WaitingUser UserName="" color="" isReady={false} isHost={false} />
                 )
               ) : (
                 <S.Close src={Close} alt="close" />

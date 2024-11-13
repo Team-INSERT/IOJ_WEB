@@ -53,13 +53,8 @@ export const ButtonBox = styled.div`
   margin-top: 2%;
 `;
 
-export const Crown = styled.div`
-  position: absolute;
-  top: 0;
-  left: 7rem;
-`;
-
 export const Close = styled.img`
   width: 240px;
   height: 240px;
+  box-shadow: 0 0 8px 0 rgba(75, 75, 75, 0.1);
 `;
