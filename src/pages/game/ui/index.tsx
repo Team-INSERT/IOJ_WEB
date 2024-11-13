@@ -247,7 +247,7 @@ export const Game = () => {
   }, [attackInfo, isItemAnimation, userId]);
 
   useEffect(() => {
-    if (isMirrorOpen) {
+    if (isMirrorOpen && !isShieldActive) {
       setRotationState("first");
       setTimeout(() => {
         setRotationState("second");
