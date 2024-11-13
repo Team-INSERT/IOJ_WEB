@@ -34,11 +34,13 @@ const OverlayItem = styled.div<{ isInkVisible: boolean }>`
   pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
 `;
 
-export const GameLayout = styled.div`
+export const GameLayout = styled.div<{ isWaterBalloonVisible: boolean }>`
   width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
+  pointer-events: ${({ isWaterBalloonVisible }) =>
+    isWaterBalloonVisible ? "none" : "auto"};
 `;
 
 export const GameBox = styled.div`
@@ -95,7 +97,8 @@ export const Game = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
-  const [isMirrorOpen, setIsMirrorOpen] = useState(false); // MIRROR 상태 관리
+  const [isMirrorOpen, setIsMirrorOpen] = useState(false);
+  const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -217,6 +220,10 @@ export const Game = () => {
     "none" | "first" | "second"
   >("none");
 
+  const handleBurstComplete = () => {
+    setIsWaterBalloonVisible(false);
+  };
+
   useEffect(() => {
     if (isItemAnimation && attackInfo?.targetUser === userId) {
       setIsWarningVisible(true);
@@ -228,6 +235,8 @@ export const Game = () => {
 
         if (attackInfo?.item === "MIRROR") {
           setIsMirrorOpen(true);
+        } else if (attackInfo?.item === "BUBBLE") {
+          setIsWaterBalloonVisible(true);
         }
       }, 2000);
     }
@@ -247,7 +256,7 @@ export const Game = () => {
   }, [isMirrorOpen]);
 
   return (
-    <GameLayout>
+    <GameLayout isWaterBalloonVisible={isWaterBalloonVisible}>
       <RotatableContainer rotationState={rotationState}>
         {isItemAnimation && attackInfo?.targetUser === userId && (
           <>
@@ -281,7 +290,7 @@ export const Game = () => {
               attackInfo?.item === "BUBBLE" &&
               isVisible && (
                 <OverlayItem isInkVisible={isVisible}>
-                  <WaterBalloon />
+                  <WaterBalloon onBurstComplete={handleBurstComplete} />
                 </OverlayItem>
               )}
           </>
