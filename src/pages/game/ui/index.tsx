@@ -128,22 +128,26 @@ export const Game = () => {
       attackUser: attackInfo?.attackUser || 0,
     });
 
-    if (response === true && isWarningVisible) {
+    if (response === true) {
+      refreshItemList();
       setIsShieldActive(true);
       setIsVisible(false);
-      refreshItemList();
-    }
-  };
-
-  const openModal = (item: string) => {
-    setSelectedItem(item);
-    if (item === "SHIELD") {
-      handleShieldDefense();
     } else {
       setIsModalOpen(true);
     }
   };
 
+  const openModal = (item: string) => {
+    setSelectedItem(item);
+
+    if (item === "SHIELD") {
+      if (isWarningVisible) {
+        handleShieldDefense();
+      }
+    } else {
+      setIsModalOpen(true);
+    }
+  };
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
