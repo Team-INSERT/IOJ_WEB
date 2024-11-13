@@ -6,6 +6,7 @@ import * as S from "./style";
 interface Details {
   UserName: string;
   color: string;
+  isReady: boolean;
 }
 
 const colorMapping: { [key: string]: string } = {
@@ -19,14 +20,14 @@ const colorMapping: { [key: string]: string } = {
   gray: theme.grey200,
 };
 
-const WaitingUser = ({ UserName, color = "gray" }: Details) => {
+const WaitingUser = ({ UserName, color = "gray", isReady }: Details) => {
   const characterColor = colorMapping[color] || colorMapping.gray;
 
   return (
     <S.Layout>
       {UserName && <WaitingCharacter color={characterColor} />}
       <S.UserName>{UserName}</S.UserName>
-      <S.Ready src={Ready} />
+      {isReady && <S.Ready src={Ready} />}
     </S.Layout>
   );
 };

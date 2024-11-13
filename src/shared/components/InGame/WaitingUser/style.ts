@@ -18,7 +18,7 @@ export const UserName = styled.div`
 `;
 export const Ready = styled.img`
   position: absolute;
-  bottom: 70px;
+  bottom: 60px;
   right: 0;
   z-index: 2;
   width: auto;

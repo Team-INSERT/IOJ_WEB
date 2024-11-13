@@ -258,12 +258,13 @@ export const Waiting = () => {
               <S.Crown>{user?.host && <Crown />}</S.Crown>
               {isUserSlot ? (
                 user ? (
-                  <>
-                    <WaitingUser UserName={user.nickname} color={user.color} />
-                    {(!user.host && user.ready)}
-                  </>
+                  <WaitingUser
+                    UserName={user.nickname}
+                    color={user.color}
+                    isReady={!user.host && user.ready}
+                  />
                 ) : (
-                  <WaitingUser UserName="" color="" />
+                  <WaitingUser UserName="" color="" isReady={false} />
                 )
               ) : (
                 <S.Close src={Close} alt="close" />
