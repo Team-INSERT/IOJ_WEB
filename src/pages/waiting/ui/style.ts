@@ -10,11 +10,15 @@ export const BlueBg = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  z-index: -1;
+  ${flex.COLUMN_START};
 `;
 export const GreyBg = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
+  z-index: -1;
+  ${flex.COLUMN_END};
 `;
 
 export const TitleBox = styled.div`
@@ -49,7 +53,7 @@ export const UserCompartmentBox = styled.div`
 
 export const ButtonBox = styled.div`
   ${flex.END};
-  gap: 20px;
+  gap: 8px;
   margin-top: 2%;
   width: 1020px;
 `;
