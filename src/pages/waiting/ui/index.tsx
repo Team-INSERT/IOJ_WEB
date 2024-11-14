@@ -39,7 +39,6 @@ export const Waiting = () => {
   const roomId = location.state?.roomId;
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
     users: websocketUsers,

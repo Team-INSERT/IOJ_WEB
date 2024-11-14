@@ -10,65 +10,6 @@ import { useParams } from "react-router-dom";
 import * as S from "./style";
 import { getItemResult } from "../api/getItemResult";
 
-const rankData = [
-  {
-    rank: 1,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 1,
-  },
-  {
-    rank: 2,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 2,
-  },
-  {
-    rank: 3,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 3,
-  },
-  {
-    rank: 4,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 4,
-  },
-  {
-    rank: 5,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 5,
-  },
-  {
-    rank: 6,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 6,
-  },
-  {
-    rank: 7,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 7,
-  },
-  {
-    rank: 8,
-    name: "강서호랑사또",
-    score: "4/6",
-    time: "24:24",
-    userId: 8,
-  },
-];
-
 interface RoomResultInfo {
   nickname: string;
   color: string;
