@@ -5,13 +5,14 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface AceEditorComponentProps {
   initialCode: string;
   language: string;
   onCodeChange: (newCode: string) => void;
   isInputDisabled: boolean;
+  isDevilActive: boolean;
 }
 
 export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
@@ -19,8 +20,10 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
   language,
   onCodeChange,
   isInputDisabled,
+  isDevilActive,
 }) => {
   const [code, setCode] = useState<string>(initialCode);
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
     setCode(initialCode);
@@ -36,8 +39,72 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
   const getEditorMode = (lang: string) =>
     ["c", "cpp"].includes(lang.toLowerCase()) ? "c_cpp" : lang.toLowerCase();
 
+  const addDevilModeCommands = () => {
+    const editor = editorRef.current?.editor;
+    if (editor) {
+      editor.commands.addCommand({
+        name: "devilModeSpace",
+        bindKey: { win: "Space", mac: "Space" },
+        exec: () => {
+          const { selection } = editor;
+          const pos = selection.getCursor();
+          const currentValue = editor.getValue();
+
+          if (pos.column > 0) {
+            const newValue =
+              currentValue.slice(
+                0,
+                editor.session.doc.positionToIndex(pos) - 1,
+              ) + currentValue.slice(editor.session.doc.positionToIndex(pos));
+            setCode(newValue);
+            onCodeChange(newValue);
+            selection.moveCursorBy(0, -1);
+          }
+        },
+      });
+
+      editor.commands.addCommand({
+        name: "devilModeBackspace",
+        bindKey: { win: "Backspace", mac: "Backspace" },
+        exec: () => {
+          const { selection } = editor;
+          const pos = selection.getCursor();
+          const currentValue = editor.getValue();
+          const newValue = `${currentValue.slice(
+            0,
+            editor.session.doc.positionToIndex(pos),
+          )} ${currentValue.slice(editor.session.doc.positionToIndex(pos))}`;
+          setCode(newValue);
+          onCodeChange(newValue);
+          selection.moveCursorBy(0, 1);
+        },
+      });
+    }
+  };
+
+  const removeDevilModeCommands = () => {
+    const editor = editorRef.current?.editor;
+    if (editor) {
+      editor.commands.removeCommand("devilModeSpace");
+      editor.commands.removeCommand("devilModeBackspace");
+    }
+  };
+
+  useEffect(() => {
+    if (isDevilActive) {
+      addDevilModeCommands();
+    } else {
+      removeDevilModeCommands();
+    }
+
+    return () => {
+      removeDevilModeCommands();
+    };
+  }, [isDevilActive]);
+
   return (
     <AceEditor
+      ref={editorRef}
       mode={getEditorMode(language)}
       theme="monokai"
       value={code}

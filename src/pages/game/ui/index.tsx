@@ -34,13 +34,16 @@ const OverlayItem = styled.div<{ isInkVisible: boolean }>`
   pointer-events: ${({ isInkVisible }) => (isInkVisible ? "none" : "auto")};
 `;
 
-export const GameLayout = styled.div<{ isWaterBalloonVisible: boolean }>`
+export const GameLayout = styled.div<{
+  isWaterBalloonVisible: boolean;
+  isShieldActive: boolean;
+}>`
   width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
-  pointer-events: ${({ isWaterBalloonVisible }) =>
-    isWaterBalloonVisible ? "none" : "auto"};
+  pointer-events: ${({ isWaterBalloonVisible, isShieldActive }) =>
+    isWaterBalloonVisible && !isShieldActive ? "none" : "auto"};
 `;
 
 export const GameBox = styled.div`
@@ -100,6 +103,7 @@ export const Game = () => {
   const [isMirrorOpen, setIsMirrorOpen] = useState(false);
   const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
   const codeEditorRef = useRef<HTMLDivElement>(null);
+  const [isDevilActive, setIsDevilActive] = useState(false);
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -134,10 +138,11 @@ export const Game = () => {
     });
 
     if (response === true) {
-      refreshItemList();
+      setIsWaterBalloonVisible(false);
       setIsShieldActive(true);
       setIsVisible(false);
       setIsWarningVisible(false);
+      refreshItemList();
       handleAnimationComplete();
     } else {
       setIsModalOpen(true);
@@ -149,6 +154,7 @@ export const Game = () => {
 
     if (item === "SHIELD") {
       if (isWarningVisible) {
+        setIsWaterBalloonVisible(false);
         handleShieldDefense();
       }
     } else {
@@ -267,8 +273,22 @@ export const Game = () => {
     }
   }, [isWaterBalloonVisible]);
 
+  useEffect(() => {
+    if (
+      isItemAnimation &&
+      attackInfo?.item === "DEVIL" &&
+      attackInfo?.targetUser === userId
+    ) {
+      setIsDevilActive(true);
+    } else {
+      setIsDevilActive(false);
+    }
+  }, [isItemAnimation, attackInfo, userId]);
   return (
-    <GameLayout isWaterBalloonVisible={isWaterBalloonVisible}>
+    <GameLayout
+      isWaterBalloonVisible={isWaterBalloonVisible}
+      isShieldActive={isShieldActive}
+    >
       <RotatableContainer rotationState={rotationState}>
         {isItemAnimation &&
           !isShieldActive &&
@@ -346,7 +366,10 @@ export const Game = () => {
             />
           </ProblemWrapper>
           <CodeEditorWrapper ref={codeEditorRef}>
-            <CodeEditor isInputDisable={isWaterBalloonVisible} />
+            <CodeEditor
+              isInputDisable={isWaterBalloonVisible}
+              isDevilActive={isDevilActive}
+            />
           </CodeEditorWrapper>
           <ItemListWrapper>
             <ItemIconList
