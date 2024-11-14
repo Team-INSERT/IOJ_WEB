@@ -26,8 +26,12 @@ interface TestCase {
 }
 interface CodeEditorProps {
   isInputDisable: boolean;
+  isDevilActive: boolean;
 }
-export const CodeEditor = ({ isInputDisable }: CodeEditorProps) => {
+export const CodeEditor = ({
+  isInputDisable,
+  isDevilActive,
+}: CodeEditorProps) => {
   const navigate = useNavigate();
   const {
     clientRef,
@@ -386,6 +390,7 @@ export const CodeEditor = ({ isInputDisable }: CodeEditorProps) => {
           language={languages}
           onCodeChange={handleCodeChange}
           isInputDisabled={isInputDisable}
+          isDevilActive={isDevilActive}
         />
         <S.TestBoxLayout>
           <TestBox

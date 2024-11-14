@@ -354,7 +354,10 @@ export const Game = () => {
             />
           </ProblemWrapper>
           <CodeEditorWrapper ref={codeEditorRef}>
-            <CodeEditor isInputDisable={isWaterBalloonVisible} />
+            <CodeEditor
+              isInputDisable={isWaterBalloonVisible}
+              isDevilActive={false}
+            />
           </CodeEditorWrapper>
           <ItemListWrapper>
             <ItemIconList
