@@ -13,62 +13,18 @@ const Devil = ({
   const [hideText, setHideText] = useState<boolean>(false);
   const [iconsHidden, setIconsHidden] = useState<boolean>(false);
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    const activeElement = document.activeElement as
-      | HTMLInputElement
-      | HTMLTextAreaElement
-      | null;
-
-    if (
-      activeElement &&
-      (activeElement.tagName === "INPUT" ||
-        activeElement.tagName === "TEXTAREA")
-    ) {
-      const { selectionStart, selectionEnd, value } = activeElement;
-
-      if (event.key === " ") {
-        event.preventDefault();
-        if (
-          selectionStart !== null &&
-          selectionEnd !== null &&
-          selectionStart > 0
-        ) {
-          activeElement.value =
-            value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
-          activeElement.setSelectionRange(
-            selectionStart - 1,
-            selectionStart - 1,
-          );
-        }
-      } else if (event.key === "Backspace") {
-        event.preventDefault();
-        if (selectionStart !== null && selectionEnd !== null) {
-          activeElement.value = `${value.slice(0, selectionStart)} ${value.slice(selectionEnd)}`;
-          activeElement.setSelectionRange(
-            selectionStart + 1,
-            selectionStart + 1,
-          );
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => setHideText(true), 1000);
     const hideTimer = setTimeout(() => setTextHidden(true), 3000);
     const iconsTimer = setTimeout(() => {
       setIconsHidden(true);
-      window.removeEventListener("keydown", handleKeyDown);
       onAnimationComplete();
     }, 7000);
-
-    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
       clearTimeout(iconsTimer);
-      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [onAnimationComplete]);
 

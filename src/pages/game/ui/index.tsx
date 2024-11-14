@@ -103,6 +103,7 @@ export const Game = () => {
   const [isMirrorOpen, setIsMirrorOpen] = useState(false);
   const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
   const codeEditorRef = useRef<HTMLDivElement>(null);
+  const [isDevilActive, setIsDevilActive] = useState(false);
 
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
@@ -272,7 +273,17 @@ export const Game = () => {
     }
   }, [isWaterBalloonVisible]);
 
-  const [isDevilEffectActive, setIsDevilEffectActive] = useState(false);
+  useEffect(() => {
+    if (
+      isItemAnimation &&
+      attackInfo?.item === "DEVIL" &&
+      attackInfo?.targetUser === userId
+    ) {
+      setIsDevilActive(true);
+    } else {
+      setIsDevilActive(false);
+    }
+  }, [isItemAnimation, attackInfo, userId]);
   return (
     <GameLayout
       isWaterBalloonVisible={isWaterBalloonVisible}
@@ -356,7 +367,8 @@ export const Game = () => {
           </ProblemWrapper>
           <CodeEditorWrapper ref={codeEditorRef}>
             <CodeEditor
-              isInputDisable={isWaterBalloonVisible && !isShieldActive}
+              isInputDisable={isWaterBalloonVisible}
+              isDevilActive={isDevilActive}
             />
           </CodeEditorWrapper>
           <ItemListWrapper>
