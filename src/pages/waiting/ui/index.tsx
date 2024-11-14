@@ -7,7 +7,7 @@ import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
-import useModal from "@/shared/hooks/useModal";
+
 import {
   roomDetail,
   enter,

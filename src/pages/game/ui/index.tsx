@@ -98,6 +98,7 @@ export const Game = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const [isMirrorOpen, setIsMirrorOpen] = useState(false);
+  const [shieldedItem, setShieldedItem] = useState("");
   const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
   const codeEditorRef = useRef<HTMLDivElement>(null);
 
@@ -125,7 +126,6 @@ export const Game = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   const handleShieldDefense = async () => {
     const response = await itemDefense({
       roomId: roomId || "",
@@ -136,6 +136,7 @@ export const Game = () => {
     if (response === true) {
       refreshItemList();
       setIsShieldActive(true);
+      setShieldedItem(attackInfo?.item || "");
       setIsVisible(false);
       setIsWarningVisible(false);
       handleAnimationComplete();
@@ -143,7 +144,6 @@ export const Game = () => {
       setIsModalOpen(true);
     }
   };
-
   const openModal = (item: string) => {
     setSelectedItem(item);
 
@@ -361,7 +361,7 @@ export const Game = () => {
 
       {isShieldActive && (
         <OverlayItem isInkVisible={isVisible}>
-          <Shield />
+          <Shield shieldItem={shieldedItem} />
         </OverlayItem>
       )}
       {isModalOpen && roomId && (

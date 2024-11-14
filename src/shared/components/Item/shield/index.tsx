@@ -2,14 +2,22 @@ import { useEffect, useState } from "react";
 import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
-const Shield = () => {
+const itemNameMap: any = {
+  BUBBLE: "물풍선",
+  MIRROR: "미러미러",
+  DEVIL: "대마왕",
+  INK: "문어먹물",
+  SHIELD: "쉴드",
+};
+
+const Shield = ({ shieldItem }: any) => {
   const [hexagonVisible, setHexagonVisible] = useState<boolean[]>(
     Array(12).fill(false),
   );
   const [fadeOut, setFadeOut] = useState<boolean[]>(Array(12).fill(false));
   const [textVisible, setTextVisible] = useState(false);
   const [textTranslate, setTextTranslate] = useState(0);
-
+  const shieldItemName = itemNameMap[shieldItem] || "알 수 없는 아이템";
   useEffect(() => {
     setHexagonVisible(Array(12).fill(true));
     const fadeOutHexagon = (index: number) => {
@@ -98,7 +106,7 @@ const Shield = () => {
             transition: "transform 0.6s ease, opacity 0.6s ease",
           }}
         >
-          <ItemStatusText status="방어 성공" title="물풍선" />
+          <ItemStatusText status="방어 성공" title={shieldItemName} />
         </S.NoShieldText>
       )}
     </S.Layout>
