@@ -6,6 +6,5 @@ interface SubmitRequest {
   language: string;
 }
 
-export const gameSubmit = async (requestBody: SubmitRequest) => {
-  await customAxios.post("/problem/submit", requestBody);
-};
+export const gameSubmit = async (requestBody: SubmitRequest) =>
+  (await customAxios.post("/problem/submit", requestBody)).data;

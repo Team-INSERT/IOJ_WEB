@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
 import { flex } from "@/shared/style";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Split from "react-split";
 import Warning from "@/shared/components/Item/warning";
 import ItemIconList from "@/shared/components/ItemIconList";
@@ -99,8 +99,10 @@ export const Game = () => {
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const [isMirrorOpen, setIsMirrorOpen] = useState(false);
   const [isWaterBalloonVisible, setIsWaterBalloonVisible] = useState(false);
+
   const navigate = useNavigate();
 
+  const codeEditorRef = useRef<HTMLDivElement>(null);
   const refreshItemList = () => setRefreshKey((prev) => prev + 1);
   const {
     isItemAnimation,
@@ -109,14 +111,18 @@ export const Game = () => {
     setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
+    handleAnimationComplete,
   } = useGameInfo(roomId || "", userId, refreshItemList);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
-    connectWebSocket();
-    return () => {
-      disconnectWebSocket();
-    };
-  }, []);
+    if (userId !== 0) {
+      connectWebSocket();
+      return () => {
+        disconnectWebSocket();
+      };
+    }
+  }, [userId]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -130,9 +136,11 @@ export const Game = () => {
     });
 
     if (response === true) {
+      refreshItemList();
       setIsShieldActive(true);
       setIsVisible(false);
-      refreshItemList();
+      setIsWarningVisible(false);
+      handleAnimationComplete();
     } else {
       setIsModalOpen(true);
     }
@@ -140,13 +148,15 @@ export const Game = () => {
 
   const openModal = (item: string) => {
     setSelectedItem(item);
+
     if (item === "SHIELD") {
-      handleShieldDefense();
+      if (isWarningVisible) {
+        handleShieldDefense();
+      }
     } else {
       setIsModalOpen(true);
     }
   };
-
   const [problemsCount, setProblemsCount] = useState(0);
   const [allProblems, setAllProblems] = useState<problemType[]>([]);
 
@@ -221,13 +231,10 @@ export const Game = () => {
     "none" | "first" | "second"
   >("none");
 
-  const handleBurstComplete = () => {
-    setIsWaterBalloonVisible(false);
-  };
-
   useEffect(() => {
     if (isItemAnimation && attackInfo?.targetUser === userId) {
       setIsWarningVisible(true);
+      setIsShieldActive(false);
       setIsVisible(false);
 
       setTimeout(() => {
@@ -244,7 +251,7 @@ export const Game = () => {
   }, [attackInfo, isItemAnimation, userId]);
 
   useEffect(() => {
-    if (isMirrorOpen) {
+    if (isMirrorOpen && !isShieldActive) {
       setRotationState("first");
       setTimeout(() => {
         setRotationState("second");
@@ -261,46 +268,62 @@ export const Game = () => {
     navigate(`/game/result/${roomId}`); // 시간이 끝나면 /room/{roomId}/result 페이지로 이동
   };
 
+  useEffect(() => {
+    if (isWaterBalloonVisible && codeEditorRef.current) {
+      codeEditorRef.current.blur();
+    }
+  }, [isWaterBalloonVisible]);
+
   return (
     <GameLayout isWaterBalloonVisible={isWaterBalloonVisible}>
       <RotatableContainer rotationState={rotationState}>
-        {isItemAnimation && attackInfo?.targetUser === userId && (
-          <>
-            {isWarningVisible && <Warning />}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "INK" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <OctopusInk />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              isMirrorOpen &&
-              attackInfo?.item === "MIRROR" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <RotatableContainer rotationState={rotationState} />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "DEVIL" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <Devil />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "BUBBLE" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <WaterBalloon onBurstComplete={handleBurstComplete} />
-                </OverlayItem>
-              )}
-          </>
-        )}
+        {isItemAnimation &&
+          !isShieldActive &&
+          attackInfo?.targetUser === userId && (
+            <>
+              {isWarningVisible && <Warning />}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "INK" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <OctopusInk onAnimationComplete={handleAnimationComplete} />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                isMirrorOpen &&
+                attackInfo?.item === "MIRROR" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <RotatableContainer
+                      rotationState={rotationState}
+                      onAnimationComplete={handleAnimationComplete}
+                    />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "DEVIL" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <Devil onAnimationComplete={handleAnimationComplete} />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "BUBBLE" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <WaterBalloon
+                      onBurstComplete={() => {
+                        setIsWaterBalloonVisible(false);
+                        handleAnimationComplete();
+                      }}
+                    />
+                  </OverlayItem>
+                )}
+            </>
+          )}
 
         <GameHeader
           onTimeEnd={handleTimeEnd}
@@ -312,18 +335,8 @@ export const Game = () => {
           sizes={[50, 50]}
           minSize={200}
           expandToMin={false}
-          gutterSize={10}
-          gutterAlign="center"
+          gutterSize={0}
           direction="horizontal"
-          cursor="col-resize"
-          gutter={(direction) => {
-            const gutter = document.createElement("div");
-            gutter.className = `gutter gutter-${direction}`;
-            gutter.onmouseenter = () => {
-              gutter.style.cursor = "col-resize";
-            };
-            return gutter;
-          }}
           style={{ display: "flex", width: "100%", height: "100%" }}
         >
           <ProblemWrapper>
@@ -340,13 +353,14 @@ export const Game = () => {
               source={problem.source}
             />
           </ProblemWrapper>
-          <CodeEditorWrapper>
-            <CodeEditor />
+          <CodeEditorWrapper ref={codeEditorRef}>
+            <CodeEditor isInputDisable={isWaterBalloonVisible} />
           </CodeEditorWrapper>
           <ItemListWrapper>
             <ItemIconList
               roomId={roomId}
               openModal={(item: string) => openModal(item)}
+              isWarningVisible={isWarningVisible}
               key={refreshKey}
             />
           </ItemListWrapper>

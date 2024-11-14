@@ -6,12 +6,15 @@ import ItemIcon from "../ItemIcon";
 interface Item {
   item: string;
 }
+
 const ItemIconList = ({
   roomId,
   openModal,
+  isWarningVisible, // 추가
 }: {
   roomId: string | undefined;
   openModal: (item: string) => void;
+  isWarningVisible: boolean; // 추가
 }) => {
   const [isItemList, setItemList] = useState<Item[] | null>(null);
 
@@ -34,6 +37,7 @@ const ItemIconList = ({
       {isItemList
         ? isItemList.map((item) => (
             <ItemIcon
+              isWarningVisible={isWarningVisible} // 추가
               key={item.item}
               name={item.item}
               openModal={() => openModal(item.item)}

@@ -3,12 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { WaitingUser, Button, ErrorModal } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
-import Ready from "@/assets/Ready.svg";
-import Crown from "@/assets/Crown";
 import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
+import useModal from "@/shared/hooks/useModal";
 import {
   roomDetail,
   enter,
@@ -17,6 +16,7 @@ import {
   start,
   deleteRoom,
 } from "../api/enter";
+
 import * as S from "./style";
 
 interface User {
@@ -37,7 +37,6 @@ export const Waiting = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const roomId = location.state?.roomId;
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [room, setRoom] = useState<RoomData | null>(null);
   const {
@@ -53,6 +52,31 @@ export const Waiting = () => {
   const [isHost, setIsHost] = useState(false);
   const [problemId, setProblemId] = useState<number | null>(null);
 
+  const handleErrorWithNavigation = (error: any) => {
+    const code = error?.response?.data?.code;
+
+    if (code === "ROOM-404-2") {
+      setErrorMessage("방 안에 유저가 존재하지 않습니다.");
+      navigate("/game/find");
+    } else if (code === "HOST-400-2") {
+      setErrorMessage("호스트는 방에서 떠날 수 없습니다.");
+      navigate(`/game/room/${roomId}`);
+    } else if (code === "ROOM-400-4") {
+      setErrorMessage("이미 게임을 시작한 방입니다.");
+      navigate(`/game/find`);
+    } else if (code === "HOST-400-1") {
+      setErrorMessage("호스트는 준비상태 변경이 불가능합니다.");
+    } else if (code === "USER-404-1") {
+      setErrorMessage("요청한 사용자가 존재하지 않습니다.");
+      navigate("/game/find");
+    } else if (code === "ROOM-400-3") {
+      setErrorMessage("방에 준비를 하지 않은 유저가 있습니다.");
+    } else {
+      setErrorMessage("알 수 없는 에러가 발생했습니다.");
+      navigate("/game/find");
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -63,7 +87,7 @@ export const Waiting = () => {
           initializeUsers(roomDetails.users);
 
           const hostUser = roomDetails.users.find(
-            (user: { host: boolean }) => user.host === true,
+            (user: { host: boolean }) => user.host,
           );
 
           const currentUser = await fetchUserData();
@@ -89,7 +113,7 @@ export const Waiting = () => {
           }
         }
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleErrorWithNavigation(error);
         console.error("방 정보를 가져오는데 실패했습니다:", error);
       }
     })();
@@ -102,16 +126,8 @@ export const Waiting = () => {
     };
   }, [roomId, connectWebSocket, disconnectWebSocket, initializeUsers]);
 
-  useEffect(
-    () => () => {
-      disconnectWebSocket();
-    },
-    [disconnectWebSocket],
-  );
-
   useEffect(() => {
     if (websocketUsers.length > 0) {
-      console.log(websocketUsers);
       setRoom((prev) =>
         prev
           ? {
@@ -122,18 +138,6 @@ export const Waiting = () => {
       );
     }
   }, [websocketUsers]);
-
-  useEffect(() => {
-    if (room) {
-      const currentUserNickname = localStorage.getItem("nickname");
-      const currentUser = room.users.find(
-        (user) => user.nickname === currentUserNickname,
-      );
-      if (currentUser) {
-        setIsReady(currentUser.ready);
-      }
-    }
-  }, [room?.users]);
 
   useEffect(() => {
     if (roomStatus === "started" && roomId) {
@@ -150,6 +154,7 @@ export const Waiting = () => {
       navigate(`/game/${roomId}/code/${problemId}`);
     }
   }, [problemId, roomId, navigate]);
+
   const handleReady = async () => {
     if (room && roomId) {
       try {
@@ -176,7 +181,7 @@ export const Waiting = () => {
           };
         });
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleErrorWithNavigation(error);
         console.error("준비 상태 변경 중 에러 발생:", error);
       }
     }
@@ -188,7 +193,7 @@ export const Waiting = () => {
         await start(roomId);
         sendEvent("/app/start", { roomId });
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleErrorWithNavigation(error);
       }
     }
   };
@@ -200,7 +205,7 @@ export const Waiting = () => {
         sendEvent("/app/delete", { roomId });
         navigate("/game/find");
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleErrorWithNavigation(error);
       }
     }
   };
@@ -219,7 +224,7 @@ export const Waiting = () => {
 
         navigate("/game/find");
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        handleErrorWithNavigation(error);
         console.error("방 나가기 실패:", error);
       }
     }
@@ -243,26 +248,27 @@ export const Waiting = () => {
       </S.TitleBox>
       <S.UserCompartmentContainer>
         {Array.from({ length: 8 }).map((_, index) => {
-          const sortedUsers = [...room.users].sort((a, b) => {
-            if (a.host) return -1;
-            if (b.host) return 1;
-            return 0;
-          });
-
+          const sortedUsers = [...room.users].sort((a, b) => (a.host ? -1 : 1));
           const user = sortedUsers[index];
           const isUserSlot = index < room.maxPeople;
 
           return (
             <S.UserCompartmentBox key={user?.nickname || `empty-${index}`}>
-              <S.Crown>{user?.host && <Crown />}</S.Crown>
               {isUserSlot ? (
                 user ? (
-                  <>
-                    <WaitingUser UserName={user.nickname} color={user.color} />
-                    {!user.host && user.ready && <S.Ready src={Ready} />}
-                  </>
+                  <WaitingUser
+                    UserName={user.nickname}
+                    color={user.color}
+                    isReady={!user.host && user.ready}
+                    isHost={user?.host}
+                  />
                 ) : (
-                  <WaitingUser UserName="" color="" />
+                  <WaitingUser
+                    UserName=""
+                    color=""
+                    isReady={false}
+                    isHost={false}
+                  />
                 )
               ) : (
                 <S.Close src={Close} alt="close" />
@@ -277,13 +283,13 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color="glowRed"
+              color="glowGray"
               font="nexon"
               onClick={handleDelete}
             >
               방 삭제하기
             </Button>
-            <Button mode="big" color="blue" font="nexon" onClick={handleStart}>
+            <Button mode="big" color="red" font="nexon" onClick={handleStart}>
               게임시작
             </Button>
           </>
@@ -291,27 +297,28 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color={isReady ? "glowRed" : "blue"}
-              font="nexon"
-              onClick={handleReady}
-            >
-              {isReady ? "준비 취소" : "준비하기"}
-            </Button>
-            <Button
-              mode="big"
-              color="glowRed"
+              color="glowGray"
               font="nexon"
               onClick={handleLeave}
             >
-              방 나가기
+              나가기
+            </Button>
+            <Button
+              mode="big"
+              color={isReady ? "orange" : "red"}
+              font="nexon"
+              onClick={handleReady}
+            >
+              {isReady ? "준비취소" : "준비하기"}
             </Button>
           </>
         )}
       </S.ButtonBox>
+
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
-          onClose={() => navigate(`/game/find`)}
+          onClose={() => setErrorMessage(null)}
         />
       )}
     </S.Layout>

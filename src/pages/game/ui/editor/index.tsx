@@ -8,6 +8,7 @@ import {
   ErrorModal,
   Modal,
 } from "@/shared/components";
+import { gameSubmit } from "@/pages/game/api/gameSubmit";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
 import { TestBox } from "../testbox";
 import { AceEditorComponent } from "../AceEditor";
@@ -23,15 +24,30 @@ interface TestCase {
   expectOutput: string;
   verdict: string;
 }
-export const CodeEditor = () => {
+interface CodeEditorProps {
+  isInputDisable: boolean;
+}
+export const CodeEditor = ({ isInputDisable }: CodeEditorProps) => {
   const navigate = useNavigate();
+  const {
+    clientRef,
+    sessionIdRef,
+    consoleOutput,
+    isExecutionActive,
+    setConsoleOutput,
+    connectWebSocket,
+    disconnectWebSocket,
+  } = useWebSocket();
+
   const { contestId, problemId } = useParams<{
     contestId: string;
     problemId: string;
   }>();
+
   const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(
     null,
   );
+
   const [code, setCode] = useState<string>("");
   const [languages, setLanguage] = useState<string>("python");
   const [fileName, setFileName] = useState<string>("Main.py");
@@ -46,6 +62,13 @@ export const CodeEditor = () => {
   const [submissionResults, setSubmissionResults] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [boilerplate, setBoilerplate] = useState("");
+  const [isInputDisabled, setInputDisabled] = useState(false);
+  const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
+  const [input, setInput] = useState<string>("");
+  const [submitStatus, setSubmitStatus] = useState<
+    "Correct" | "RunTime" | "InCorrect" | null
+  >(null);
+  const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
   useEffect(() => {
     const savedCode = localStorage.getItem(
@@ -70,12 +93,14 @@ export const CodeEditor = () => {
     }
   }, [languages, contestId, problemId]);
   const handleCodeChange = (newCode: string) => {
-    setCode(newCode);
-    if (contestId && problemId) {
-      localStorage.setItem(
-        `code_${contestId}_${problemId}_${languages}`,
-        newCode,
-      );
+    if (!isInputDisable) {
+      setCode(newCode);
+      if (contestId && problemId) {
+        localStorage.setItem(
+          `code_${contestId}_${problemId}_${languages}`,
+          newCode,
+        );
+      }
     }
   };
   const handleResetCode = async () => {
@@ -88,24 +113,7 @@ export const CodeEditor = () => {
       console.error(err);
     }
   };
-  const [isInputDisabled, setInputDisabled] = useState(false);
-  const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
-  const [input, setInput] = useState<string>("");
-  const {
-    clientRef,
-    sessionIdRef,
-    consoleOutput,
-    isExecutionActive,
-    setConsoleOutput,
-    connectWebSocket,
-    disconnectWebSocket,
-  } = useWebSocket();
 
-  const [executionActive, setExecutionActive] = useState(isExecutionActive);
-
-  const [submitStatus, setSubmitStatus] = useState<
-    "Correct" | "RunTime" | "InCorrect" | null
-  >(null);
   useEffect(() => {
     if (submitStatus) {
       const timer = setTimeout(() => {
@@ -211,38 +219,58 @@ export const CodeEditor = () => {
   const handleInputChange = (userInput: string) => {
     setInput(userInput);
   };
-  const handleSubmit = async () => {
-    if (isSubmitting) {
-      setIsModalOpen(true);
-      return;
-    }
-    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
-    setIsSubmitting(true);
-    setActiveTab("results");
-    try {
-      const res = await contestSubmit({
+
+  const submitProblem = async () => {
+    if (contestId && problemId) {
+      return contestSubmit({
         contestId: Number(contestId),
         problemId: Number(problemId),
         sourcecode: code,
         language: languages.toUpperCase(),
       });
+    }
+    return gameSubmit({
+      id: Number(problemId),
+      sourcecode: code,
+      language: languages.toUpperCase(),
+    });
+  };
+
+  const updateSubmitStatus = (res: string) => {
+    if (res === "ACCEPTED") {
+      setSubmitStatus("Correct");
+    } else if (res === "WRONG_ANSWER") {
+      setSubmitStatus("InCorrect");
+    } else if (res === "RUNTIME_ERROR") {
+      setSubmitStatus("RunTime");
+    } else {
+      setSubmitStatus("InCorrect");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
+    setIsSubmitting(true);
+    setActiveTab("results");
+
+    try {
+      const res = await submitProblem();
+
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = res;
         return updatedResults;
       });
-      if (res === "ACCEPTED") {
-        setSubmitStatus("Correct");
-      } else if (res === "WRONG_ANSWER") {
-        setSubmitStatus("InCorrect");
-      } else if (res === "RUNTIME_ERROR") {
-        setSubmitStatus("RunTime");
-      } else {
-        setSubmitStatus("InCorrect");
-      }
+
+      updateSubmitStatus(res);
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.response.data.message);
+      setErrorMessage(err.response?.data?.message || "Unknown error");
       setSubmissionResults((prevResults) => {
         const updatedResults = [...prevResults];
         updatedResults[0] = "런타임 에러";
@@ -253,6 +281,7 @@ export const CodeEditor = () => {
       setIsSubmitting(false);
     }
   };
+
   const handleLanguageChange = (selectedLanguage: string, file: string) => {
     setLanguage(selectedLanguage);
     setFileName(file);
@@ -356,6 +385,7 @@ export const CodeEditor = () => {
           initialCode={code}
           language={languages}
           onCodeChange={handleCodeChange}
+          isInputDisabled={isInputDisable}
         />
         <S.TestBoxLayout>
           <TestBox
@@ -370,7 +400,7 @@ export const CodeEditor = () => {
             isExecutionActive={executionActive}
             submissionResults={submissionResults}
             disconnectWebSocket={disconnectWebSocket}
-            isInputDisabled={isInputDisabled}
+            isInputDisabled={isInputDisable || executionActive}
             errorMessage={errorMessage}
           />
         </S.TestBoxLayout>
