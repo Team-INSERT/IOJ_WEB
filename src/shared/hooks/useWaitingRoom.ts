@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { customAxios } from "@/shared/utils/customAxios";
@@ -19,6 +20,7 @@ interface RoomEvent {
 }
 
 export const useWaitingRoom = (roomId: string) => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState<
@@ -77,6 +79,7 @@ export const useWaitingRoom = (roomId: string) => {
         break;
       case "DELETE":
         setRoomStatus("deleted");
+        navigate("/game/find");
         break;
       default:
         console.warn(`${event.type}`);
