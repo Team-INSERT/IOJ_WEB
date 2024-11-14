@@ -283,13 +283,13 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color="glowRed"
+              color="glowGray"
               font="nexon"
               onClick={handleDelete}
             >
               방 삭제하기
             </Button>
-            <Button mode="big" color="blue" font="nexon" onClick={handleStart}>
+            <Button mode="big" color="red" font="nexon" onClick={handleStart}>
               게임시작
             </Button>
           </>
@@ -297,15 +297,15 @@ export const Waiting = () => {
           <>
             <Button
               mode="big"
-              color="glowRed"
+              color="glowGray"
               font="nexon"
               onClick={handleLeave}
             >
-              방 나가기
+              나가기
             </Button>
             <Button
               mode="big"
-              color={isReady ? "green" : "green"}
+              color={isReady ? "orange" : "red"}
               font="nexon"
               onClick={handleReady}
             >
