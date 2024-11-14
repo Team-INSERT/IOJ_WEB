@@ -109,14 +109,18 @@ export const Game = () => {
     setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
+    handleAnimationComplete,
   } = useGameInfo(roomId || "", userId, refreshItemList);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
-    connectWebSocket();
-    return () => {
-      disconnectWebSocket();
-    };
-  }, []);
+    if (userId !== 0) {
+      connectWebSocket();
+      return () => {
+        disconnectWebSocket();
+      };
+    }
+  }, [userId]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -134,6 +138,7 @@ export const Game = () => {
       setIsShieldActive(true);
       setIsVisible(false);
       setIsWarningVisible(false);
+      handleAnimationComplete();
     } else {
       setIsModalOpen(true);
     }
@@ -224,10 +229,6 @@ export const Game = () => {
     "none" | "first" | "second"
   >("none");
 
-  const handleBurstComplete = () => {
-    setIsWaterBalloonVisible(false);
-  };
-
   useEffect(() => {
     if (isItemAnimation && attackInfo?.targetUser === userId) {
       setIsWarningVisible(true);
@@ -269,43 +270,53 @@ export const Game = () => {
   return (
     <GameLayout isWaterBalloonVisible={isWaterBalloonVisible}>
       <RotatableContainer rotationState={rotationState}>
-        {isItemAnimation && attackInfo?.targetUser === userId && (
-          <>
-            {isWarningVisible && <Warning />}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "INK" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <OctopusInk />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              isMirrorOpen &&
-              attackInfo?.item === "MIRROR" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <RotatableContainer rotationState={rotationState} />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "DEVIL" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <Devil />
-                </OverlayItem>
-              )}
-            {!isShieldActive &&
-              !isWarningVisible &&
-              attackInfo?.item === "BUBBLE" &&
-              isVisible && (
-                <OverlayItem isInkVisible={isVisible}>
-                  <WaterBalloon onBurstComplete={handleBurstComplete} />
-                </OverlayItem>
-              )}
-          </>
-        )}
+        {isItemAnimation &&
+          !isShieldActive &&
+          attackInfo?.targetUser === userId && (
+            <>
+              {isWarningVisible && <Warning />}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "INK" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <OctopusInk onAnimationComplete={handleAnimationComplete} />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                isMirrorOpen &&
+                attackInfo?.item === "MIRROR" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <RotatableContainer
+                      rotationState={rotationState}
+                      onAnimationComplete={handleAnimationComplete}
+                    />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "DEVIL" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <Devil onAnimationComplete={handleAnimationComplete} />
+                  </OverlayItem>
+                )}
+              {!isShieldActive &&
+                !isWarningVisible &&
+                attackInfo?.item === "BUBBLE" &&
+                isVisible && (
+                  <OverlayItem isInkVisible={isVisible}>
+                    <WaterBalloon
+                      onBurstComplete={() => {
+                        setIsWaterBalloonVisible(false);
+                        handleAnimationComplete();
+                      }}
+                    />
+                  </OverlayItem>
+                )}
+            </>
+          )}
 
         <GameHeader
           problemsCount={problemsCount}

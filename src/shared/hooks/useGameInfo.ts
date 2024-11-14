@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { customAxios } from "../utils/customAxios";
@@ -26,15 +26,31 @@ export const useGameInfo = (
   const [attackInfo, setAttackInfo] = useState<AttackInfo | null>(null);
   const [isAddItem, setIsAddItem] = useState<boolean>(false);
   const clientRef = useRef<Client | null>(null);
+  const [receivedAttackQueue, setReceivedAttackQueue] = useState<AttackInfo[]>(
+    [],
+  );
+
+  const processNextAttackInQueue = useCallback(() => {
+    if (receivedAttackQueue.length > 0 && !isItemAnimation) {
+      setAttackInfo(receivedAttackQueue[0]);
+      setIsAnimation(true);
+    }
+  }, [receivedAttackQueue, isItemAnimation]);
+
+  const handleAnimationComplete = useCallback(() => {
+    setIsAnimation(false);
+    setAttackInfo(null);
+    setReceivedAttackQueue((prevQueue) => prevQueue.slice(1));
+
+    processNextAttackInQueue();
+  }, [attackInfo, processNextAttackInQueue]);
 
   const processEvent = useCallback(
     (event: GameEvent) => {
-      console.log("Received event:", event); // 전체 이벤트 출력
-
       if (
         event.type === "ATTACK" &&
         event.item &&
-        event.targetUser !== undefined &&
+        event.targetUser === userId &&
         event.attackUser !== undefined
       ) {
         const attackData: AttackInfo = {
@@ -42,24 +58,20 @@ export const useGameInfo = (
           targetUser: event.targetUser,
           attackUser: event.attackUser,
         };
-
-        if (attackData.targetUser === userId) {
-          console.log("같다! targetUser와 userId가 동일함");
-        } else {
-          console.log("다르다! targetUser와 userId가 다름");
-        }
-        setIsAnimation(true);
-        setAttackInfo(attackData);
+        setReceivedAttackQueue((prevQueue) => [...prevQueue, attackData]);
       } else if (event.type === "ITEM") {
         setIsAddItem(true);
-        console.log("아이템 추가 이벤트");
         refreshItemList();
       } else {
-        console.warn("알 수 없는 이벤트 타입:", event.type);
+        console.warn("Unknown event type:", event.type);
       }
     },
     [userId, refreshItemList],
   );
+
+  useEffect(() => {
+    processNextAttackInQueue();
+  }, [receivedAttackQueue, processNextAttackInQueue]);
 
   const connectWebSocket = useCallback(async () => {
     const { baseURL } = customAxios.defaults;
@@ -67,7 +79,6 @@ export const useGameInfo = (
     const stompClient = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
-        console.log("Connect to Websocket");
         setIsConnected(true);
 
         stompClient.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {
@@ -76,7 +87,7 @@ export const useGameInfo = (
         });
       },
       onStompError: (frame) => {
-        console.error(`${frame.headers.message}`);
+        console.error(`WebSocket error: ${frame.headers.message}`);
         setIsConnected(false);
       },
     });
@@ -93,6 +104,7 @@ export const useGameInfo = (
     setIsAnimation(false);
     setAttackInfo(null);
     setIsAddItem(false);
+    setReceivedAttackQueue([]);
   }, []);
 
   return {
@@ -103,5 +115,6 @@ export const useGameInfo = (
     setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
+    handleAnimationComplete,
   };
 };
