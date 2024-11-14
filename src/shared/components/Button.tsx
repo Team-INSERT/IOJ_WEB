@@ -5,11 +5,13 @@ import { flex, NexonFont, Pretendard, theme } from "../style";
 type ButtonMode = "big" | "exit" | "small" | "choose" | "warn";
 type ColorMode =
   | "gray"
+  | "glowGray"
   | "blue"
   | "glowBlue"
   | "red"
   | "glowRed"
   | "green"
+  | "orange"
   | "white";
 
 type FontType = "nexon" | "pretendard";
@@ -46,7 +48,7 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
         return css`
           background-color: ${theme.warningRed};
           color: ${theme.white};
-          border: 1px solid ${theme.warningRed};
+          border: none;
           &:hover {
             background-color: #d13030;
           }
@@ -55,10 +57,19 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
         return css`
           background-color: transparent;
           color: ${theme.warningRed};
-          border: 1px solid ${theme.warningRed};
+          border: 2px solid ${theme.warningRed};
           &:hover {
             background-color: ${theme.warningRed};
             color: ${theme.white};
+          }
+        `;
+      case "orange":
+        return css`
+          background: #f2992d;
+          color: ${theme.white};
+          border: none;
+          &:hover {
+            background-color: #E3912C;
           }
         `;
       case "gray":
@@ -68,6 +79,16 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
           border: none;
           &:hover {
             background-color: #595959;
+          }
+        `;
+      case "glowGray":
+        return css`
+          background-color: transparent;
+          color: ${theme.grey700};
+          border: 2px solid ${theme.grey700};
+          &:hover {
+            background-color: ${theme.grey700};
+            color: ${theme.white};
           }
         `;
       case "green":
@@ -98,14 +119,14 @@ const ButtonType = (mode: ButtonMode, color: ColorMode, font?: FontType) => {
       case "big":
         return font === "nexon"
           ? css`
-              width: auto;
-              padding: 12px 60px;
+              width: 159px;
+              height: 47px;
               font-weight: 500 !important;
               ${NexonFont.NexonText};
             `
           : css`
-              width: auto;
-              padding: 12px 60px;
+              width: 159px;
+              height: 47px;
               font-weight: 700 !important;
               ${Pretendard.Text};
             `;

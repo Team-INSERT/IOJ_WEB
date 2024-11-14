@@ -13,7 +13,11 @@ const positions = [
   { id: 7, top: "54%", left: "80%" },
 ];
 
-const OctopusInk = () => {
+const OctopusInk = ({
+  onAnimationComplete,
+}: {
+  onAnimationComplete: () => void;
+}) => {
   const [visibleLogos, setVisibleLogos] = useState<number[]>([]);
   const [expand, setExpand] = useState(false);
   const [hideText, setHideText] = useState(false);
@@ -41,9 +45,10 @@ const OctopusInk = () => {
 
       setTimeout(() => {
         setTextHidden(true);
+        onAnimationComplete();
       }, 1600);
     }
-  }, [visibleLogos]);
+  }, [visibleLogos, onAnimationComplete]);
 
   return (
     <S.Layout>

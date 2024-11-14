@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
-const Devil = () => {
+const Devil = ({
+  onAnimationComplete,
+}: {
+  onAnimationComplete: () => void;
+}) => {
   const [textHidden, setTextHidden] = useState<boolean>(false);
   const [hideText, setHideText] = useState<boolean>(false);
   const [iconsHidden, setIconsHidden] = useState<boolean>(false);
@@ -55,6 +59,7 @@ const Devil = () => {
     const iconsTimer = setTimeout(() => {
       setIconsHidden(true);
       window.removeEventListener("keydown", handleKeyDown);
+      onAnimationComplete();
     }, 7000);
 
     window.addEventListener("keydown", handleKeyDown);
@@ -65,7 +70,7 @@ const Devil = () => {
       clearTimeout(iconsTimer);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [onAnimationComplete]);
 
   return (
     <S.ModalWrapper>
