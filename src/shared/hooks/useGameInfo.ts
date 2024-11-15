@@ -22,7 +22,7 @@ export const useGameInfo = (
   refreshItemList: () => void,
 ) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [isItemAnimation, setIsAnimation] = useState<boolean>(false);
+  const isItemAnimation = useRef<boolean>(false);
   const [attackInfo, setAttackInfo] = useState<AttackInfo | null>(null);
   const [isAddItem, setIsAddItem] = useState<boolean>(false);
   const clientRef = useRef<Client | null>(null);
@@ -31,19 +31,21 @@ export const useGameInfo = (
   );
 
   const processNextAttackInQueue = useCallback(() => {
-    if (receivedAttackQueue.length > 0 && !isItemAnimation) {
-      setAttackInfo(receivedAttackQueue[0]);
-      setIsAnimation(true);
+    if (!isItemAnimation.current && receivedAttackQueue.length > 0) {
+      const nextItem = receivedAttackQueue[0];
+      setAttackInfo(nextItem);
+      isItemAnimation.current = true;
     }
-  }, [receivedAttackQueue, isItemAnimation]);
+  }, [receivedAttackQueue]);
 
   const handleAnimationComplete = useCallback(() => {
-    setIsAnimation(false);
+    isItemAnimation.current = false;
     setAttackInfo(null);
-    setReceivedAttackQueue((prevQueue) => prevQueue.slice(1));
-
-    processNextAttackInQueue();
-  }, [attackInfo, processNextAttackInQueue]);
+    setReceivedAttackQueue((prevQueue) => {
+      const updatedQueue = prevQueue.slice(1);
+      return updatedQueue;
+    });
+  }, [attackInfo]);
 
   const processEvent = useCallback(
     (event: GameEvent) => {
@@ -58,19 +60,25 @@ export const useGameInfo = (
           targetUser: event.targetUser,
           attackUser: event.attackUser,
         };
-        setReceivedAttackQueue((prevQueue) => [...prevQueue, attackData]);
+
+        setReceivedAttackQueue((prevQueue) => {
+          const updatedQueue = [...prevQueue, attackData];
+          return updatedQueue;
+        });
       } else if (event.type === "ITEM") {
         setIsAddItem(true);
         refreshItemList();
       } else {
-        console.warn("Unknown event type:", event.type);
+        console.warn("알 수 없는 이벤트:", event.type);
       }
     },
     [userId, refreshItemList],
   );
 
   useEffect(() => {
-    processNextAttackInQueue();
+    if (receivedAttackQueue.length > 0 && !isItemAnimation.current) {
+      processNextAttackInQueue();
+    }
   }, [receivedAttackQueue, processNextAttackInQueue]);
 
   const connectWebSocket = useCallback(async () => {
@@ -82,26 +90,30 @@ export const useGameInfo = (
         setIsConnected(true);
 
         stompClient.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {
-          const event: GameEvent = JSON.parse(message.body);
-          processEvent(event);
+          try {
+            const event: GameEvent = JSON.parse(message.body);
+            processEvent(event);
+          } catch (error) {
+            console.error("WebSocket 메시지 처리 중 오류:", error);
+          }
         });
       },
       onStompError: (frame) => {
-        console.error(`WebSocket error: ${frame.headers.message}`);
+        console.error("WebSocket 오류:", frame.headers.message);
         setIsConnected(false);
       },
     });
-
     stompClient.activate();
     clientRef.current = stompClient;
   }, [roomId, processEvent]);
 
+  // WebSocket 연결 해제
   const disconnectWebSocket = useCallback(() => {
     if (clientRef.current) {
       clientRef.current.deactivate();
     }
     setIsConnected(false);
-    setIsAnimation(false);
+    isItemAnimation.current = false;
     setAttackInfo(null);
     setIsAddItem(false);
     setReceivedAttackQueue([]);
@@ -109,7 +121,7 @@ export const useGameInfo = (
 
   return {
     isConnected,
-    isItemAnimation,
+    isItemAnimation: isItemAnimation.current,
     attackInfo,
     isAddItem,
     setIsAddItem,
