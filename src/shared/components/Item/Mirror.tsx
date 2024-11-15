@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
+import DefeatMessage from "@/shared/components/DefeatMessage";
 
 const rotate180Animation = keyframes`
   from {
@@ -21,7 +22,6 @@ const rotateBackToOriginalAnimation = keyframes`
 
 export const RotatableContainer = styled.div<{
   rotationState: "none" | "first" | "second";
-  onAnimationComplete?: () => void;
 }>`
   perspective: 1000px;
   width: 100%;
@@ -40,16 +40,33 @@ export const RotatableContainer = styled.div<{
     `}
 `;
 
-const RotatableContainerWithAnimation = ({
+export const RotatableAnimation = ({
   rotationState,
   onAnimationComplete,
   children,
 }: {
   rotationState: "none" | "first" | "second";
   onAnimationComplete?: () => void;
-  // eslint-disable-next-line no-undef
-  children: React.ReactNode;
+  children?: React.ReactNode; // children은 선택적 prop으로 설정
 }) => {
+  const [textVisible, setTextVisible] = useState(false);
+  const [textTranslate, setTextTranslate] = useState(0);
+
+  useEffect(() => {
+    if (rotationState === "first" || rotationState === "second") {
+      setTextVisible(true);
+      setTextTranslate(-30);
+
+      setTimeout(() => {
+        setTextTranslate(40);
+
+        setTimeout(() => {
+          setTextVisible(false);
+        }, 600);
+      }, 800);
+    }
+  }, [rotationState]);
+
   useEffect(() => {
     const handleAnimationEnd = () => {
       if (onAnimationComplete) {
@@ -70,9 +87,13 @@ const RotatableContainerWithAnimation = ({
       className="rotatable-container"
       rotationState={rotationState}
     >
+      <DefeatMessage
+        status="방어 실패"
+        title="미러미러"
+        isVisible={textVisible}
+        translateY={textTranslate}
+      />
       {children}
     </RotatableContainer>
   );
 };
-
-export default RotatableContainerWithAnimation;
