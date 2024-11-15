@@ -263,11 +263,6 @@ export const Game = () => {
     }
   }, [isMirrorOpen]);
 
-  // 시간 종료 시 호출될 함수 정의
-  const handleTimeEnd = () => {
-    navigate(`/game/result/${roomId}`); // 시간이 끝나면 /room/{roomId}/result 페이지로 이동
-  };
-
   useEffect(() => {
     if (isWaterBalloonVisible && codeEditorRef.current) {
       codeEditorRef.current.blur();
@@ -326,7 +321,6 @@ export const Game = () => {
           )}
 
         <GameHeader
-          onTimeEnd={handleTimeEnd}
           problemsCount={problemsCount}
           problemIndex={problemIndex}
           noHeader={!roomId}

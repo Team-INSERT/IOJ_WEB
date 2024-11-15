@@ -149,11 +149,14 @@ export const Waiting = () => {
     }
   }, [roomStatus, roomId]);
 
+  // 문제 ID가 설정된 경우 navigate 호출 시 room.title 전달
   useEffect(() => {
     if (problemId) {
-      navigate(`/game/${roomId}/code/${problemId}`);
+      navigate(`/game/${roomId}/code/${problemId}`, {
+        state: { title: room?.title },
+      });
     }
-  }, [problemId, roomId, navigate]);
+  }, [problemId, roomId, navigate, room?.title]);
 
   const handleReady = async () => {
     if (room && roomId) {

@@ -73,8 +73,9 @@ export const PodiumImg = styled.img`
 
 export const Podium = styled.div`
   ${flex.COLUMN_END};
-  margin: 104px 60px 256px 0;
+  margin: 300px 60px 256px 0; // margin-top을 200px로 증가
   position: relative;
+  bottom: 0;
 `;
 
 export const CharacterPosition = styled.div`

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom"; // useLocation import 추가
 import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
@@ -5,8 +7,6 @@ import Crown from "@/assets/Crown";
 import flash from "@/assets/flash.png";
 import Character from "@/assets/Character";
 import Podium from "@/assets/Podium.svg";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import * as S from "./style";
 import { getItemResult } from "../api/getItemResult";
 
@@ -21,9 +21,13 @@ interface RoomResultInfo {
 }
 
 export const Result = () => {
+  const navigate = useNavigate();
+  const { roomId } = useParams();
+  const location = useLocation();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
   const [color, setColor] = useState("");
-  const { roomId } = useParams();
+  const title = location.state?.title || "게임 제목 없음"; // 전달받은 title 값
+
   useEffect(() => {
     (async () => {
       if (roomId) {
@@ -36,7 +40,8 @@ export const Result = () => {
         }
       }
     })();
-  }, []);
+  }, [roomId]);
+
   return (
     <S.ResultBox>
       <S.BlueBg>
@@ -47,7 +52,7 @@ export const Result = () => {
       </S.GreyBg>
       <S.RankingBox>
         <S.GameInfo>
-          <S.GameTitle>게임제목입니다</S.GameTitle>
+          <S.GameTitle>{title}</S.GameTitle>
           <Button mode="small" color="blue" font="nexon">
             상세 정보 보기
           </Button>
@@ -88,7 +93,12 @@ export const Result = () => {
         <S.PodiumImg src={Podium} alt="Podium 이미지" />
 
         <S.Button>
-          <Button mode="big" color="blue" font="nexon">
+          <Button
+            mode="big"
+            color="blue"
+            font="nexon"
+            onClick={() => navigate("/game/find")}
+          >
             나가기
           </Button>
         </S.Button>
