@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom"; // useLocation import 추가
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
@@ -15,7 +15,7 @@ interface RoomResultInfo {
   color: string;
   correctProblem: number;
   totalProblem: number;
-  finishedTime: Date;
+  finishedTime: string | null;
   useItemCnt: number;
   protectCnt: number;
 }
@@ -25,21 +25,22 @@ export const Result = () => {
   const { roomId } = useParams();
   const location = useLocation();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
-  const [color, setColor] = useState("");
-  const title = location.state?.title || "게임 제목 없음"; // 전달받은 title 값
+  const title = location.state?.title || "게임 제목 없음";
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          setColor(res.color.toLowerCase());
-          setItemRoomResult(res);
+          console.log("API 응답:", res); // 응답 데이터 확인
+          setItemRoomResult(res); // 배열 바로 할당
         } catch (err) {
-          console.error(err);
+          console.error("API 오류:", err);
         }
       }
-    })();
+    };
+
+    fetchData();
   }, [roomId]);
 
   return (
@@ -70,7 +71,11 @@ export const Result = () => {
               <S.RankRank>{index + 1}</S.RankRank>
               <S.RankName>{item.nickname}</S.RankName>
               <S.RankScore>{item.correctProblem}</S.RankScore>
-              <S.RankTime>{item.finishedTime.toLocaleTimeString()}</S.RankTime>
+              <S.RankTime>
+                {item.finishedTime
+                  ? new Date(item.finishedTime).toLocaleTimeString()
+                  : "-"}
+              </S.RankTime>
             </S.RankRow>
           ))}
         </S.RankTable>
@@ -81,13 +86,23 @@ export const Result = () => {
             <Crown />
           </S.CrownPosition>
           <S.Flash src={flash} />
-          <Character characterColor={color[1]} />
+          <Character
+            characterColor={itemRoomResult[0]?.color.toLowerCase() || "red"} // 1위 색상
+          />
         </S.FirstPlaceCharacter>
         <S.SecondPlaceCharacter>
-          <Character characterColor={color[0]} />
+          <Character
+            characterColor={
+              itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
+            } // 2위 색상
+          />
         </S.SecondPlaceCharacter>
         <S.ThirdPlaceCharacter>
-          <Character characterColor={color[2]} />
+          <Character
+            characterColor={
+              itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
+            } // 3위 색상
+          />
         </S.ThirdPlaceCharacter>
 
         <S.PodiumImg src={Podium} alt="Podium 이미지" />

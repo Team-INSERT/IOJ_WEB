@@ -4,23 +4,23 @@ import { theme, flex, NexonFont } from "@/shared/style";
 export const ResultBox = styled.div`
   width: 100%;
   ${flex.FLEX};
-  margin-top: 5%;
-  overflow: hidden;
+  height: 100vh;
 `;
 
 export const BlueBg = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  overflow: hidden;
+  ${flex.COLUMN_START};
+  z-index: -1;
 `;
 
 export const GreyBg = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 607px;
-  overflow: hidden;
+  z-index: -1;
+  ${flex.COLUMN_END};
 `;
 
 export const RankingBox = styled.div`
@@ -59,6 +59,7 @@ export const RankHeader = styled.div`
 export const RankHeaderItem = styled(TextStyle)``;
 export const RankRow = styled.div`
   display: contents;
+  color: ${theme.black};
 `;
 
 export const RankRank = styled(TextStyle)``;
@@ -73,7 +74,7 @@ export const PodiumImg = styled.img`
 
 export const Podium = styled.div`
   ${flex.COLUMN_END};
-  margin: 300px 60px 256px 0; // margin-top을 200px로 증가
+  margin: 550px 60px 256px 0; // margin-top을 200px로 증가
   position: relative;
   bottom: 0;
 `;
