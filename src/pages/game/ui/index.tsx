@@ -9,7 +9,7 @@ import ItemIconList from "@/shared/components/ItemIconList";
 import { useGameInfo } from "@/shared/hooks/useGameInfo";
 import OctopusInk from "@/shared/components/Item/octopusInk";
 import Shield from "@/shared/components/Item/shield";
-import { RotatableContainer } from "@/shared/components/Item/Mirror";
+import { RotatableAnimation } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
 import { CodeEditor } from "./editor";
@@ -44,13 +44,6 @@ export const GameLayout = styled.div<{
   overflow: hidden;
   pointer-events: ${({ isWaterBalloonVisible, isShieldActive }) =>
     isWaterBalloonVisible && !isShieldActive ? "none" : "auto"};
-`;
-
-export const GameBox = styled.div`
-  ${flex.HORIZONTAL}
-  position: fixed;
-  width: 100%;
-  height: 100%;
 `;
 
 export const ProblemWrapper = styled.div`
@@ -289,7 +282,7 @@ export const Game = () => {
       isWaterBalloonVisible={isWaterBalloonVisible}
       isShieldActive={isShieldActive}
     >
-      <RotatableContainer rotationState={rotationState}>
+      <RotatableAnimation rotationState={rotationState}>
         {isItemAnimation &&
           !isShieldActive &&
           attackInfo?.targetUser === userId && (
@@ -308,7 +301,7 @@ export const Game = () => {
                 attackInfo?.item === "MIRROR" &&
                 isVisible && (
                   <OverlayItem isInkVisible={isVisible}>
-                    <RotatableContainer
+                    <RotatableAnimation
                       rotationState={rotationState}
                       onAnimationComplete={handleAnimationComplete}
                     />
@@ -380,7 +373,7 @@ export const Game = () => {
             />
           </ItemListWrapper>
         </Split>
-      </RotatableContainer>
+      </RotatableAnimation>
 
       {isShieldActive && (
         <OverlayItem isInkVisible={isVisible}>
