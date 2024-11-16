@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
-import { flex } from "@/shared/style";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Split from "react-split";
 import Warning from "@/shared/components/Item/warning";
@@ -73,6 +72,8 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
+  const location = useLocation();
+  const gameTitle = location.state?.title || "기본 게임 제목";
   const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
@@ -118,6 +119,10 @@ export const Game = () => {
       };
     }
   }, [userId]);
+
+  useEffect(() => {
+    console.log("받은 게임 제목:", gameTitle);
+  }, [gameTitle]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -335,6 +340,7 @@ export const Game = () => {
           problemsCount={problemsCount}
           problemIndex={problemIndex}
           noHeader={!roomId}
+          title={gameTitle}
         />
         <Split
           sizes={[50, 50]}

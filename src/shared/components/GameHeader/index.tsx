@@ -11,6 +11,7 @@ interface gameHeaderProps {
   problemsCount: number;
   problemIndex: number;
   noHeader?: boolean;
+  title?: string;
 }
 
 interface problemsType {
@@ -30,6 +31,7 @@ const GameHeader = ({
   problemsCount,
   problemIndex,
   noHeader = false,
+  title = "기본 게임 제목",
 }: gameHeaderProps) => {
   const { pathname } = window.location;
   const navigate = useNavigate();
@@ -88,7 +90,9 @@ const GameHeader = ({
 
             if (time === "00 : 00 : 00") {
               clearInterval(intervalId); // 타이머 중지
-              navigate(`/game/result/${roomId}`); // 시간이 끝나면 이동
+              navigate(`/game/result/${roomId}`, {
+                state: { title },
+              });
             }
           }, 1000);
         }
@@ -99,7 +103,7 @@ const GameHeader = ({
     return () => {
       clearInterval(intervalId);
     };
-  }, [roomId]);
+  }, [roomId, title]);
 
   const onNextClick = (mode: string) => {
     if (mode === "next") {
