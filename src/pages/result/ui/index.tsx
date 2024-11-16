@@ -87,7 +87,9 @@ export const Result = () => {
           </S.CrownPosition>
           <S.Flash src={flash} />
           <Character
-            characterColor={itemRoomResult[0]?.color.toLowerCase() || "red"} // 1위 색상
+            characterColor={
+              itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
+            } // 1위 색상
           />
         </S.FirstPlaceCharacter>
         <S.SecondPlaceCharacter>
