@@ -1,4 +1,4 @@
-import { useRef, MutableRefObject, useCallback } from "react";
+import { useRef, MutableRefObject } from "react";
 import { Terminal } from "xterm";
 import { useWebSocket } from "./useWebSocket";
 
@@ -14,6 +14,7 @@ export const useTerminal = () => {
   const terminalInstanceRef = useRef<Terminal | null>(null);
   const inputBufferRef = useRef<string>("");
   const isTerminalInitialized = useRef(false);
+  const isProcessFinishedRef = useRef(false);
 
   const initializeTerminal = ({
     terminalRef,
@@ -31,12 +32,14 @@ export const useTerminal = () => {
       terminal.writeln("프로세스가 실행됩니다.");
       terminal.writeln("");
 
+      isProcessFinishedRef.current = isProcessFinished;
+
       terminal.onData((data: string) => {
-        if (inputDisableRef.current || isProcessFinished) {
+        if (inputDisableRef.current || isProcessFinishedRef.current) {
           return;
         }
 
-        if (!isProcessFinished) {
+        if (!isProcessFinishedRef.current) {
           if (data === "\r" || data === "\n") {
             if (inputBufferRef.current.trim() !== "") {
               terminal.writeln("");
@@ -74,6 +77,7 @@ export const useTerminal = () => {
       terminalInstanceRef.current.dispose();
       terminalInstanceRef.current = null;
       isTerminalInitialized.current = false;
+      isProcessFinishedRef.current = false;
       initializeTerminal({
         terminalRef,
         inputDisableRef,
@@ -89,6 +93,13 @@ export const useTerminal = () => {
       lines.forEach((line) => {
         if (line.trim() !== "") {
           terminalInstanceRef.current?.write(`${line}\n\r`);
+
+          if (
+            line.includes("Process finished with exit code 0") ||
+            line.includes("Process finished with exit code 1")
+          ) {
+            isProcessFinishedRef.current = true;
+          }
         }
       });
     } else {
@@ -100,5 +111,6 @@ export const useTerminal = () => {
     initializeTerminal,
     resetAndEnableTerminal,
     writeToTerminal,
+    isProcessFinishedRef,
   };
 };
