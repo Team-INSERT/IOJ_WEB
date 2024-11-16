@@ -4,7 +4,10 @@ import Stars from "@/shared/components/Stars";
 import { ReactComponent as XBold } from "@/assets/XBold.svg";
 import { useAtom } from "jotai";
 import { roomIdAtom } from "@/shared/utils/atom/roomAtom";
-import { createRoomApi, roomList } from "../../api/roomApi";
+import { validateCreateRoom } from "@/shared/helper/createRoomHelper";
+import useModal from "@/shared/hooks/useModal";
+import TestModal from "@/shared/components/TestModal";
+import { createRoomApi } from "../../api/roomApi";
 import * as S from "./style";
 
 interface CreateRoomModalProps {
@@ -22,13 +25,17 @@ export interface createRoomProps {
 
 export const CreateRoomModal = ({ close }: CreateRoomModalProps) => {
   const navigate = useNavigate();
+  const { ModalWrapper, openModal, closeModal } = useModal();
   const [title, setTitle] = useState("");
   const [maxPeople, setMaxPeople] = useState(0);
   const [problem, setProblem] = useState(0);
   const [minDifficulty, setMinDifficulty] = useState(0);
   const [maxDifficulty, setMaxDifficulty] = useState(0);
   const [time, setTime] = useState(3);
-  const [, setRoomId] = useAtom(roomIdAtom); // roomId 전역 상태
+  const [createModalStatus, setCreateModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  const [createModalTitle, setCreateModalTitle] = useState("");
+  const [createModalSubtitle, setCreateModalSubtitle] = useState("");
+  const [, setRoomId] = useAtom(roomIdAtom);
   const onCreateRoomClick = async () => {
     const createRoomData: createRoomProps = {
       title,
@@ -39,12 +46,28 @@ export const CreateRoomModal = ({ close }: CreateRoomModalProps) => {
       time,
     };
 
+    const createValidationResult = validateCreateRoom(
+      title,
+      maxPeople,
+      problem,
+      minDifficulty,
+      maxDifficulty,
+      time,
+    );
+
+    if (!createValidationResult.valid) {
+      setCreateModalStatus(createValidationResult.status);
+      setCreateModalTitle(createValidationResult.title);
+      setCreateModalSubtitle(createValidationResult.subtitle);
+      await openModal();
+    }
+
     try {
       const roomId = await createRoomApi(createRoomData);
 
       if (roomId) {
-        setRoomId(roomId); // roomIdAtom에 설정
-        console.log("Navigating to room with ID:", roomId); // newRoomId 확인
+        setRoomId(roomId);
+        console.log("Navigating to room with ID:", roomId);
         navigate(`/game/waiting/${roomId}`, {
           state: {
             roomNumber: roomId,
@@ -122,20 +145,32 @@ export const CreateRoomModal = ({ close }: CreateRoomModalProps) => {
   ];
 
   return (
-    <S.ModalContainer>
-      <S.Header>
-        <S.Title>방 생성하기</S.Title>
-        <S.No onClick={() => close(null)}>
-          <XBold />
-        </S.No>
-      </S.Header>
-      {container.map((detail) => (
-        <S.InputContainer key={detail.id}>
-          <S.InputContainerTitle>{detail.title}</S.InputContainerTitle>
-          {detail.detail}
-        </S.InputContainer>
-      ))}
-      <S.CreateButton onClick={onCreateRoomClick}>생성하기</S.CreateButton>
-    </S.ModalContainer>
+    <>
+      <S.ModalContainer>
+        <S.Header>
+          <S.Title>방 생성하기</S.Title>
+          <S.No onClick={() => close(null)}>
+            <XBold />
+          </S.No>
+        </S.Header>
+        {container.map((detail) => (
+          <S.InputContainer key={detail.id}>
+            <S.InputContainerTitle>{detail.title}</S.InputContainerTitle>
+            {detail.detail}
+          </S.InputContainer>
+        ))}
+        <S.CreateButton onClick={onCreateRoomClick}>생성하기</S.CreateButton>
+      </S.ModalContainer>
+      <ModalWrapper>
+        <TestModal
+          status={createModalStatus}
+          mode="알림"
+          title={createModalTitle}
+          subtitle={createModalSubtitle}
+          close={closeModal}
+          animation
+        />
+      </ModalWrapper>
+    </>
   );
 };

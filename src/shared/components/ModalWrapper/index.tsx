@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ModalPortal } from "@/shared/utils/protals/ModalPortal";
+import { ModalPortal } from "@/shared/utils/portals/ModalPortal";
 import styled from "styled-components";
 
 const Backdrop = styled.div`
