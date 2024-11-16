@@ -15,6 +15,7 @@ import { AceEditorComponent } from "../AceEditor";
 import { contestSubmit } from "../../api/contestSubmt";
 import { getTestcase } from "../../api/testcase";
 import { boilerplateCode } from "../../api/boilerplateCode";
+import { itemSubmit } from "../../api/gameApi";
 import * as S from "./style";
 
 interface TestCase {
@@ -43,9 +44,10 @@ export const CodeEditor = ({
     disconnectWebSocket,
   } = useWebSocket();
 
-  const { contestId, problemId } = useParams<{
+  const { contestId, problemId, roomId } = useParams<{
     contestId: string;
     problemId: string;
+    roomId: string;
   }>();
 
   const testBoxRef = useRef<{ resetAndEnableTerminal: () => void } | null>(
@@ -96,6 +98,7 @@ export const CodeEditor = ({
       })();
     }
   }, [languages, contestId, problemId]);
+
   const handleCodeChange = (newCode: string) => {
     if (!isInputDisable) {
       setCode(newCode);
@@ -107,6 +110,7 @@ export const CodeEditor = ({
       }
     }
   };
+
   const handleResetCode = async () => {
     try {
       const res = await boilerplateCode(languages);
@@ -127,6 +131,7 @@ export const CodeEditor = ({
     }
     return undefined;
   }, [submitStatus]);
+
   useEffect(() => {
     const updateEditorHeight = () => {
       const newHeight = window.innerHeight * 0.06;
@@ -233,8 +238,10 @@ export const CodeEditor = ({
         language: languages.toUpperCase(),
       });
     }
-    return gameSubmit({
-      id: Number(problemId),
+
+    return itemSubmit({
+      roomId,
+      problemId: Number(problemId),
       sourcecode: code,
       language: languages.toUpperCase(),
     });

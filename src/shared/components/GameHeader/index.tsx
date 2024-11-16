@@ -11,6 +11,7 @@ interface gameHeaderProps {
   problemsCount: number;
   problemIndex: number;
   noHeader?: boolean;
+  title?: string;
 }
 
 interface problemsType {
@@ -30,6 +31,7 @@ const GameHeader = ({
   problemsCount,
   problemIndex,
   noHeader = false,
+  title = "기본 게임 제목",
 }: gameHeaderProps) => {
   const { pathname } = window.location;
   const navigate = useNavigate();
@@ -83,7 +85,15 @@ const GameHeader = ({
           setRemainingTime(calculateRemainingTime(problems.endTime));
 
           intervalId = setInterval(() => {
-            setRemainingTime(calculateRemainingTime(problems.endTime));
+            const time = calculateRemainingTime(problems.endTime);
+            setRemainingTime(time);
+
+            if (time === "00 : 00 : 00") {
+              clearInterval(intervalId); // 타이머 중지
+              navigate(`/game/result/${roomId}`, {
+                state: { title },
+              });
+            }
           }, 1000);
         }
       } catch (err) {
@@ -93,31 +103,7 @@ const GameHeader = ({
     return () => {
       clearInterval(intervalId);
     };
-  }, [roomId]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    let intervalId: NodeJS.Timeout;
-
-    (async () => {
-      try {
-        const res: ContestDetails = await contestProblem(contestId);
-        setProblemList(res.problems);
-
-        setRemainingTime(calculateRemainingTime(res.endTime));
-
-        intervalId = setInterval(() => {
-          setRemainingTime(calculateRemainingTime(res.endTime));
-        }, 1000);
-      } catch (err) {
-        /**/
-      }
-    })();
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [contestId]);
+  }, [roomId, title]);
 
   const onNextClick = (mode: string) => {
     if (mode === "next") {

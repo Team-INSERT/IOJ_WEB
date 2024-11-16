@@ -1,4 +1,4 @@
-import { flex, NexonFont, Pretendard, theme } from "@/shared/style";
+import { flex, NexonFont, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
