@@ -19,7 +19,7 @@ import {
   ContestQuestion,
   ContestRank,
 } from "@/pages/room";
-import { Result } from "@/pages/result";
+import { Result, Detail } from "@/pages/result";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
@@ -76,6 +76,7 @@ const App = () => {
           <Route path="/game/waiting/:roomId" element={<Waiting />} />
           <Route path="/game/:roomId/code/:problemId" element={<Game />} />
           <Route path="/game/result/:roomId" element={<Result />} />
+          <Route path="/game/result/detail/:roomId" element={<Detail />} />
           <Route path="/game/:roomId" element={<Game />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>

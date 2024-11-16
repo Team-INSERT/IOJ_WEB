@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
-import Crown from "@/assets/Crown";
-import flash from "@/assets/flash.png";
-import Character from "@/assets/Character";
-import Podium from "@/assets/Podium.svg";
+import { Button } from "@/shared/components";
 import * as S from "./style";
-import { getItemResult } from "../api/getItemResult";
+import { getItemResult } from "../../api/getItemResult";
 
 interface RoomResultInfo {
   nickname: string;
@@ -20,7 +16,7 @@ interface RoomResultInfo {
   protectCnt: number;
 }
 
-export const Result = () => {
+export const Detail = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const location = useLocation();
@@ -58,13 +54,9 @@ export const Result = () => {
             mode="small"
             color="blue"
             font="nexon"
-            onClick={() =>
-              navigate(`/game/result/detail/${roomId}`, {
-                state: { itemRoomResult, title },
-              })
-            }
+            onClick={() => navigate(`/game/result/${roomId}`)}
           >
-            상세 정보 보기
+            돌아가기
           </Button>
         </S.GameInfo>
         <S.RankTable>
@@ -73,6 +65,8 @@ export const Result = () => {
             <S.RankHeaderItem>이름</S.RankHeaderItem>
             <S.RankHeaderItem>맞은 문제 수</S.RankHeaderItem>
             <S.RankHeaderItem>시간</S.RankHeaderItem>
+            <S.RankHeaderItem>사용한 아이템 수</S.RankHeaderItem>
+            <S.RankHeaderItem>방어한 횟수</S.RankHeaderItem>
           </S.RankHeader>
 
           {itemRoomResult.map((item, index) => (
@@ -85,50 +79,12 @@ export const Result = () => {
                   ? new Date(item.finishedTime).toLocaleTimeString()
                   : "-"}
               </S.RankTime>
+              <S.UseItem>{item.useItemCnt}개</S.UseItem>
+              <S.ShieldItem>{item.protectCnt}개</S.ShieldItem>
             </S.RankRow>
           ))}
         </S.RankTable>
       </S.RankingBox>
-      <S.Podium>
-        <S.FirstPlaceCharacter>
-          <S.CrownPosition>
-            <Crown />
-          </S.CrownPosition>
-          <S.Flash src={flash} />
-          <Character
-            characterColor={
-              itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
-            } // 1위 색상
-          />
-        </S.FirstPlaceCharacter>
-        <S.SecondPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
-            } // 2위 색상
-          />
-        </S.SecondPlaceCharacter>
-        <S.ThirdPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
-            } // 3위 색상
-          />
-        </S.ThirdPlaceCharacter>
-
-        <S.PodiumImg src={Podium} alt="Podium 이미지" />
-
-        <S.Button>
-          <Button
-            mode="big"
-            color="blue"
-            font="nexon"
-            onClick={() => navigate("/game/find")}
-          >
-            나가기
-          </Button>
-        </S.Button>
-      </S.Podium>
     </S.ResultBox>
   );
 };
