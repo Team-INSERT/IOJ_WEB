@@ -5,7 +5,6 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { Terminal } from "xterm";
 import { theme } from "@/shared/style";
 import { useTerminal } from "@/shared/hooks/useTerminal";
 import * as S from "./style";
@@ -122,8 +121,10 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
     useEffect(() => {
       inputDisableRef.current = isInputDisabled;
     }, [isInputDisabled]);
+
     useEffect(() => {
       if (isExecutionActive) {
+        inputDisableRef.current = false;
         initializeTerminal({
           terminalRef,
           inputDisableRef,
@@ -132,6 +133,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         });
       }
     }, [isExecutionActive, onSubmit, initializeTerminal]);
+
     useImperativeHandle(
       ref,
       () => ({
