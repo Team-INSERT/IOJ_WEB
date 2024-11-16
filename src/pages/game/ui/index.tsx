@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { GameHeader } from "@/shared/components";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Split from "react-split";
 import Warning from "@/shared/components/Item/warning";
@@ -72,6 +72,7 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const gameTitle = location.state?.title || "기본 게임 제목";
   const { problemId, contestId, roomId } = useParams();
@@ -119,10 +120,6 @@ export const Game = () => {
       };
     }
   }, [userId]);
-
-  useEffect(() => {
-    console.log("받은 게임 제목:", gameTitle);
-  }, [gameTitle]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -282,6 +279,7 @@ export const Game = () => {
       setIsDevilActive(false);
     }
   }, [isItemAnimation, attackInfo, userId]);
+
   return (
     <GameLayout
       isWaterBalloonVisible={isWaterBalloonVisible}
@@ -366,7 +364,7 @@ export const Game = () => {
           </ProblemWrapper>
           <CodeEditorWrapper ref={codeEditorRef}>
             <CodeEditor
-              isInputDisable={isWaterBalloonVisible}
+              isInputDisable={isWaterBalloonVisible && !isShieldActive}
               isDevilActive={isDevilActive}
             />
           </CodeEditorWrapper>

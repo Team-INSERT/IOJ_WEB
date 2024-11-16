@@ -31,7 +31,7 @@ const GameHeader = ({
   problemsCount,
   problemIndex,
   noHeader = false,
-  title = "기본 게임 제목",
+  title = "게임 기본 제목",
 }: gameHeaderProps) => {
   const { pathname } = window.location;
   const navigate = useNavigate();
@@ -104,6 +104,35 @@ const GameHeader = ({
       clearInterval(intervalId);
     };
   }, [roomId, title]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    let intervalId: NodeJS.Timeout;
+
+    const fetchContestDetails = async () => {
+      try {
+        const res: ContestDetails = await contestProblem(contestId);
+        setRemainingTime(calculateRemainingTime(res.endTime));
+
+        intervalId = setInterval(() => {
+          const time = calculateRemainingTime(res.endTime);
+          setRemainingTime(time);
+
+          if (time === "00 : 00 : 00") {
+            clearInterval(intervalId); // 타이머 중지
+          }
+        }, 1000);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchContestDetails();
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [contestId]);
 
   const onNextClick = (mode: string) => {
     if (mode === "next") {
