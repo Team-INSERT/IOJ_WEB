@@ -333,7 +333,67 @@ export const Game = () => {
                 )}
             </>
           )}
+
+        <GameHeader
+          problemsCount={problemsCount}
+          problemIndex={problemIndex}
+          noHeader={!roomId}
+          title={gameTitle}
+        />
+        <Split
+          sizes={[50, 50]}
+          minSize={200}
+          expandToMin={false}
+          gutterSize={0}
+          direction="horizontal"
+          style={{ display: "flex", width: "100%", height: "100%" }}
+        >
+          <ProblemWrapper>
+            <Problem
+              id={problemId?.padStart(4, "0") || ""}
+              title={problem.title}
+              timeLimit={problem.timeLimit}
+              memoryLimit={problem.memoryLimit}
+              content={problem.content}
+              inputContent={problem.inputContent}
+              outputContent={problem.outputContent}
+              level={problem.level}
+              testcases={problem.testcases}
+              source={problem.source}
+            />
+          </ProblemWrapper>
+          <CodeEditorWrapper ref={codeEditorRef}>
+            <CodeEditor
+              isInputDisable={isWaterBalloonVisible && !isShieldActive}
+              isDevilActive={isDevilActive}
+            />
+          </CodeEditorWrapper>
+          <ItemListWrapper>
+            <ItemIconList
+              roomId={roomId}
+              openModal={(item: string) => openModal(item)}
+              isWarningVisible={isWarningVisible}
+              key={refreshKey}
+            />
+          </ItemListWrapper>
+        </Split>
       </RotatableAnimation>
+
+      {isShieldActive && (
+        <OverlayItem isInkVisible={isVisible}>
+          <Shield />
+        </OverlayItem>
+      )}
+      {isModalOpen && roomId && (
+        <ModalLayout>
+          <ChooseAttackModal
+            roomId={roomId}
+            closeModal={closeModal}
+            item={selectedItem}
+            refreshItemList={refreshItemList}
+          />
+        </ModalLayout>
+      )}
     </GameLayout>
   );
 };
