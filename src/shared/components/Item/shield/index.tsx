@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
-const Shield = () => {
+const Shield = ({
+  onAnimationComplete,
+}: {
+  onAnimationComplete: () => void;
+}) => {
   const [hexagonVisible, setHexagonVisible] = useState<boolean[]>(
     Array(12).fill(false),
   );
@@ -12,6 +16,9 @@ const Shield = () => {
 
   useEffect(() => {
     setHexagonVisible(Array(12).fill(true));
+    setTextVisible(true);
+    setTextTranslate(-30);
+
     const fadeOutHexagon = (index: number) => {
       setFadeOut((prev) => {
         const newFade = [...prev];
@@ -27,36 +34,29 @@ const Shield = () => {
       }, 2500);
     };
 
-    const timeout = setTimeout(() => {
-      const leftTimeouts = Array.from({ length: 6 }, (_, i) =>
-        setTimeout(() => fadeOutHexagon(i), 100 * (i + 1)),
-      );
+    const leftTimeouts = Array.from({ length: 6 }, (_, i) =>
+      setTimeout(() => fadeOutHexagon(i), 100 * (i + 1)),
+    );
+    const rightTimeouts = Array.from({ length: 6 }, (_, i) =>
+      setTimeout(() => fadeOutHexagon(11 - i), 100 * (i + 1)),
+    );
 
-      const rightTimeouts = Array.from({ length: 6 }, (_, i) =>
-        setTimeout(() => fadeOutHexagon(11 - i), 100 * (i + 1)),
-      );
-
-      return () => {
-        leftTimeouts.forEach(clearTimeout);
-        rightTimeouts.forEach(clearTimeout);
-      };
-    }, 2500);
-
-    setTimeout(() => {
-      setTextVisible(true);
-      setTextTranslate(-30);
+    const textAnimationTimeout = setTimeout(() => {
+      setTextTranslate(40);
 
       setTimeout(() => {
-        setTextTranslate(40);
+        setTextVisible(false);
 
-        setTimeout(() => {
-          setTextVisible(false);
-        }, 1500);
-      }, 2000);
-    });
+        onAnimationComplete();
+      }, 1500);
+    }, 2000);
 
-    return () => clearTimeout(timeout);
-  }, []);
+    return () => {
+      leftTimeouts.forEach(clearTimeout);
+      rightTimeouts.forEach(clearTimeout);
+      clearTimeout(textAnimationTimeout);
+    };
+  }, [onAnimationComplete]);
 
   return (
     <S.Layout>
