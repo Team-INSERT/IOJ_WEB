@@ -108,6 +108,7 @@ export const Game = () => {
     connectWebSocket,
     disconnectWebSocket,
     handleAnimationComplete,
+    processNextAttackInQueue,
   } = useGameInfo(roomId || "", userId, refreshItemList);
 
   // eslint-disable-next-line consistent-return
@@ -125,26 +126,37 @@ export const Game = () => {
   };
 
   const handleShieldDefense = async () => {
-    const response = await itemDefense({
-      roomId: roomId || "",
-      item: attackInfo?.item || "",
-      attackUser: attackInfo?.attackUser || 0,
-    });
+    if (!isWarningVisible || !attackInfo) return;
 
-    if (response === true) {
-      setIsWaterBalloonVisible(false);
-      setIsShieldActive(true);
-      setIsVisible(false);
-      setIsWarningVisible(false);
-      refreshItemList();
-      handleAnimationComplete();
-    } else {
-      setIsModalOpen(true);
+    try {
+      const response = await itemDefense({
+        roomId: roomId || "",
+        item: attackInfo.item,
+        attackItemId: attackInfo.attackItemId,
+      });
+
+      if (response) {
+        console.log("방어 성공");
+        setIsShieldActive(true);
+        setIsWarningVisible(false);
+        setIsWaterBalloonVisible(false);
+
+        setTimeout(() => {
+          handleAnimationComplete(); // 애니메이션 완료 처리
+          processNextAttackInQueue(); // 다음 공격 실행
+        }, 500); // 0.5초 지연 후 실행
+      } else {
+        console.error("방어 실패:", response);
+        setIsModalOpen(true);
+      }
+    } catch (error) {
+      console.error("handleShieldDefense 에러:", error);
     }
   };
 
   const openModal = (item: string) => {
     setSelectedItem(item);
+    console.log("Clicked item:", item); // 추가
 
     if (item === "SHIELD") {
       if (isWarningVisible) {
@@ -381,7 +393,13 @@ export const Game = () => {
 
       {isShieldActive && (
         <OverlayItem isInkVisible={isVisible}>
-          <Shield />
+          <Shield
+            onAnimationComplete={() => {
+              console.log("Shield 애니메이션 완료");
+              setIsShieldActive(false);
+              refreshItemList(); // 아이템 리스트 갱신
+            }}
+          />
         </OverlayItem>
       )}
       {isModalOpen && roomId && (
@@ -397,3 +415,6 @@ export const Game = () => {
     </GameLayout>
   );
 };
+function processNextAttackInQueue(): void {
+  throw new Error("Function not implemented.");
+}

@@ -1,19 +1,20 @@
 import { useCallback, useRef, useState, useEffect } from "react";
 import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { getAttackStart } from "@/pages/game/api/getAttackStart";
 import { customAxios } from "../utils/customAxios";
 
 interface AttackInfo {
   item: "INK" | "DEVIL" | "BUBBLE" | "MIRROR";
   targetUser: number;
-  attackUser: number;
+  attackItemId: number;
 }
 
 interface GameEvent {
   type: "ATTACK" | "ITEM";
   item?: "INK" | "DEVIL" | "BUBBLE" | "MIRROR";
   targetUser?: number;
-  attackUser?: number;
+  attackItemId?: number;
 }
 
 export const useGameInfo = (
@@ -29,22 +30,63 @@ export const useGameInfo = (
   const [receivedAttackQueue, setReceivedAttackQueue] = useState<AttackInfo[]>(
     [],
   );
+  const handledAttackIds = useRef<Set<number>>(new Set());
+
+  const clearHandledAttackIds = useCallback(() => {
+    handledAttackIds.current.clear();
+  }, []);
 
   const processNextAttackInQueue = useCallback(() => {
-    if (!isItemAnimation.current && receivedAttackQueue.length > 0) {
-      const nextItem = receivedAttackQueue[0];
-      setAttackInfo(nextItem);
-      isItemAnimation.current = true;
+    if (isItemAnimation.current || receivedAttackQueue.length === 0) {
+      return;
+    }
+
+    const nextItem = receivedAttackQueue[0];
+
+    if (handledAttackIds.current.has(nextItem.attackItemId)) {
+      console.warn(
+        "이미 방어된 공격입니다. 다음으로 넘어갑니다. ID:",
+        nextItem.attackItemId,
+      );
+      setReceivedAttackQueue((prevQueue) => prevQueue.slice(1));
+      return;
+    }
+
+    setAttackInfo(nextItem);
+    isItemAnimation.current = true;
+
+    try {
+      getAttackStart(nextItem.attackItemId);
+    } catch (error) {
+      isItemAnimation.current = false;
     }
   }, [receivedAttackQueue]);
 
   const handleAnimationComplete = useCallback(() => {
-    isItemAnimation.current = false;
-    setAttackInfo(null);
     setReceivedAttackQueue((prevQueue) => {
       const updatedQueue = prevQueue.slice(1);
+
+      if (attackInfo) {
+        handledAttackIds.current.add(attackInfo.attackItemId);
+      }
+      if (updatedQueue.length > 0) {
+        const nextItem = updatedQueue[0];
+        if (!handledAttackIds.current.has(nextItem.attackItemId)) {
+          setAttackInfo(nextItem);
+        } else {
+          console.warn(
+            "큐에 있는 다음 공격이 이미 방어되었습니다:",
+            nextItem.attackItemId,
+          );
+        }
+      } else {
+        console.error("큐가 비어있음, 공격 중단");
+      }
+
       return updatedQueue;
     });
+
+    isItemAnimation.current = false;
   }, [attackInfo]);
 
   const processEvent = useCallback(
@@ -53,18 +95,14 @@ export const useGameInfo = (
         event.type === "ATTACK" &&
         event.item &&
         event.targetUser === userId &&
-        event.attackUser !== undefined
+        event.attackItemId !== undefined
       ) {
         const attackData: AttackInfo = {
           item: event.item,
           targetUser: event.targetUser,
-          attackUser: event.attackUser,
+          attackItemId: event.attackItemId,
         };
-
-        setReceivedAttackQueue((prevQueue) => {
-          const updatedQueue = [...prevQueue, attackData];
-          return updatedQueue;
-        });
+        setReceivedAttackQueue((prevQueue) => [...prevQueue, attackData]);
       } else if (event.type === "ITEM") {
         setIsAddItem(true);
         refreshItemList();
@@ -117,16 +155,18 @@ export const useGameInfo = (
     setAttackInfo(null);
     setIsAddItem(false);
     setReceivedAttackQueue([]);
-  }, []);
+    clearHandledAttackIds();
+  }, [clearHandledAttackIds]);
 
   return {
     isConnected,
-    isItemAnimation: isItemAnimation.current,
+    isItemAnimation,
     attackInfo,
     isAddItem,
     setIsAddItem,
     connectWebSocket,
     disconnectWebSocket,
     handleAnimationComplete,
+    processNextAttackInQueue,
   };
 };
