@@ -1,3 +1,19 @@
-//공통 컴포넌트들 불러오기
-export { Header } from "./header/index";
-export { footer } from "./footer/index";
+export { default as Button } from "./Button";
+export { default as MainHeader } from "./MainHeader/index";
+export { default as ContestTitle } from "./InGame/ContestTitle/index";
+export { default as Result } from "./InGame/Result/index";
+export { default as UserCompartment } from "./InGame/UserCompartment/index";
+export { default as Footer } from "./Footer/index";
+export { default as GameCard } from "./GameCard/index";
+export { default as Question } from "./Question/index";
+export { default as Room } from "./Room/index";
+export { default as WaitingRoom } from "./WaitingRoom";
+export { default as Stars } from "./Stars";
+export { default as Dropdown } from "./DropDown";
+export { default as GameHeader } from "./GameHeader/index";
+export { default as Level } from "./level";
+export { default as Submit } from "./Submit";
+export { default as level } from "./level";
+export { default as ErrorModal } from "./ErrorModal";
+export { default as Modal } from "./Modal/index";
+export { default as WaitingUser } from "./InGame/WaitingUser";

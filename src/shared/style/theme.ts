@@ -28,13 +28,13 @@ const theme = {
   blueDarkActive: "#003873",
   blueDarker: "#002859",
 
-  characterBlue: "#6B71FF",
-  characterPink: "#FF6AC3",
-  characterRed: "#FF6B6B",
-  characterPurple: "#C446EE",
-  characterNeon: "#65EEE83",
-  characterOrange: "#FF984D",
-  characterSkyblue: "#5CE2FF",
+  BLUE: "#6B71FF",
+  PINK: "#FF6AC3",
+  RED: "#FF6B6B",
+  PURPLE: "#C446EE",
+  NEON: "#65EE83",
+  ORANGE: "#FF984D",
+  SKYBLUE: "#5CE2FF",
 };
 
 export default theme;

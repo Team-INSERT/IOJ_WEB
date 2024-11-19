@@ -1,0 +1,1 @@
+export { Setting } from "./ui/page/Page";

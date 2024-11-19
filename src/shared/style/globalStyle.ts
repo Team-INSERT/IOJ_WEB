@@ -16,13 +16,6 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
 }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-
   :root {
     @media screen and (min-width: 1026px) and (max-width: 1440px) {
       font-size: 90%;
