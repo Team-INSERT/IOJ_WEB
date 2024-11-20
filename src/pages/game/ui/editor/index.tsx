@@ -303,14 +303,15 @@ export const CodeEditor = ({
       );
     }
   };
-
   const onTestcaseClick = async () => {
     if (isTestLoading) {
-      setIsModalOpen(true);
+      setErrorMessage("테스트케이스가 이미 로딩 중입니다!");
       return;
     }
+
     setActiveTab("testCases");
     setIsTestLoading(true);
+
     try {
       const res = await getTestcase({
         id: Number(problemId),
@@ -320,10 +321,12 @@ export const CodeEditor = ({
       setTestResult([...res]);
     } catch (err) {
       console.error(err);
+      setErrorMessage("테스트케이스를 가져오는 중 오류가 발생했습니다.");
     } finally {
       setIsTestLoading(false);
     }
   };
+
   return (
     <S.EditorLayout>
       {isModalOpen && (
@@ -420,7 +423,14 @@ export const CodeEditor = ({
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
-          onClose={() => navigate(`/game/contest/${contestId}`)}
+          onClose={() => {
+            if (contestId) {
+              navigate(`/game/contest/${contestId}`);
+            } else if (roomId) {
+              navigate(`/game/${roomId}/code/${problemId}`);
+            }
+            setErrorMessage(null);
+          }}
         />
       )}
       {isModalOpen && (
