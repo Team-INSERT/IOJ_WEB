@@ -7,6 +7,8 @@ import Crown from "@/assets/Crown";
 import flash from "@/assets/flash.png";
 import Character from "@/assets/Character";
 import Podium from "@/assets/Podium.svg";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom"; // 전역 상태 변수 import
 import * as S from "./style";
 import { getItemResult } from "../api/getItemResult";
 
@@ -24,7 +26,14 @@ export const Result = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
+  const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
+  useEffect(() => {
+    const storedTitle = localStorage.getItem("roomTitle") || "게임 제목 없음";
+    if (roomTitle === "게임 제목 없음") {
+      setRoomTitle(storedTitle);
+    }
+  }, [roomTitle, setRoomTitle]);
   useEffect(() => {
     const fetchData = async () => {
       if (roomId) {
@@ -51,7 +60,7 @@ export const Result = () => {
       </S.GreyBg>
       <S.RankingBox>
         <S.GameInfo>
-          <S.GameTitle>결과 화면</S.GameTitle>
+          <S.GameTitle>{roomTitle}</S.GameTitle>
           <Button
             mode="small"
             color="blue"

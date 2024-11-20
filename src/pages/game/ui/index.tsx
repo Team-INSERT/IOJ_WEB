@@ -76,13 +76,18 @@ export const ModalLayout = styled.div`
 export const Game = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
   const location = useLocation();
-  const gameTitle = location.state?.title || "기본 게임 제목";
+  const newGameTitle = location.state?.title || "게임 제목 없음";
 
   useEffect(() => {
-    if (gameTitle && roomTitle !== gameTitle) {
-      setRoomTitle(gameTitle);
+    if (newGameTitle && roomTitle !== newGameTitle) {
+      setRoomTitle(newGameTitle);
+      localStorage.setItem("roomTitle", newGameTitle);
     }
-  }, [gameTitle, roomTitle, setRoomTitle]);
+  }, [newGameTitle, roomTitle, setRoomTitle]);
+
+  useEffect(() => {
+    console.log("현재 게임 제목:", roomTitle);
+  }, [roomTitle]);
 
   const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
@@ -364,7 +369,7 @@ export const Game = () => {
           problemsCount={problemsCount}
           problemIndex={problemIndex}
           noHeader={!roomId}
-          title={gameTitle}
+          title={roomTitle}
         />
         <Split
           sizes={[50, 50]}
