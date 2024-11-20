@@ -98,13 +98,6 @@ export const Result = () => {
       </S.RankingBox>
       <S.Podium>
         <S.FirstPlaceCharacter>
-          <S.WinnerBox>
-            <S.WinnerCrown>
-              <Crown />
-            </S.WinnerCrown>
-            <S.NickName>{itemRoomResult[0]?.nickname || "1등 없음"}</S.NickName>
-          </S.WinnerBox>
-
           <S.CrownPosition>
             <Crown />
           </S.CrownPosition>
@@ -117,7 +110,6 @@ export const Result = () => {
         </S.FirstPlaceCharacter>
 
         <S.SecondPlaceCharacter>
-          <S.NickName>{itemRoomResult[1]?.nickname || "2등 없음"}</S.NickName>
           <Character
             characterColor={
               itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
@@ -126,7 +118,6 @@ export const Result = () => {
         </S.SecondPlaceCharacter>
 
         <S.ThirdPlaceCharacter>
-          <S.NickName>{itemRoomResult[2]?.nickname || "3등 없음"}</S.NickName>
           <Character
             characterColor={
               itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
