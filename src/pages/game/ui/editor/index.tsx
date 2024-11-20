@@ -8,7 +8,6 @@ import {
   ErrorModal,
   Modal,
 } from "@/shared/components";
-import { gameSubmit } from "@/pages/game/api/gameSubmit";
 import { useWebSocket } from "@/shared/hooks/useWebSocket";
 import { TestBox } from "../testbox";
 import { AceEditorComponent } from "../AceEditor";
@@ -71,15 +70,25 @@ export const CodeEditor = ({
   const [isInputDisabled, setInputDisabled] = useState(false);
   const [editorHeight, setEditorHeight] = useState<string>("18.5rem");
   const [input, setInput] = useState<string>("");
+  const [isContest, setIsContest] = useState<boolean>(false);
   const [submitStatus, setSubmitStatus] = useState<
     "Correct" | "RunTime" | "InCorrect" | null
   >(null);
   const [executionActive, setExecutionActive] = useState(isExecutionActive);
 
   useEffect(() => {
-    const savedCode = localStorage.getItem(
-      `code_${contestId}_${problemId}_${languages}`,
-    );
+    if (contestId && problemId) {
+      setIsContest(true);
+    } else {
+      setIsContest(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedCode = isContest
+      ? localStorage.getItem(`code_${contestId}_${problemId}_${languages}`)
+      : localStorage.getItem(`code_${problemId}_${languages}`);
+
     if (savedCode) {
       setCode(savedCode);
     } else {
@@ -88,10 +97,12 @@ export const CodeEditor = ({
           const res = await boilerplateCode(languages);
           setBoilerplate(res);
           setCode(res);
-          localStorage.setItem(
-            `code_${contestId}_${problemId}_${languages}`,
-            res,
-          );
+
+          const storageKey = isContest
+            ? `code_${contestId}_${problemId}_${languages}`
+            : `code_${problemId}`;
+
+          localStorage.setItem(storageKey, res);
         } catch (err) {
           console.error(err);
         }
@@ -102,12 +113,10 @@ export const CodeEditor = ({
   const handleCodeChange = (newCode: string) => {
     if (!isInputDisable) {
       setCode(newCode);
-      if (contestId && problemId) {
-        localStorage.setItem(
-          `code_${contestId}_${problemId}_${languages}`,
-          newCode,
-        );
-      }
+      const changedKey = isContest
+        ? `code_${contestId}_${problemId}_${languages}`
+        : `code_${problemId}_${languages}`;
+      localStorage.setItem(changedKey, newCode);
     }
   };
 
@@ -116,7 +125,10 @@ export const CodeEditor = ({
       const res = await boilerplateCode(languages);
       setBoilerplate(res);
       setCode(res);
-      localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, res);
+      const resetKey = isContest
+      ? `code_${contestId}_${problemId}_${languages}`
+      : `code_${problemId}_${languages}_`;
+      localStorage.setItem(resetKey, res)
     } catch (err) {
       console.error(err);
     }
@@ -188,10 +200,12 @@ export const CodeEditor = ({
   ]);
 
   const handleSaveCode = () => {
-    if (contestId && problemId) {
+    if (isContest) {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
-      setIsModalOpen(true);
+    } else {
+      localStorage.setItem(`code_${problemId}_${languages}`, code);
     }
+    setIsModalOpen(true);
   };
 
   useEffect(() => {

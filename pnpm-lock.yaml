@@ -71,6 +71,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-ga4:
+        specifier: ^2.1.0
+        version: 2.1.0
       react-lottie-player:
         specifier: ^2.1.0
         version: 2.1.0(react@18.3.1)
@@ -5168,6 +5171,9 @@ packages:
 
   react-error-overlay@6.0.11:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
+
+  react-ga4@2.1.0:
+    resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -12239,6 +12245,8 @@ snapshots:
       scheduler: 0.23.2
 
   react-error-overlay@6.0.11: {}
+
+  react-ga4@2.1.0: {}
 
   react-is@16.13.1: {}
 
