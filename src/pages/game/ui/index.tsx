@@ -274,6 +274,7 @@ export const Game = () => {
         setTimeout(() => {
           setRotationState("none");
           setIsMirrorOpen(false);
+          handleAnimationComplete();
         }, 4000);
       }, 5000);
     }
@@ -321,10 +322,7 @@ export const Game = () => {
                 attackInfo?.item === "MIRROR" &&
                 isVisible && (
                   <OverlayItem isInkVisible={isVisible}>
-                    <RotatableAnimation
-                      rotationState={rotationState}
-                      onAnimationComplete={handleAnimationComplete}
-                    />
+                    <RotatableAnimation rotationState={rotationState} />
                   </OverlayItem>
                 )}
               {!isShieldActive &&
