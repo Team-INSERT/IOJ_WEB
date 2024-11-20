@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
@@ -7,6 +7,8 @@ import Crown from "@/assets/Crown";
 import flash from "@/assets/flash.png";
 import Character from "@/assets/Character";
 import Podium from "@/assets/Podium.svg";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom"; // 전역 상태 변수 import
 import * as S from "./style";
 import { getItemResult } from "../api/getItemResult";
 
@@ -23,17 +25,22 @@ interface RoomResultInfo {
 export const Result = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const location = useLocation();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
-  const title = location.state?.title || "게임 제목 없음";
+  const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
+  useEffect(() => {
+    const storedTitle = localStorage.getItem("roomTitle") || "게임 제목 없음";
+    if (roomTitle === "게임 제목 없음") {
+      setRoomTitle(storedTitle);
+    }
+  }, [roomTitle, setRoomTitle]);
   useEffect(() => {
     const fetchData = async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res); // 응답 데이터 확인
-          setItemRoomResult(res); // 배열 바로 할당
+          console.log("API 응답:", res);
+          setItemRoomResult(res);
         } catch (err) {
           console.error("API 오류:", err);
         }
@@ -53,14 +60,14 @@ export const Result = () => {
       </S.GreyBg>
       <S.RankingBox>
         <S.GameInfo>
-          <S.GameTitle>{title}</S.GameTitle>
+          <S.GameTitle>{roomTitle}</S.GameTitle>
           <Button
             mode="small"
             color="blue"
             font="nexon"
             onClick={() =>
               navigate(`/game/result/detail/${roomId}`, {
-                state: { itemRoomResult, title },
+                state: { itemRoomResult },
               })
             }
           >
@@ -98,21 +105,23 @@ export const Result = () => {
           <Character
             characterColor={
               itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
-            } // 1위 색상
+            }
           />
         </S.FirstPlaceCharacter>
+
         <S.SecondPlaceCharacter>
           <Character
             characterColor={
               itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
-            } // 2위 색상
+            }
           />
         </S.SecondPlaceCharacter>
+
         <S.ThirdPlaceCharacter>
           <Character
             characterColor={
               itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
-            } // 3위 색상
+            }
           />
         </S.ThirdPlaceCharacter>
 

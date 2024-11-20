@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import "./index.css";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import ReactGA from "react-ga4";
 import App from "./app/App";
 

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
 import { Button } from "@/shared/components";
@@ -19,17 +21,16 @@ interface RoomResultInfo {
 export const Detail = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const location = useLocation();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
-  const title = location.state?.title || "게임 제목 없음";
+  const [roomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
     const fetchData = async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res); // 응답 데이터 확인
-          setItemRoomResult(res); // 배열 바로 할당
+          console.log("API 응답:", res);
+          setItemRoomResult(res);
         } catch (err) {
           console.error("API 오류:", err);
         }
@@ -49,7 +50,7 @@ export const Detail = () => {
       </S.GreyBg>
       <S.RankingBox>
         <S.GameInfo>
-          <S.GameTitle>{title}</S.GameTitle>
+          <S.GameTitle>{roomTitle}</S.GameTitle>
           <Button
             mode="small"
             color="blue"

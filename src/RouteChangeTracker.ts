@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import ReactGA from "react-ga4";
 
 const RouteChangeTracker = () => {

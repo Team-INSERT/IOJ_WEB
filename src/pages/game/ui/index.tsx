@@ -11,6 +11,8 @@ import Shield from "@/shared/components/Item/shield";
 import { RotatableAnimation } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -72,8 +74,21 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
+  const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
   const location = useLocation();
-  const gameTitle = location.state?.title || "기본 게임 제목";
+  const newGameTitle = location.state?.title || "게임 제목 없음";
+
+  useEffect(() => {
+    if (newGameTitle && roomTitle !== newGameTitle) {
+      setRoomTitle(newGameTitle);
+      localStorage.setItem("roomTitle", newGameTitle);
+    }
+  }, [newGameTitle, roomTitle, setRoomTitle]);
+
+  useEffect(() => {
+    console.log("현재 게임 제목:", roomTitle);
+  }, [roomTitle]);
+
   const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
@@ -354,7 +369,7 @@ export const Game = () => {
           problemsCount={problemsCount}
           problemIndex={problemIndex}
           noHeader={!roomId}
-          title={gameTitle}
+          title={roomTitle}
         />
         <Split
           sizes={[50, 50]}
