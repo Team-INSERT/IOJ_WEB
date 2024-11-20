@@ -129,3 +129,8 @@ export const Button = styled.div`
   width: 100%;
   padding-top: 10px;
 `;
+
+export const WinnerBox = styled.div``;
+export const WinnerCrown = styled.div``;
+
+export const NickName = styled.p``;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components";
 import GameRankBlue from "@/assets/GameRankBlue";
 import GameRankGrey from "@/assets/GameRankGrey";
@@ -23,17 +23,15 @@ interface RoomResultInfo {
 export const Result = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const location = useLocation();
   const [itemRoomResult, setItemRoomResult] = useState<RoomResultInfo[]>([]);
-  const title = location.state?.title || "게임 제목 없음";
 
   useEffect(() => {
     const fetchData = async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res); // 응답 데이터 확인
-          setItemRoomResult(res); // 배열 바로 할당
+          console.log("API 응답:", res);
+          setItemRoomResult(res);
         } catch (err) {
           console.error("API 오류:", err);
         }
@@ -53,14 +51,14 @@ export const Result = () => {
       </S.GreyBg>
       <S.RankingBox>
         <S.GameInfo>
-          <S.GameTitle>{title}</S.GameTitle>
+          <S.GameTitle>결과 화면</S.GameTitle>
           <Button
             mode="small"
             color="blue"
             font="nexon"
             onClick={() =>
               navigate(`/game/result/detail/${roomId}`, {
-                state: { itemRoomResult, title },
+                state: { itemRoomResult },
               })
             }
           >
@@ -91,6 +89,13 @@ export const Result = () => {
       </S.RankingBox>
       <S.Podium>
         <S.FirstPlaceCharacter>
+          <S.WinnerBox>
+            <S.WinnerCrown>
+              <Crown />
+            </S.WinnerCrown>
+            <S.NickName>{itemRoomResult[0]?.nickname || "1등 없음"}</S.NickName>
+          </S.WinnerBox>
+
           <S.CrownPosition>
             <Crown />
           </S.CrownPosition>
@@ -98,21 +103,25 @@ export const Result = () => {
           <Character
             characterColor={
               itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
-            } // 1위 색상
+            }
           />
         </S.FirstPlaceCharacter>
+
         <S.SecondPlaceCharacter>
+          <S.NickName>{itemRoomResult[1]?.nickname || "2등 없음"}</S.NickName>
           <Character
             characterColor={
               itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
-            } // 2위 색상
+            }
           />
         </S.SecondPlaceCharacter>
+
         <S.ThirdPlaceCharacter>
+          <S.NickName>{itemRoomResult[2]?.nickname || "3등 없음"}</S.NickName>
           <Character
             characterColor={
               itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
-            } // 3위 색상
+            }
           />
         </S.ThirdPlaceCharacter>
 

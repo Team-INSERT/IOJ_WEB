@@ -7,7 +7,7 @@ import Close from "@/assets/close.svg";
 import { useWaitingRoom } from "@/shared/hooks/useWaitingRoom";
 import { fetchUserData } from "@/shared/utils/auth/authService";
 import { getGameDetails } from "@/pages/game/api/getGameDetails";
-import useModal from "@/shared/hooks/useModal";
+
 import {
   roomDetail,
   enter,
@@ -149,7 +149,6 @@ export const Waiting = () => {
     }
   }, [roomStatus, roomId]);
 
-  // 문제 ID가 설정된 경우 navigate 호출 시 room.title 전달
   useEffect(() => {
     if (problemId) {
       navigate(`/game/${roomId}/code/${problemId}`, {
