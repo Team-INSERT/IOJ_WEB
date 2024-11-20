@@ -11,6 +11,8 @@ import Shield from "@/shared/components/Item/shield";
 import { RotatableAnimation } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -72,8 +74,16 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
+  const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
   const location = useLocation();
   const gameTitle = location.state?.title || "기본 게임 제목";
+
+  useEffect(() => {
+    if (gameTitle && roomTitle !== gameTitle) {
+      setRoomTitle(gameTitle);
+    }
+  }, [gameTitle, roomTitle, setRoomTitle]);
+
   const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
@@ -142,9 +152,9 @@ export const Game = () => {
         setIsWaterBalloonVisible(false);
 
         setTimeout(() => {
-          handleAnimationComplete(); // 애니메이션 완료 처리
-          processNextAttackInQueue(); // 다음 공격 실행
-        }, 500); // 0.5초 지연 후 실행
+          handleAnimationComplete();
+          processNextAttackInQueue();
+        }, 500);
       } else {
         console.error("방어 실패:", response);
         setIsModalOpen(true);
@@ -156,7 +166,7 @@ export const Game = () => {
 
   const openModal = (item: string) => {
     setSelectedItem(item);
-    console.log("Clicked item:", item); // 추가
+    console.log("Clicked item:", item);
 
     if (item === "SHIELD") {
       if (isWarningVisible) {
@@ -397,7 +407,7 @@ export const Game = () => {
             onAnimationComplete={() => {
               console.log("Shield 애니메이션 완료");
               setIsShieldActive(false);
-              refreshItemList(); // 아이템 리스트 갱신
+              refreshItemList();
             }}
           />
         </OverlayItem>
