@@ -42,10 +42,10 @@ const Room = ({
       <S.Details>
         <S.Title>{title}</S.Title>
         <S.CartegoryNumber>
-          <S.DarkGrayFont>{maxPeople}명</S.DarkGrayFont>/
-          <S.DarkGrayFont>
+          <S.DarkGrayFont>{maxPeople}명</S.DarkGrayFont>
+          {/* <S.DarkGrayFont>
             {maxPeople}명 중 {currentPeople}명
-          </S.DarkGrayFont>
+          </S.DarkGrayFont> */}
         </S.CartegoryNumber>
         <S.TimeLevel>
           <S.DarkGrayFont>{time}분</S.DarkGrayFont>/
