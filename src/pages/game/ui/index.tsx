@@ -90,7 +90,6 @@ export const Game = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [userId, setUserId] = useState(0);
-  const [isShieldActive, setIsShieldActive] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
@@ -103,12 +102,17 @@ export const Game = () => {
   const {
     isItemAnimation,
     attackInfo,
+    setAttackInfo,
     isAddItem,
     setIsAddItem,
+    isShieldActive,
+    setIsShieldActive,
     connectWebSocket,
     disconnectWebSocket,
     handleAnimationComplete,
     processNextAttackInQueue,
+    setReceivedAttackQueue,
+    handledAttackIds,
   } = useGameInfo(roomId || "", userId, refreshItemList);
 
   // eslint-disable-next-line consistent-return
@@ -126,7 +130,7 @@ export const Game = () => {
   };
 
   const handleShieldDefense = async () => {
-    if (!isWarningVisible || !attackInfo) return;
+    if (!attackInfo || !attackInfo.attackItemId) return; // 방어할 공격이 없으면 종료
 
     try {
       const response = await itemDefense({
@@ -136,18 +140,21 @@ export const Game = () => {
       });
 
       if (response) {
-        console.log("방어 성공");
+        handledAttackIds.current.add(attackInfo.attackItemId);
+
+        setReceivedAttackQueue((prevQueue) =>
+          prevQueue.filter(
+            (item) => item.attackItemId !== attackInfo.attackItemId,
+          ),
+        );
+
         setIsShieldActive(true);
-        setIsWarningVisible(false);
         setIsWaterBalloonVisible(false);
 
-        setTimeout(() => {
-          handleAnimationComplete(); // 애니메이션 완료 처리
-          processNextAttackInQueue(); // 다음 공격 실행
-        }, 500); // 0.5초 지연 후 실행
+        isItemAnimation.current = false;
+        setAttackInfo(null);
       } else {
         console.error("방어 실패:", response);
-        setIsModalOpen(true);
       }
     } catch (error) {
       console.error("handleShieldDefense 에러:", error);
@@ -156,7 +163,6 @@ export const Game = () => {
 
   const openModal = (item: string) => {
     setSelectedItem(item);
-    console.log("Clicked item:", item); // 추가
 
     if (item === "SHIELD") {
       if (isWarningVisible) {
@@ -396,8 +402,8 @@ export const Game = () => {
           <Shield
             onAnimationComplete={() => {
               console.log("Shield 애니메이션 완료");
-              setIsShieldActive(false);
-              refreshItemList(); // 아이템 리스트 갱신
+              setIsShieldActive(false); // 쉴드 상태 해제
+              processNextAttackInQueue(); // 다음 공격 실행
             }}
           />
         </OverlayItem>
@@ -415,6 +421,3 @@ export const Game = () => {
     </GameLayout>
   );
 };
-function processNextAttackInQueue(): void {
-  throw new Error("Function not implemented.");
-}

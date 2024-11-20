@@ -26,6 +26,7 @@ export const useGameInfo = (
   const isItemAnimation = useRef<boolean>(false);
   const [attackInfo, setAttackInfo] = useState<AttackInfo | null>(null);
   const [isAddItem, setIsAddItem] = useState<boolean>(false);
+  const [isShieldActive, setIsShieldActive] = useState<boolean>(false); // 추가된 상태
   const clientRef = useRef<Client | null>(null);
   const [receivedAttackQueue, setReceivedAttackQueue] = useState<AttackInfo[]>(
     [],
@@ -37,57 +38,45 @@ export const useGameInfo = (
   }, []);
 
   const processNextAttackInQueue = useCallback(() => {
-    if (isItemAnimation.current || receivedAttackQueue.length === 0) {
+    if (
+      isItemAnimation.current ||
+      isShieldActive ||
+      receivedAttackQueue.length === 0
+    ) {
       return;
     }
 
-    const nextItem = receivedAttackQueue[0];
+    const nextItem = receivedAttackQueue.find(
+      (item) => !handledAttackIds.current.has(item.attackItemId),
+    );
 
-    if (handledAttackIds.current.has(nextItem.attackItemId)) {
-      console.warn(
-        "이미 방어된 공격입니다. 다음으로 넘어갑니다. ID:",
-        nextItem.attackItemId,
+    if (nextItem) {
+      setAttackInfo(nextItem);
+      isItemAnimation.current = true;
+
+      try {
+        getAttackStart(nextItem.attackItemId);
+      } catch (error) {
+        console.error("공격 시작 실패:", error);
+        isItemAnimation.current = false;
+      }
+      setReceivedAttackQueue((prevQueue) =>
+        prevQueue.filter((item) => item.attackItemId !== nextItem.attackItemId),
       );
-      setReceivedAttackQueue((prevQueue) => prevQueue.slice(1));
-      return;
     }
-
-    setAttackInfo(nextItem);
-    isItemAnimation.current = true;
-
-    try {
-      getAttackStart(nextItem.attackItemId);
-    } catch (error) {
-      isItemAnimation.current = false;
-    }
-  }, [receivedAttackQueue]);
+  }, [receivedAttackQueue, isShieldActive]);
 
   const handleAnimationComplete = useCallback(() => {
-    setReceivedAttackQueue((prevQueue) => {
-      const updatedQueue = prevQueue.slice(1);
-
-      if (attackInfo) {
-        handledAttackIds.current.add(attackInfo.attackItemId);
-      }
-      if (updatedQueue.length > 0) {
-        const nextItem = updatedQueue[0];
-        if (!handledAttackIds.current.has(nextItem.attackItemId)) {
-          setAttackInfo(nextItem);
-        } else {
-          console.warn(
-            "큐에 있는 다음 공격이 이미 방어되었습니다:",
-            nextItem.attackItemId,
-          );
-        }
-      } else {
-        console.error("큐가 비어있음, 공격 중단");
-      }
-
-      return updatedQueue;
-    });
-
+    if (!attackInfo) return;
+    setReceivedAttackQueue((prevQueue) =>
+      prevQueue.filter((item) => item.attackItemId !== attackInfo.attackItemId),
+    );
+    handledAttackIds.current.add(attackInfo.attackItemId);
     isItemAnimation.current = false;
-  }, [attackInfo]);
+    setAttackInfo(null);
+
+    processNextAttackInQueue();
+  }, [attackInfo, processNextAttackInQueue]);
 
   const processEvent = useCallback(
     (event: GameEvent) => {
@@ -159,14 +148,18 @@ export const useGameInfo = (
   }, [clearHandledAttackIds]);
 
   return {
-    isConnected,
     isItemAnimation,
     attackInfo,
+    setAttackInfo,
     isAddItem,
     setIsAddItem,
+    isShieldActive,
+    setIsShieldActive,
     connectWebSocket,
     disconnectWebSocket,
     handleAnimationComplete,
     processNextAttackInQueue,
+    setReceivedAttackQueue,
+    handledAttackIds,
   };
 };
