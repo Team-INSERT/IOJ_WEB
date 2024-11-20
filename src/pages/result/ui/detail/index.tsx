@@ -28,8 +28,8 @@ export const Detail = () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res); // 응답 데이터 확인
-          setItemRoomResult(res); // 배열 바로 할당
+          console.log("API 응답:", res);
+          setItemRoomResult(res);
         } catch (err) {
           console.error("API 오류:", err);
         }
