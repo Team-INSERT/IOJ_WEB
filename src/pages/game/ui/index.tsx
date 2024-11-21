@@ -165,6 +165,7 @@ export const Game = () => {
 
         setIsShieldActive(true);
         setIsWaterBalloonVisible(false);
+        refreshItemList();
 
         isItemAnimation.current = false;
         setAttackInfo(null);
@@ -287,9 +288,11 @@ export const Game = () => {
       setTimeout(() => {
         setRotationState("second");
         setTimeout(() => {
+          handleAnimationComplete();
+        }, 1000);
+        setTimeout(() => {
           setRotationState("none");
           setIsMirrorOpen(false);
-          handleAnimationComplete();
         }, 4000);
       }, 5000);
     }
