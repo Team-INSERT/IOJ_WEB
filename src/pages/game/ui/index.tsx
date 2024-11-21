@@ -421,8 +421,8 @@ export const Game = () => {
           <Shield
             onAnimationComplete={() => {
               console.log("Shield 애니메이션 완료");
-              setIsShieldActive(false); // 쉴드 상태 해제
-              processNextAttackInQueue(); // 다음 공격 실행
+              setIsShieldActive(false);
+              processNextAttackInQueue();
             }}
           />
         </OverlayItem>

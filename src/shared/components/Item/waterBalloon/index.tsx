@@ -6,7 +6,7 @@ import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
 const WaterBalloon = ({
-  notifyExecutionState, // 새로운 방식으로 상태 전달
+  notifyExecutionState,
   onAnimationComplete,
 }: {
   notifyExecutionState: (state: "idle" | "running" | "completed") => void;
@@ -19,9 +19,8 @@ const WaterBalloon = ({
   const [textVisible, setTextVisible] = useState(false);
   const [textTranslate, setTextTranslate] = useState(0);
 
-  const isBurstingRef = useRef(false); // 애니메이션 실행 여부 추적
+  const isBurstingRef = useRef(false);
 
-  // 애니메이션 상태를 외부에 알림
   const updateExecutionState = (state: "idle" | "running" | "completed") => {
     if (notifyExecutionState) {
       notifyExecutionState(state);
