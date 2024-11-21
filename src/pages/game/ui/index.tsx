@@ -354,11 +354,17 @@ export const Game = () => {
                 isVisible && (
                   <OverlayItem isInkVisible={isVisible}>
                     <WaterBalloon
-                      onBurstComplete={() => {
-                        setIsWaterBalloonVisible(false);
+                      notifyExecutionState={(state) => {
+                        if (state === "running") {
+                          console.log("running");
+                        } else if (state === "completed") {
+                          console.log("Water balloon animation completed.");
+                          setIsWaterBalloonVisible(false);
+                        }
+                      }}
+                      onAnimationComplete={() => {
                         handleAnimationComplete();
                       }}
-                      onAnimationComplete={handleAnimationComplete}
                     />
                   </OverlayItem>
                 )}
