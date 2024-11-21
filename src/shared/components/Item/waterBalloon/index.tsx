@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Balloon from "@/assets/Balloon";
 import Cursor from "@/assets/cursor.svg";
 import Boom from "@/assets/boom.svg";
@@ -6,25 +6,32 @@ import * as S from "./style";
 import ItemStatusText from "../../ItemStatusText";
 
 const WaterBalloon = ({
-  onBurstComplete,
+  notifyExecutionState,
   onAnimationComplete,
 }: {
-  onBurstComplete: () => void;
+  notifyExecutionState: (state: "idle" | "running" | "completed") => void;
   onAnimationComplete: () => void;
 }) => {
   const [width, setWidth] = useState(1200);
   const [spaceCount, setSpaceCount] = useState(0);
   const [isSpacePressed, setIsSpacePressed] = useState(false);
-  const [hasBurst, setHasBurst] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [textVisible, setTextVisible] = useState(false);
   const [textTranslate, setTextTranslate] = useState(0);
-  const [boomAnimationComplete, setBoomAnimationComplete] = useState(false);
+
+  const isBurstingRef = useRef(false);
+
+  const updateExecutionState = (state: "idle" | "running" | "completed") => {
+    if (notifyExecutionState) {
+      notifyExecutionState(state);
+    }
+  };
 
   const handleAnimationEnd = () => {
-    setBoomAnimationComplete(true);
+    isBurstingRef.current = false;
+    updateExecutionState("completed");
     if (onAnimationComplete) {
-      onAnimationComplete(); // 애니메이션 종료 후 호출
+      onAnimationComplete();
     }
   };
 
@@ -36,9 +43,10 @@ const WaterBalloon = ({
           setWidth((prevWidth) => prevWidth * 0.948);
           setSpaceCount((prevCount) => prevCount + 1);
         }
-        if (spaceCount === 17) {
-          setHasBurst(true);
-          onBurstComplete();
+
+        if (spaceCount === 17 && !isBurstingRef.current) {
+          isBurstingRef.current = true;
+          updateExecutionState("running");
         }
       }
     }
@@ -51,29 +59,6 @@ const WaterBalloon = ({
   };
 
   useEffect(() => {
-    if (boomAnimationComplete) {
-      setIsVisible(false);
-    }
-  }, [boomAnimationComplete]);
-
-  useEffect(() => {
-    const translateDown = setTimeout(() => {
-      setTextVisible(true);
-      setTextTranslate(-30);
-
-      setTimeout(() => {
-        setTextTranslate(40);
-
-        setTimeout(() => {
-          setTextVisible(false);
-        }, 600);
-      }, 800);
-    });
-
-    return () => clearTimeout(translateDown);
-  }, []);
-
-  useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -82,8 +67,9 @@ const WaterBalloon = ({
     };
   }, [spaceCount, isSpacePressed]);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (hasBurst) {
+    if (isBurstingRef.current) {
       const boomImage = document.getElementById("boomImage");
       if (boomImage) {
         boomImage.addEventListener("animationend", handleAnimationEnd);
@@ -92,8 +78,7 @@ const WaterBalloon = ({
         };
       }
     }
-    return () => {};
-  }, [hasBurst]);
+  }, [isBurstingRef.current]);
 
   const barCount = 18;
   const barColors = Array.from({ length: barCount }, (_, index) => {
@@ -111,24 +96,24 @@ const WaterBalloon = ({
 
   return isVisible ? (
     <S.Layout>
-      {!hasBurst && <S.Bar>{barColors}</S.Bar>}
-      {!hasBurst && spaceCount < 18 ? (
+      {!isBurstingRef.current && <S.Bar>{barColors}</S.Bar>}
+      {!isBurstingRef.current && spaceCount < 18 ? (
         <S.AnimatedBalloon>
           <Balloon width={width} />
         </S.AnimatedBalloon>
       ) : null}
-      {hasBurst && (
+      {isBurstingRef.current && (
         <S.BoomImage
           id="boomImage"
           src={Boom}
           alt="Boom!"
           style={{
-            opacity: boomAnimationComplete ? 0 : 1,
+            opacity: isBurstingRef.current ? 1 : 0,
             transition: "opacity 1s ease",
           }}
         />
       )}
-      {!hasBurst && (
+      {!isBurstingRef.current && (
         <>
           <S.Space isPressed={isSpacePressed}>SPACE!!</S.Space>
           <S.Cursor src={Cursor} />
