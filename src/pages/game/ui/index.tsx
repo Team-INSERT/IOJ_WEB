@@ -11,6 +11,8 @@ import Shield from "@/shared/components/Item/shield";
 import { RotatableAnimation } from "@/shared/components/Item/Mirror";
 import Devil from "@/shared/components/Item/devil";
 import WaterBalloon from "@/shared/components/Item/waterBalloon";
+import { useAtom } from "jotai";
+import { roomTitleAtom } from "@/shared/utils/atom/roomTitelAtom";
 import { CodeEditor } from "./editor";
 import { Problem } from "./problem";
 import { gameDetail } from "../api/gameDetail";
@@ -72,8 +74,21 @@ export const ModalLayout = styled.div`
 `;
 
 export const Game = () => {
+  const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
   const location = useLocation();
-  const gameTitle = location.state?.title || "기본 게임 제목";
+  const newGameTitle = location.state?.title || "게임 제목 없음";
+
+  useEffect(() => {
+    if (newGameTitle && roomTitle !== newGameTitle) {
+      setRoomTitle(newGameTitle);
+      localStorage.setItem("roomTitle", newGameTitle);
+    }
+  }, [newGameTitle, roomTitle, setRoomTitle]);
+
+  useEffect(() => {
+    console.log("현재 게임 제목:", roomTitle);
+  }, [roomTitle]);
+
   const { problemId, contestId, roomId } = useParams();
   const [problem, setProblem] = useState<problemInfoProps>({
     title: "",
@@ -90,7 +105,6 @@ export const Game = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [userId, setUserId] = useState(0);
-  const [isShieldActive, setIsShieldActive] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
@@ -103,12 +117,17 @@ export const Game = () => {
   const {
     isItemAnimation,
     attackInfo,
+    setAttackInfo,
     isAddItem,
     setIsAddItem,
+    isShieldActive,
+    setIsShieldActive,
     connectWebSocket,
     disconnectWebSocket,
     handleAnimationComplete,
     processNextAttackInQueue,
+    setReceivedAttackQueue,
+    handledAttackIds,
   } = useGameInfo(roomId || "", userId, refreshItemList);
 
   // eslint-disable-next-line consistent-return
@@ -126,7 +145,7 @@ export const Game = () => {
   };
 
   const handleShieldDefense = async () => {
-    if (!isWarningVisible || !attackInfo) return;
+    if (!attackInfo || !attackInfo.attackItemId) return; // 방어할 공격이 없으면 종료
 
     try {
       const response = await itemDefense({
@@ -136,18 +155,22 @@ export const Game = () => {
       });
 
       if (response) {
-        console.log("방어 성공");
-        setIsShieldActive(true);
-        setIsWarningVisible(false);
-        setIsWaterBalloonVisible(false);
+        handledAttackIds.current.add(attackInfo.attackItemId);
 
-        setTimeout(() => {
-          handleAnimationComplete(); // 애니메이션 완료 처리
-          processNextAttackInQueue(); // 다음 공격 실행
-        }, 500); // 0.5초 지연 후 실행
+        setReceivedAttackQueue((prevQueue) =>
+          prevQueue.filter(
+            (item) => item.attackItemId !== attackInfo.attackItemId,
+          ),
+        );
+
+        setIsShieldActive(true);
+        setIsWaterBalloonVisible(false);
+        refreshItemList();
+
+        isItemAnimation.current = false;
+        setAttackInfo(null);
       } else {
         console.error("방어 실패:", response);
-        setIsModalOpen(true);
       }
     } catch (error) {
       console.error("handleShieldDefense 에러:", error);
@@ -156,7 +179,6 @@ export const Game = () => {
 
   const openModal = (item: string) => {
     setSelectedItem(item);
-    console.log("Clicked item:", item); // 추가
 
     if (item === "SHIELD") {
       if (isWarningVisible) {
@@ -266,6 +288,9 @@ export const Game = () => {
       setTimeout(() => {
         setRotationState("second");
         setTimeout(() => {
+          handleAnimationComplete();
+        }, 1000);
+        setTimeout(() => {
           setRotationState("none");
           setIsMirrorOpen(false);
         }, 4000);
@@ -315,10 +340,7 @@ export const Game = () => {
                 attackInfo?.item === "MIRROR" &&
                 isVisible && (
                   <OverlayItem isInkVisible={isVisible}>
-                    <RotatableAnimation
-                      rotationState={rotationState}
-                      onAnimationComplete={handleAnimationComplete}
-                    />
+                    <RotatableAnimation rotationState={rotationState} />
                   </OverlayItem>
                 )}
               {!isShieldActive &&
@@ -335,11 +357,17 @@ export const Game = () => {
                 isVisible && (
                   <OverlayItem isInkVisible={isVisible}>
                     <WaterBalloon
-                      onBurstComplete={() => {
-                        setIsWaterBalloonVisible(false);
+                      notifyExecutionState={(state) => {
+                        if (state === "running") {
+                          console.log("running");
+                        } else if (state === "completed") {
+                          console.log("Water balloon animation completed.");
+                          setIsWaterBalloonVisible(false);
+                        }
+                      }}
+                      onAnimationComplete={() => {
                         handleAnimationComplete();
                       }}
-                      onAnimationComplete={handleAnimationComplete}
                     />
                   </OverlayItem>
                 )}
@@ -350,7 +378,7 @@ export const Game = () => {
           problemsCount={problemsCount}
           problemIndex={problemIndex}
           noHeader={!roomId}
-          title={gameTitle}
+          title={roomTitle}
         />
         <Split
           sizes={[50, 50]}
@@ -397,7 +425,7 @@ export const Game = () => {
             onAnimationComplete={() => {
               console.log("Shield 애니메이션 완료");
               setIsShieldActive(false);
-              refreshItemList(); // 아이템 리스트 갱신
+              processNextAttackInQueue();
             }}
           />
         </OverlayItem>
@@ -415,6 +443,3 @@ export const Game = () => {
     </GameLayout>
   );
 };
-function processNextAttackInQueue(): void {
-  throw new Error("Function not implemented.");
-}

@@ -89,10 +89,14 @@ const GameHeader = ({
             setRemainingTime(time);
 
             if (time === "00 : 00 : 00") {
-              clearInterval(intervalId); // 타이머 중지
-              navigate(`/game/result/${roomId}`, {
-                state: { title },
-              });
+              clearInterval(intervalId);
+              setTimeout(async () => {
+                navigate(`/game/result/${roomId}`, {
+                  state: {
+                    title,
+                  },
+                });
+              }, 600);
             }
           }, 1000);
         }

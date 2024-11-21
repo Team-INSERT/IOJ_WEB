@@ -24,6 +24,7 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
 }) => {
   const [code, setCode] = useState<string>(initialCode);
   const editorRef = useRef<any>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     setCode(initialCode);
@@ -79,6 +80,7 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
           selection.moveCursorBy(0, 1);
         },
       });
+      console.log("Devil 모드 명령 추가됨");
     }
   };
 
@@ -92,13 +94,32 @@ export const AceEditorComponent: React.FC<AceEditorComponentProps> = ({
 
   useEffect(() => {
     if (isDevilActive) {
+      console.log("Devil 모드 활성화");
       addDevilModeCommands();
+
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // 9.5초 후 Devil 모드 자동 종료
+      timeoutRef.current = window.setTimeout(() => {
+        removeDevilModeCommands();
+        timeoutRef.current = null;
+      }, 9500); // 9.5초
     } else {
       removeDevilModeCommands();
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     }
 
     return () => {
       removeDevilModeCommands();
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, [isDevilActive]);
 
