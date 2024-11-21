@@ -41,11 +41,13 @@ const OctopusInk = ({
 
       setTimeout(() => {
         setShrink(true);
+        setTimeout(() => {
+          onAnimationComplete();
+        }, 1000);
       }, 4000);
 
       setTimeout(() => {
         setTextHidden(true);
-        onAnimationComplete();
       }, 1600);
     }
   }, [visibleLogos, onAnimationComplete]);
