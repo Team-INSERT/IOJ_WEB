@@ -29,6 +29,16 @@ export const Result = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
+    const codePattern = /^code_\d+_[a-zA-Z]+$/; // code_숫자_언어 형식
+    Object.keys(localStorage).forEach((key) => {
+      if (codePattern.test(key)) {
+        console.log(`Deleting key: ${key}`); // 삭제 키 확인용
+        localStorage.removeItem(key);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const storedTitle = localStorage.getItem("roomTitle") || "게임 제목 없음";
     if (roomTitle === "게임 제목 없음") {
       setRoomTitle(storedTitle);
