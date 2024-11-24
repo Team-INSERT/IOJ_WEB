@@ -79,16 +79,21 @@ export const CodeEditor = ({
   useEffect(() => {
     if (contestId && problemId) {
       setIsContest(true);
-    } else {
+    } else if (contestId === undefined && problemId) {
       setIsContest(false);
     }
-  }, []);
+  }, [contestId, problemId]);
 
   useEffect(() => {
-    const savedCode = isContest
-      ? localStorage.getItem(`code_${contestId}_${problemId}_${languages}`)
-      : localStorage.getItem(`code_${problemId}_${languages}`);
+    if (problemId === undefined) {
+      return;
+    }
 
+    const storageKey = contestId
+      ? `code_${contestId}_${problemId}_${languages}`
+      : `code_${problemId}_${languages}`;
+
+    const savedCode = localStorage.getItem(storageKey);
     if (savedCode) {
       setCode(savedCode);
     } else {
@@ -97,14 +102,9 @@ export const CodeEditor = ({
           const res = await boilerplateCode(languages);
           setBoilerplate(res);
           setCode(res);
-
-          const storageKey = isContest
-            ? `code_${contestId}_${problemId}_${languages}`
-            : `code_${problemId}`;
-
           localStorage.setItem(storageKey, res);
         } catch (err) {
-          console.error(err);
+          /**/
         }
       })();
     }
@@ -126,11 +126,11 @@ export const CodeEditor = ({
       setBoilerplate(res);
       setCode(res);
       const resetKey = isContest
-      ? `code_${contestId}_${problemId}_${languages}`
-      : `code_${problemId}_${languages}_`;
-      localStorage.setItem(resetKey, res)
+        ? `code_${contestId}_${problemId}_${languages}`
+        : `code_${problemId}_${languages}_`;
+      localStorage.setItem(resetKey, res);
     } catch (err) {
-      console.error(err);
+      /**/
     }
   };
 
@@ -181,10 +181,10 @@ export const CodeEditor = ({
           }),
         });
       } else {
-        console.log("WebSocket client or session ID is not ready.");
+        /**/
       }
     } catch (err) {
-      console.error(err);
+      /**/
     } finally {
       setIsExecuteLoading(false);
     }

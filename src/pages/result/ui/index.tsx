@@ -29,25 +29,31 @@ export const Result = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
+    const codePattern = /^code_\d+_[a-zA-Z]+$/;
+    Object.keys(localStorage).forEach((key) => {
+      if (codePattern.test(key)) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const storedTitle = localStorage.getItem("roomTitle") || "게임 제목 없음";
     if (roomTitle === "게임 제목 없음") {
       setRoomTitle(storedTitle);
     }
   }, [roomTitle, setRoomTitle]);
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res);
           setItemRoomResult(res);
         } catch (err) {
-          console.error("API 오류:", err);
+          /**/
         }
       }
-    };
-
-    fetchData();
+    })();
   }, [roomId]);
 
   return (
