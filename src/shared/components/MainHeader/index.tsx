@@ -78,7 +78,7 @@ const MainHeader = () => {
         <S.Details>
           <S.DetailText onClick={onNameClick}>
             {accessToken && refreshToken
-              ? localStorage.getItem("name")
+              ? getCookie("name")
               : "로그인"}
           </S.DetailText>
           |
