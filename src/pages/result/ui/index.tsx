@@ -29,10 +29,9 @@ export const Result = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
-    const codePattern = /^code_\d+_[a-zA-Z]+$/; // code_숫자_언어 형식
+    const codePattern = /^code_\d+_[a-zA-Z]+$/;
     Object.keys(localStorage).forEach((key) => {
       if (codePattern.test(key)) {
-        console.log(`Deleting key: ${key}`); // 삭제 키 확인용
         localStorage.removeItem(key);
       }
     });
@@ -45,19 +44,16 @@ export const Result = () => {
     }
   }, [roomTitle, setRoomTitle]);
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res);
           setItemRoomResult(res);
         } catch (err) {
-          console.error("API 오류:", err);
+          /**/
         }
       }
-    };
-
-    fetchData();
+    })();
   }, [roomId]);
 
   return (

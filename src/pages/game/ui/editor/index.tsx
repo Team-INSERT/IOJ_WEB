@@ -79,10 +79,8 @@ export const CodeEditor = ({
   useEffect(() => {
     if (contestId && problemId) {
       setIsContest(true);
-      console.log("대회");
     } else if (contestId === undefined && problemId) {
       setIsContest(false);
-      console.log("방");
     }
   }, [contestId, problemId]);
 
@@ -106,7 +104,7 @@ export const CodeEditor = ({
           setCode(res);
           localStorage.setItem(storageKey, res);
         } catch (err) {
-          console.error(err);
+          /**/
         }
       })();
     }
@@ -132,7 +130,7 @@ export const CodeEditor = ({
         : `code_${problemId}_${languages}_`;
       localStorage.setItem(resetKey, res);
     } catch (err) {
-      console.error(err);
+      /**/
     }
   };
 
@@ -183,10 +181,10 @@ export const CodeEditor = ({
           }),
         });
       } else {
-        console.log("WebSocket client or session ID is not ready.");
+        /**/
       }
     } catch (err) {
-      console.error(err);
+      /**/
     } finally {
       setIsExecuteLoading(false);
     }
