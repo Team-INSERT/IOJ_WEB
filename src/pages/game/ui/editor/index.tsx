@@ -84,6 +84,11 @@ export const CodeEditor = ({
     }
   }, [contestId, problemId]);
 
+  const extractRoomId = (key: string): string | null => {
+    const match = key.match(/^room_([^_]+)_/);
+    return match ? match[1] : null;
+  };
+
   useEffect(() => {
     if (problemId === undefined) {
       return;
@@ -91,7 +96,20 @@ export const CodeEditor = ({
 
     const storageKey = contestId
       ? `code_${contestId}_${problemId}_${languages}`
-      : `code_${problemId}_${languages}`;
+      : `room_${roomId}_${problemId}_${languages}`;
+
+    if (!contestId) {
+      const keys = Object.keys(localStorage);
+
+      keys.forEach((key) => {
+        if (key.startsWith("room_")) {
+          const currentRoomId = extractRoomId(key);
+          if (currentRoomId !== roomId) {
+            localStorage.removeItem(key);
+          }
+        }
+      });
+    }
 
     const savedCode = localStorage.getItem(storageKey);
     if (savedCode) {
@@ -104,7 +122,7 @@ export const CodeEditor = ({
           setCode(res);
           localStorage.setItem(storageKey, res);
         } catch (err) {
-          /**/
+          console.error("Error fetching boilerplate code:", err);
         }
       })();
     }
@@ -115,7 +133,7 @@ export const CodeEditor = ({
       setCode(newCode);
       const changedKey = isContest
         ? `code_${contestId}_${problemId}_${languages}`
-        : `code_${problemId}_${languages}`;
+        : `room_${roomId}_${problemId}_${languages}`;
       localStorage.setItem(changedKey, newCode);
     }
   };
@@ -127,7 +145,7 @@ export const CodeEditor = ({
       setCode(res);
       const resetKey = isContest
         ? `code_${contestId}_${problemId}_${languages}`
-        : `code_${problemId}_${languages}_`;
+        : `room_${roomId}_${problemId}_${languages}`;
       localStorage.setItem(resetKey, res);
     } catch (err) {
       /**/
@@ -203,7 +221,7 @@ export const CodeEditor = ({
     if (isContest) {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
     } else {
-      localStorage.setItem(`code_${problemId}_${languages}`, code);
+      localStorage.setItem(`room_${roomId}_${problemId}_${languages}`, code);
     }
     setIsModalOpen(true);
   };

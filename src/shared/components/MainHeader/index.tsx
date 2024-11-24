@@ -24,7 +24,8 @@ const MainHeader = () => {
   const refreshToken = getCookie("refreshToken");
 
   const headerItemClick = (url: string, id: number) => {
-    if (id === 2 || id === 3) {
+    const navIds = [2, 3, 5];
+    if (navIds.includes(id)) {
       if (!isLogin) {
         setIsModalOpen(true);
         return;
@@ -46,7 +47,6 @@ const MainHeader = () => {
   const handleModalClose = (value: number) => {
     if (value === 0) {
       setIsModalOpen(false);
-      navigate("/login");
     }
   };
 
@@ -78,7 +78,7 @@ const MainHeader = () => {
         <S.Details>
           <S.DetailText onClick={onNameClick}>
             {accessToken && refreshToken
-              ? localStorage.getItem("name")
+              ? getCookie("name")
               : "로그인"}
           </S.DetailText>
           |

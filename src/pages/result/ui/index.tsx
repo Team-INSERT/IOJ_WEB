@@ -29,9 +29,9 @@ export const Result = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
-    const codePattern = /^code_\d+_[a-zA-Z]+$/;
+    const roomPattern = /^room_/;
     Object.keys(localStorage).forEach((key) => {
-      if (codePattern.test(key)) {
+      if (roomPattern.test(key)) {
         localStorage.removeItem(key);
       }
     });
