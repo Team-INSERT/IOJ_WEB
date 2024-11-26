@@ -62,7 +62,17 @@ export const GameFind = () => {
 
   return (
     <S.GameFindLayout>
-      <S.Title>게임찾기</S.Title>
+      <S.TitleLayout>
+        <S.Title>게임찾기</S.Title>
+        <Button
+          mode="small"
+          color="red"
+          font="pretendard"
+          onClick={() => navigate(-1)}
+        >
+          뒤로가기
+        </Button>
+      </S.TitleLayout>
       <S.FindCreateGame>
         <S.FindGame placeholder="방 제목을 입력하세요." />
         <Button

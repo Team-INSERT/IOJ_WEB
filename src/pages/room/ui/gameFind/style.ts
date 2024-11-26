@@ -5,6 +5,11 @@ export const GameFindLayout = styled.div`
   padding: 100px 230px;
   ${flex.COLUMN_FLEX}
 `;
+export const TitleLayout = styled.div`
+  width: 100%;
+  ${flex.BETWEEN};
+  align-items: end;
+`
 export const Title = styled.span`
   ${NexonFont.NexonBigTitle}
 `;
