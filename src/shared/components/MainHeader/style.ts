@@ -6,7 +6,7 @@ export const Layout = styled.div`
   height: 100px;
   ${flex.FLEX}
   position: relative;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.08);
 `;
 export const Logo = styled.div`
   ${flex.VERTICAL}

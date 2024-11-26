@@ -24,10 +24,12 @@ export const FindCreateGame = styled.div`
   gap: 8px;
 `;
 export const FindGame = styled.input`
-  padding-left: 9px;
-  border-radius: 4px;
+  padding-left: 12px;
   outline: none;
   border: 1px solid ${theme.grey200};
+  width: 220px;
+  border-radius: 4px;
+  background: #fff;
 `;
 export const GameList = styled.div`
   width: 100%;
