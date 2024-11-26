@@ -300,6 +300,7 @@ export const Game = () => {
   useEffect(() => {
     if (isWaterBalloonVisible && codeEditorRef.current) {
       codeEditorRef.current.blur();
+      closeModal();
     }
   }, [isWaterBalloonVisible]);
 
