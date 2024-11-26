@@ -2,7 +2,7 @@ import { flex, NexonFont, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const GameFindLayout = styled.div`
-  padding: 160px 230px;
+  padding: 100px 230px;
   ${flex.COLUMN_FLEX}
 `;
 export const Title = styled.span`
