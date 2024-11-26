@@ -42,16 +42,14 @@ const Room = ({
       <S.Details>
         <S.Title>{title}</S.Title>
         <S.CartegoryNumber>
-          <S.DarkGrayFont>{maxPeople}명</S.DarkGrayFont>
-          {/* <S.DarkGrayFont>
-            {maxPeople}명 중 {currentPeople}명
-          </S.DarkGrayFont> */}
+          <S.Grey700Font>아이템전 <S.Grey400Font>/</S.Grey400Font> 개인전 <S.Grey400Font>/</S.Grey400Font> {maxPeople}명</S.Grey700Font>
         </S.CartegoryNumber>
         <S.TimeLevel>
-          <S.DarkGrayFont>{time}분</S.DarkGrayFont>/
-          <S.DarkGrayFont>
+          <S.Grey700Font>{time}분</S.Grey700Font>
+          <S.Grey400Font>/</S.Grey400Font>
+          <S.Grey700Font>
             {minDifficulty}-{maxDifficulty}⭐️
-          </S.DarkGrayFont>
+          </S.Grey700Font>
         </S.TimeLevel>
       </S.Details>
     </S.Layout>

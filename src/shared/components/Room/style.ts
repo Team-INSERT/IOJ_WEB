@@ -68,6 +68,9 @@ export const TimeLevel = styled.div`
   gap: 2px;
 `;
 
-export const DarkGrayFont = styled.div`
+export const Grey700Font = styled.div`
   color: ${theme.grey700};
 `;
+export const Grey400Font = styled.span`
+  color: ${theme.grey400};
+`
