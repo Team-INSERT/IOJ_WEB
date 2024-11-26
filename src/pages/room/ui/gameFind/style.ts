@@ -10,14 +10,14 @@ export const TitleLayout = styled.div`
   width: 100%;
   ${flex.BETWEEN};
   align-items: end;
-`
+`;
 export const Title = styled.span`
   ${NexonFont.NexonBigTitle}
 `;
 export const MainContents = styled.div`
   ${flex.COLUMN_END};
   gap: 12px;
-`
+`;
 export const FindCreateGame = styled.div`
   ${flex.FLEX}
   margin-left: auto;

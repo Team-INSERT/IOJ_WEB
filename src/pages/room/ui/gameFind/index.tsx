@@ -79,7 +79,7 @@ export const GameFind = () => {
           <Button
             mode="small"
             color="blue"
-            font="nexon"
+            font="pretendard"
             onClick={openCreateRoomModal}
           >
             방 생성하기
