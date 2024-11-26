@@ -2,8 +2,11 @@ import { flex, NexonFont, theme } from "@/shared/style";
 import styled from "styled-components";
 
 export const Layout = styled.div`
+  height: calc(100vh - 100px);
+  ${flex.CENTER};
+`;
+export const Contents = styled.div`
   ${flex.COLUMN_VERTICAL}
-  padding: 4rem 0 4rem 0;
 `;
 export const Title = styled.div`
   ${NexonFont.NexonBigTitle}
@@ -20,6 +23,6 @@ export const Line = styled.div`
 `;
 export const ChooseGameMode = styled.div`
   ${flex.CENTER}
-  padding-top: 52px;
+  padding-top: 40px;
   gap: 30px;
 `;

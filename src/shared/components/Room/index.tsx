@@ -1,5 +1,5 @@
-import Contest from "@/assets/Contest.svg";
-import Customization from "@/assets/Customization.svg";
+import BlueBg from "@/assets/BlueBg";
+import GrayBg from "@/assets/GrayBg";
 import * as S from "./style";
 
 interface RoomProps {
@@ -11,7 +11,6 @@ interface RoomProps {
   maxDifficulty: number;
   time: number;
   currentPeople?: number;
-  category?: string;
   onClick?: () => void;
   roomNumber: string;
 }
@@ -25,37 +24,38 @@ const Room = ({
   maxDifficulty,
   time,
   currentPeople = 0,
-  category = "customization",
   onClick,
   roomNumber,
-}: RoomProps) => {
-  const backgroundImage = category === "contest" ? Contest : Customization;
-
-  return (
-    <S.Layout
-      backgroundImage={backgroundImage}
-      category={category}
-      onClick={onClick}
-    >
-      <S.Number category={category}>{roomNumber}</S.Number>
-      <S.Line />
-      <S.Details>
-        <S.Title>{title}</S.Title>
+}: RoomProps) => (
+  <S.Layout onClick={onClick}>
+    <S.BlueBgLayout>
+      <BlueBg />
+    </S.BlueBgLayout>
+    <S.GrayBgLayout>
+      <GrayBg />
+    </S.GrayBgLayout>
+    <S.NumberLayout>
+      <S.Number>{roomNumber}</S.Number>
+    </S.NumberLayout>
+    <S.Details>
+      <S.Title>{title}</S.Title>
+      <S.RoomInfoDetails>
         <S.CartegoryNumber>
-          <S.DarkGrayFont>{maxPeople}명</S.DarkGrayFont>
-          {/* <S.DarkGrayFont>
-            {maxPeople}명 중 {currentPeople}명
-          </S.DarkGrayFont> */}
+          <S.Grey700Font>
+            아이템전 <S.Grey400Font>/</S.Grey400Font> 개인전{" "}
+            <S.Grey400Font>/</S.Grey400Font> {maxPeople}명
+          </S.Grey700Font>
         </S.CartegoryNumber>
         <S.TimeLevel>
-          <S.DarkGrayFont>{time}분</S.DarkGrayFont>/
-          <S.DarkGrayFont>
+          <S.Grey700Font>{time}분 </S.Grey700Font>
+          <S.Grey400Font>/ </S.Grey400Font>
+          <S.Grey700Font>
             {minDifficulty}-{maxDifficulty}⭐️
-          </S.DarkGrayFont>
+          </S.Grey700Font>
         </S.TimeLevel>
-      </S.Details>
-    </S.Layout>
-  );
-};
+      </S.RoomInfoDetails>
+    </S.Details>
+  </S.Layout>
+);
 
 export default Room;

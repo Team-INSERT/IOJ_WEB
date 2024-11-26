@@ -9,7 +9,6 @@ export const Container = styled.div`
   ${flex.COLUMN_FLEX}
   width: 100%;
   height: 100vh;
-  background-color: #222;
   color: white;
   overflow-x: hidden;
   background-color: ${theme.black};
@@ -127,8 +126,4 @@ export const ResultBox = styled.div`
   background-color: ${theme.grey800};
   color: ${theme.white};
   border-radius: 4px;
-`;
-
-export const Trmt = styled.div`
-  text-align: left !important; /* 터미널 텍스트를 좌측 정렬 */
 `;
