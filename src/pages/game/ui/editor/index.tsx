@@ -410,23 +410,6 @@ export const CodeEditor = ({
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-      <Split
-        direction="vertical"
-        sizes={[50, 50]}
-        minSize={100}
-        gutterSize={10}
-        gutterAlign="center"
-        style={{ height: "100%", width: "100%" }}
-        cursor="row-resize"
-        gutter={(direction) => {
-          const gutter = document.createElement("div");
-          gutter.className = `gutter gutter-${direction}`;
-          gutter.onmouseenter = () => {
-            gutter.style.cursor = "row-resize";
-          };
-          return gutter;
-        }}
-      >
         <AceEditorComponent
           initialCode={code}
           language={languages}
@@ -451,7 +434,6 @@ export const CodeEditor = ({
             errorMessage={errorMessage}
           />
         </S.TestBoxLayout>
-      </Split>
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
