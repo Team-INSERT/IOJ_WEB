@@ -20,7 +20,6 @@ export const Main = () => {
   const handleModalClose = (value: number) => {
     if (value === 0) {
       setIsModalOpen(false);
-      navigate("/login");
     }
   };
 

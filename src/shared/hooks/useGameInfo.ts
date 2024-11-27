@@ -68,10 +68,16 @@ export const useGameInfo = (
 
   const handleAnimationComplete = useCallback(() => {
     if (!attackInfo) return;
+
+    if (!handledAttackIds.current.has(attackInfo.attackItemId)) {
+      handledAttackIds.current.add(attackInfo.attackItemId);
+      console.log("Attack handled:", attackInfo.attackItemId);
+    }
+
     setReceivedAttackQueue((prevQueue) =>
       prevQueue.filter((item) => item.attackItemId !== attackInfo.attackItemId),
     );
-    handledAttackIds.current.add(attackInfo.attackItemId);
+
     isItemAnimation.current = false;
     setAttackInfo(null);
 
@@ -103,7 +109,7 @@ export const useGameInfo = (
   );
 
   useEffect(() => {
-    if (receivedAttackQueue.length > 0 && !isItemAnimation.current) {
+    if (!isItemAnimation.current) {
       processNextAttackInQueue();
     }
   }, [receivedAttackQueue, processNextAttackInQueue]);
@@ -115,18 +121,20 @@ export const useGameInfo = (
       webSocketFactory: () => socket,
       onConnect: () => {
         setIsConnected(true);
+        console.log("WebSocket connected");
 
         stompClient.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {
           try {
             const event: GameEvent = JSON.parse(message.body);
+            console.log("Received event:", event);
             processEvent(event);
           } catch (error) {
-            console.error("WebSocket 메시지 처리 중 오류:", error);
+            console.error("WebSocket message processing error:", error);
           }
         });
       },
       onStompError: (frame) => {
-        console.error("WebSocket 오류:", frame.headers.message);
+        console.error("WebSocket error:", frame.headers.message);
         setIsConnected(false);
       },
     });

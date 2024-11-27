@@ -181,7 +181,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
           )}
           {activeTab === "testCases" &&
             (isErrorOutput(testResult[0]?.verdict) && !isTestLoading ? (
-              <>
+              <S.ScrollableSection>
                 <S.TestCasesHeader>
                   테스트케이스 일치 비율 :{" "}
                   <S.StyledSpan>{acceptCount}</S.StyledSpan> /{" "}
@@ -195,9 +195,9 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
                   바랍니다.
                 </S.TestCasesNote>
                 <pre>{errorOutput}</pre>
-              </>
+              </S.ScrollableSection>
             ) : (
-              <>
+              <S.ScrollableSection>
                 <S.TestCasesHeader>
                   테스트케이스 일치 비율 :{" "}
                   <S.StyledSpan>{acceptCount}</S.StyledSpan> /{" "}
@@ -258,7 +258,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
                     </S.TableBody>
                   </S.Table>
                 </S.ScrollLayout>
-              </>
+              </S.ScrollableSection>
             ))}
           {activeTab === "results" && (
             <S.ResultBoxContainer>
