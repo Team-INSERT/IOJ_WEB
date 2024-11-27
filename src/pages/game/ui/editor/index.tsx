@@ -456,10 +456,8 @@ export const CodeEditor = ({
         <ErrorModal
           errorMessage={errorMessage}
           onClose={() => {
-            if (contestId) {
+            if (contestId && (errorMessage === "종료된 대회입니다.")) {
               navigate(`/game/contest/${contestId}`);
-            } else if (roomId) {
-              navigate(`/game/${roomId}/code/${problemId}`);
             }
             setErrorMessage(null);
           }}
