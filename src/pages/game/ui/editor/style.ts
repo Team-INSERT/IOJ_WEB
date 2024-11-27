@@ -33,7 +33,7 @@ export const Button = styled.div`
 export const TestBoxLayout = styled.div`
   ${flex.COLUMN_FLEX}
   background-color: ${theme.black};
-  height: 16rem;
+  height: 40rem;
   overflow: auto;
   z-index: 20;
   width: 100%;
