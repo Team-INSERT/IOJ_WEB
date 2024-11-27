@@ -58,6 +58,7 @@ export const CodeEditor = ({
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
@@ -223,7 +224,7 @@ export const CodeEditor = ({
     } else {
       localStorage.setItem(`room_${roomId}_${problemId}_${languages}`, code);
     }
-    setIsModalOpen(true);
+    setIsSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -290,14 +291,13 @@ export const CodeEditor = ({
       setSubmitStatus("InCorrect");
     }
   };
-
   const handleSubmit = async () => {
     if (isSubmitting) {
-      setIsModalOpen(true);
+      setErrorMessage("이미 제출 요청 중입니다!");
       return;
     }
 
-    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
+    setSubmissionResults((prevResults) => ["처리 중...", ...prevResults]);
     setIsSubmitting(true);
     setActiveTab("results");
 
@@ -465,13 +465,13 @@ export const CodeEditor = ({
           }}
         />
       )}
-      {isModalOpen && (
+      {isSaveModalOpen && (
         <Modal
           status="좋음"
           mode="알림"
           title="저장이 완료되었습니다!"
           animation
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsSaveModalOpen(false)}
         />
       )}
     </S.EditorLayout>
