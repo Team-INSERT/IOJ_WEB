@@ -103,33 +103,38 @@ export const Result = () => {
         </S.RankTable>
       </S.RankingBox>
       <S.Podium>
-        <S.FirstPlaceCharacter>
-          <S.CrownPosition>
-            <Crown />
-          </S.CrownPosition>
-          <S.Flash src={flash} />
-          <Character
-            characterColor={
-              itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.FirstPlaceCharacter>
+        {itemRoomResult.length >= 1 && (
+          <S.FirstPlaceCharacter>
+            <S.CrownPosition>
+              <Crown />
+            </S.CrownPosition>
+            <S.Flash src={flash} />
+            <Character
+              characterColor={
+                itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.FirstPlaceCharacter>
+        )}
+        {itemRoomResult.length >= 2 && (
+          <S.SecondPlaceCharacter>
+            <Character
+              characterColor={
+                itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.SecondPlaceCharacter>
+        )}
 
-        <S.SecondPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.SecondPlaceCharacter>
-
-        <S.ThirdPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.ThirdPlaceCharacter>
+        {itemRoomResult.length >= 3 && (
+          <S.ThirdPlaceCharacter>
+            <Character
+              characterColor={
+                itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.ThirdPlaceCharacter>
+        )}
 
         <S.PodiumImg src={Podium} alt="Podium 이미지" />
 
