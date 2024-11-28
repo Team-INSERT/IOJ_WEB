@@ -54,7 +54,7 @@ export const Result = () => {
         }
       }
     })();
-  }, [roomId]);
+  }, []);
 
   return (
     <S.ResultBox>
