@@ -68,7 +68,7 @@ export const GameFind = () => {
           mode="small"
           color="red"
           font="pretendard"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/game")}
         >
           뒤로가기
         </Button>
