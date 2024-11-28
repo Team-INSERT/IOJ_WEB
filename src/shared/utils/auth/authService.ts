@@ -33,7 +33,7 @@ export const authorizeAccess = async (accessToken: String) => {
 
     if (getCookie("accessToken") && getCookie("refreshToken")) {
       const userData = await fetchUserData();
-      localStorage.setItem("name", userData.nickname);
+      setCookie("name", userData.nickname);
       localStorage.setItem("color", userData.color);
       window.location.replace("/");
     }

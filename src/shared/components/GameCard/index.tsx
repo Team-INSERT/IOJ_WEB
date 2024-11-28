@@ -37,8 +37,8 @@ const GameCard = ({ mode }: Modetype) => {
       id: 3,
       markup: CustomMarkUp,
       mode: "아이템전",
-      subtitle1: "게임을 만들어서",
-      subtitle2: "여러가지 게임을 즐겨봐요",
+      subtitle1: "다양한 아이템을 사용해",
+      subtitle2: "게임을 즐겨보세요!",
     },
     {
       id: 4,

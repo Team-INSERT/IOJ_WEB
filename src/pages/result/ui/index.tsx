@@ -29,25 +29,31 @@ export const Result = () => {
   const [roomTitle, setRoomTitle] = useAtom(roomTitleAtom);
 
   useEffect(() => {
+    const roomPattern = /^room_/;
+    Object.keys(localStorage).forEach((key) => {
+      if (roomPattern.test(key)) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const storedTitle = localStorage.getItem("roomTitle") || "게임 제목 없음";
     if (roomTitle === "게임 제목 없음") {
       setRoomTitle(storedTitle);
     }
   }, [roomTitle, setRoomTitle]);
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if (roomId) {
         try {
           const res = await getItemResult(roomId);
-          console.log("API 응답:", res);
           setItemRoomResult(res);
         } catch (err) {
-          console.error("API 오류:", err);
+          /**/
         }
       }
-    };
-
-    fetchData();
+    })();
   }, [roomId]);
 
   return (
@@ -97,33 +103,38 @@ export const Result = () => {
         </S.RankTable>
       </S.RankingBox>
       <S.Podium>
-        <S.FirstPlaceCharacter>
-          <S.CrownPosition>
-            <Crown />
-          </S.CrownPosition>
-          <S.Flash src={flash} />
-          <Character
-            characterColor={
-              itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.FirstPlaceCharacter>
+        {itemRoomResult.length >= 1 && (
+          <S.FirstPlaceCharacter>
+            <S.CrownPosition>
+              <Crown />
+            </S.CrownPosition>
+            <S.Flash src={flash} />
+            <Character
+              characterColor={
+                itemRoomResult[0]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.FirstPlaceCharacter>
+        )}
+        {itemRoomResult.length >= 2 && (
+          <S.SecondPlaceCharacter>
+            <Character
+              characterColor={
+                itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.SecondPlaceCharacter>
+        )}
 
-        <S.SecondPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[1]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.SecondPlaceCharacter>
-
-        <S.ThirdPlaceCharacter>
-          <Character
-            characterColor={
-              itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
-            }
-          />
-        </S.ThirdPlaceCharacter>
+        {itemRoomResult.length >= 3 && (
+          <S.ThirdPlaceCharacter>
+            <Character
+              characterColor={
+                itemRoomResult[2]?.color.toLowerCase() || "defaultColor"
+              }
+            />
+          </S.ThirdPlaceCharacter>
+        )}
 
         <S.PodiumImg src={Podium} alt="Podium 이미지" />
 

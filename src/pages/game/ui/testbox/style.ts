@@ -8,15 +8,13 @@ interface TabProps {
 export const Container = styled.div`
   ${flex.COLUMN_FLEX}
   width: 100%;
-  height: 100vh;
-  background-color: #222;
   color: white;
   overflow-x: hidden;
   background-color: ${theme.black};
 `;
 
 export const TabContainer = styled.div`
-  ${flex.FLEX}
+  ${flex.FLEX};
   background-color: ${theme.grey900};
   position: fixed;
   width: 100%;
@@ -129,6 +127,10 @@ export const ResultBox = styled.div`
   border-radius: 4px;
 `;
 
-export const Trmt = styled.div`
-  text-align: left !important; /* 터미널 텍스트를 좌측 정렬 */
+export const ScrollableSection = styled.div`
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 32px;
 `;

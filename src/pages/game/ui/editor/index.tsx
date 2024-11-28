@@ -58,6 +58,7 @@ export const CodeEditor = ({
   const [fileName, setFileName] = useState<string>("Main.py");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "execution" | "testCases" | "results"
   >("execution");
@@ -79,16 +80,39 @@ export const CodeEditor = ({
   useEffect(() => {
     if (contestId && problemId) {
       setIsContest(true);
-    } else {
+    } else if (contestId === undefined && problemId) {
       setIsContest(false);
     }
-  }, []);
+  }, [contestId, problemId]);
+
+  const extractRoomId = (key: string): string | null => {
+    const match = key.match(/^room_([^_]+)_/);
+    return match ? match[1] : null;
+  };
 
   useEffect(() => {
-    const savedCode = isContest
-      ? localStorage.getItem(`code_${contestId}_${problemId}_${languages}`)
-      : localStorage.getItem(`code_${problemId}_${languages}`);
+    if (problemId === undefined) {
+      return;
+    }
 
+    const storageKey = contestId
+      ? `code_${contestId}_${problemId}_${languages}`
+      : `room_${roomId}_${problemId}_${languages}`;
+
+    if (!contestId) {
+      const keys = Object.keys(localStorage);
+
+      keys.forEach((key) => {
+        if (key.startsWith("room_")) {
+          const currentRoomId = extractRoomId(key);
+          if (currentRoomId !== roomId) {
+            localStorage.removeItem(key);
+          }
+        }
+      });
+    }
+
+    const savedCode = localStorage.getItem(storageKey);
     if (savedCode) {
       setCode(savedCode);
     } else {
@@ -97,14 +121,9 @@ export const CodeEditor = ({
           const res = await boilerplateCode(languages);
           setBoilerplate(res);
           setCode(res);
-
-          const storageKey = isContest
-            ? `code_${contestId}_${problemId}_${languages}`
-            : `code_${problemId}`;
-
           localStorage.setItem(storageKey, res);
         } catch (err) {
-          console.error(err);
+          console.error("Error fetching boilerplate code:", err);
         }
       })();
     }
@@ -115,7 +134,7 @@ export const CodeEditor = ({
       setCode(newCode);
       const changedKey = isContest
         ? `code_${contestId}_${problemId}_${languages}`
-        : `code_${problemId}_${languages}`;
+        : `room_${roomId}_${problemId}_${languages}`;
       localStorage.setItem(changedKey, newCode);
     }
   };
@@ -126,11 +145,11 @@ export const CodeEditor = ({
       setBoilerplate(res);
       setCode(res);
       const resetKey = isContest
-      ? `code_${contestId}_${problemId}_${languages}`
-      : `code_${problemId}_${languages}_`;
-      localStorage.setItem(resetKey, res)
+        ? `code_${contestId}_${problemId}_${languages}`
+        : `room_${roomId}_${problemId}_${languages}`;
+      localStorage.setItem(resetKey, res);
     } catch (err) {
-      console.error(err);
+      /**/
     }
   };
 
@@ -181,10 +200,10 @@ export const CodeEditor = ({
           }),
         });
       } else {
-        console.log("WebSocket client or session ID is not ready.");
+        /**/
       }
     } catch (err) {
-      console.error(err);
+      /**/
     } finally {
       setIsExecuteLoading(false);
     }
@@ -203,9 +222,9 @@ export const CodeEditor = ({
     if (isContest) {
       localStorage.setItem(`code_${contestId}_${problemId}_${languages}`, code);
     } else {
-      localStorage.setItem(`code_${problemId}_${languages}`, code);
+      localStorage.setItem(`room_${roomId}_${problemId}_${languages}`, code);
     }
-    setIsModalOpen(true);
+    setIsSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -272,14 +291,13 @@ export const CodeEditor = ({
       setSubmitStatus("InCorrect");
     }
   };
-
   const handleSubmit = async () => {
     if (isSubmitting) {
-      setIsModalOpen(true);
+      setErrorMessage("이미 제출 요청 중입니다!");
       return;
     }
 
-    setSubmissionResults((prevResults) => ["처리중...", ...prevResults]);
+    setSubmissionResults((prevResults) => ["처리 중...", ...prevResults]);
     setIsSubmitting(true);
     setActiveTab("results");
 
@@ -392,23 +410,6 @@ export const CodeEditor = ({
         </S.ButtonBox>
       </S.HeaderBox>
       {submitStatus && <Submit mode={submitStatus} />}
-      <Split
-        direction="vertical"
-        sizes={[50, 50]}
-        minSize={100}
-        gutterSize={10}
-        gutterAlign="center"
-        style={{ height: "100%", width: "100%" }}
-        cursor="row-resize"
-        gutter={(direction) => {
-          const gutter = document.createElement("div");
-          gutter.className = `gutter gutter-${direction}`;
-          gutter.onmouseenter = () => {
-            gutter.style.cursor = "row-resize";
-          };
-          return gutter;
-        }}
-      >
         <AceEditorComponent
           initialCode={code}
           language={languages}
@@ -433,27 +434,24 @@ export const CodeEditor = ({
             errorMessage={errorMessage}
           />
         </S.TestBoxLayout>
-      </Split>
       {errorMessage && (
         <ErrorModal
           errorMessage={errorMessage}
           onClose={() => {
-            if (contestId) {
+            if (contestId && (errorMessage === "종료된 대회입니다.")) {
               navigate(`/game/contest/${contestId}`);
-            } else if (roomId) {
-              navigate(`/game/${roomId}/code/${problemId}`);
             }
             setErrorMessage(null);
           }}
         />
       )}
-      {isModalOpen && (
+      {isSaveModalOpen && (
         <Modal
           status="좋음"
           mode="알림"
           title="저장이 완료되었습니다!"
           animation
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsSaveModalOpen(false)}
         />
       )}
     </S.EditorLayout>

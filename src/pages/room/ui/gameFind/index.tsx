@@ -62,29 +62,41 @@ export const GameFind = () => {
 
   return (
     <S.GameFindLayout>
-      <S.Title>게임찾기</S.Title>
-      <S.FindCreateGame>
-        <S.FindGame placeholder="방 제목을 입력하세요." />
+      <S.TitleLayout>
+        <S.Title>게임찾기</S.Title>
         <Button
           mode="small"
-          color="blue"
-          font="nexon"
-          onClick={openCreateRoomModal}
+          color="red"
+          font="pretendard"
+          onClick={() => navigate(-1)}
         >
-          방 생성하기
+          뒤로가기
         </Button>
-      </S.FindCreateGame>
-      <S.GameList>
-        {rooms.map((room, index) => (
-          <Room
-            key={room.id}
-            {...room}
-            currentPeople={0}
-            roomNumber={formatRoomNumber(index)}
-            onClick={() => handleRoomClick(room, index)}
-          />
-        ))}
-      </S.GameList>
+      </S.TitleLayout>
+      <S.MainContents>
+        <S.FindCreateGame>
+          <S.FindGame placeholder="방 제목을 입력하세요." />
+          <Button
+            mode="small"
+            color="blue"
+            font="pretendard"
+            onClick={openCreateRoomModal}
+          >
+            방 생성하기
+          </Button>
+        </S.FindCreateGame>
+        <S.GameList>
+          {rooms.map((room, index) => (
+            <Room
+              key={room.id}
+              {...room}
+              currentPeople={0}
+              roomNumber={formatRoomNumber(index)}
+              onClick={() => handleRoomClick(room, index)}
+            />
+          ))}
+        </S.GameList>
+      </S.MainContents>
       <CreateRoomModalWrapper>
         <CreateRoomModal close={closeCreateRoomModal} />
       </CreateRoomModalWrapper>
