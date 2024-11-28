@@ -49,7 +49,6 @@ export const Result = () => {
         try {
           const res = await getItemResult(roomId);
           setItemRoomResult(res);
-          window.location.reload();
         } catch (err) {
           /**/
         }
