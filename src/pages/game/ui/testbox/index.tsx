@@ -101,7 +101,7 @@ export const TestBox = forwardRef<TestBoxHandles, TestBoxProps>(
         RUNTIME_ERROR: "런타임 에러",
         "처리중...": "처리 중...",
       };
-      return resultMapping[result] || "제출 중";
+      return resultMapping[result] || "알 수 없는 결과";
     };
     const isErrorOutput = (verdict: string) =>
       [
