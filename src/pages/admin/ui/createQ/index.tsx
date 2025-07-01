@@ -280,7 +280,7 @@ export const CreateQuestion = () => {
               시간 제한 <S.span>: {problemTimeLimit} Sec</S.span>
             </S.TimeBox>
             <S.Memory>
-              메모리 제한 <S.span>: {problemMemoryLimit} MB</S.span>
+              메모리 제한 <S.span>: {problemMemoryLimit} KB</S.span>
             </S.Memory>
           </S.MiniBox>
           <S.ProblemContentBox>
