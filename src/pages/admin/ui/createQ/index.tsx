@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Button, MainHeader, Level, Stars } from "@/shared/components";
 import Plus from "@/assets/Plus.svg";
 import Minus from "@/assets/Minus.svg";
@@ -9,6 +9,8 @@ import Modal from "@/shared/components/Modal";
 import { useNavigate } from "react-router-dom";
 import { postProblem } from "@/pages/admin/api/createProblem";
 import { validateQuestion } from "@/shared/helper/validateQuestion";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import * as S from "./style";
 
 interface TestCase {
@@ -218,6 +220,44 @@ export const CreateQuestion = () => {
     }
   };
 
+  const quillRef = useRef<ReactQuill | null>(null);
+
+  const imageHandler = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result;
+          const editor = quillRef.current?.getEditor();
+          editor?.insertEmbed(
+            editor.getSelection()?.index || 0,
+            "image",
+            base64,
+          );
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  };
+
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [["image"]],
+        handlers: {
+          image: imageHandler,
+        },
+      },
+    }),
+    [],
+  );
+
   return (
     <>
       <MainHeader />
@@ -234,9 +274,17 @@ export const CreateQuestion = () => {
           </S.Box>
           <S.Box>
             <S.Text>문제 설명</S.Text>
-            <S.ExplainInput
+            <ReactQuill
+              ref={quillRef}
               value={explain}
-              onChange={(e) => setExplain(e.target.value)}
+              onChange={setExplain}
+              modules={modules}
+              theme="snow"
+              placeholder="문제 설명을 입력해주세요"
+              style={{
+                width: "40rem",
+                marginBottom: "3rem",
+              }}
             />
           </S.Box>
           <S.Box>
@@ -383,9 +431,7 @@ export const CreateQuestion = () => {
           </S.MiniBox>
           <S.ProblemContentBox>
             <S.Problem>문제</S.Problem>
-            <S.ProblemContent>
-              {formatTextWithLineBreaks(explain)}
-            </S.ProblemContent>
+            <S.ProblemContent dangerouslySetInnerHTML={{ __html: explain }} />
             <S.Problem>입력</S.Problem>
             <S.ProblemContent>
               {formatTextWithLineBreaks(inputExplain)}
