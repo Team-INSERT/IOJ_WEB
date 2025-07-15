@@ -232,3 +232,37 @@ export const ExBox = styled.div`
   padding: 12px;
   overflow-y: auto;
 `;
+
+// 새로운 subtask 관련 스타일 컴포넌트들
+export const SubtaskBox = styled.div`
+  ${flex.COLUMN_FLEX};
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid ${theme.grey200};
+  border-radius: 8px;
+  background-color: ${theme.white};
+`;
+
+export const SubtaskHeader = styled.div`
+  ${flex.COLUMN_FLEX};
+  margin-bottom: 12px;
+`;
+
+export const SubtaskInputs = styled.div`
+  ${flex.FLEX};
+  gap: 12px;
+  margin-top: 8px;
+
+  ${Input} {
+    width: 19rem;
+  }
+`;
+
+export const SubtaskPreviewBox = styled.div`
+  ${flex.COLUMN_FLEX};
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid ${theme.grey200};
+  border-radius: 8px;
+  background-color: ${theme.white};
+`;

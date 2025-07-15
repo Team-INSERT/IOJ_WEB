@@ -7,6 +7,15 @@ export const validateQuestion = (
   problemMemoryLimit: string,
   problemTimeLimit: string,
   problemSource: string,
+  subtasks?: Array<{
+    score: number;
+    description: string;
+    testcases: Array<{
+      input: string;
+      output: string;
+      example: boolean;
+    }>;
+  }>,
 ): {
   valid: boolean;
   status: "좋음" | "나쁨";
@@ -97,6 +106,65 @@ export const validateQuestion = (
       title: "시간 제한을 확인해주세요.",
       subtitle: "시간 제한은 1초에서 10초 사이여야 합니다!",
     };
+  }
+
+  // subtask 검증 추가
+  if (subtasks && subtasks.length > 0) {
+    for (let i = 0; i < subtasks.length; i += 1) {
+      const subtask = subtasks[i];
+      
+      // subtask 점수 검증
+      if (subtask.score <= 0) {
+        return {
+          valid: false,
+          status: "나쁨",
+          title: `서브태스크 ${i + 1}의 점수를 입력해주세요.`,
+          subtitle: "서브태스크 점수는 0보다 커야 합니다!",
+        };
+      }
+
+      // subtask 설명 검증
+      if (subtask.description.length === 0) {
+        return {
+          valid: false,
+          status: "나쁨",
+          title: `서브태스크 ${i + 1}의 설명을 입력해주세요.`,
+          subtitle: "서브태스크 설명은 필수로 입력되어야 합니다!",
+        };
+      }
+
+      // subtask 테스트케이스 검증
+      if (subtask.testcases.length === 0) {
+        return {
+          valid: false,
+          status: "나쁨",
+          title: `서브태스크 ${i + 1}의 테스트케이스를 입력해주세요.`,
+          subtitle: "서브태스크는 최소 1개의 테스트케이스가 필요합니다!",
+        };
+      }
+
+      for (let j = 0; j < subtask.testcases.length; j += 1) {
+        const testcase = subtask.testcases[j];
+        
+        if (testcase.input.length === 0) {
+          return {
+            valid: false,
+            status: "나쁨",
+            title: `서브태스크 ${i + 1}의 테스트케이스 ${j + 1} 입력을 입력해주세요.`,
+            subtitle: "테스트케이스 입력은 필수로 입력되어야 합니다!",
+          };
+        }
+
+        if (testcase.output.length === 0) {
+          return {
+            valid: false,
+            status: "나쁨",
+            title: `서브태스크 ${i + 1}의 테스트케이스 ${j + 1} 출력을 입력해주세요.`,
+            subtitle: "테스트케이스 출력은 필수로 입력되어야 합니다!",
+          };
+        }
+      }
+    }
   }
 
   return { valid: true, status: "좋음", title: "", subtitle: "" };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, MainHeader, Level, Stars } from "@/shared/components";
 import Plus from "@/assets/Plus.svg";
 import Minus from "@/assets/Minus.svg";
@@ -12,9 +12,17 @@ import { validateQuestion } from "@/shared/helper/validateQuestion";
 import * as S from "./style";
 
 interface TestCase {
+  id: string;
   input: string;
   output: string;
   example: boolean;
+}
+
+interface Subtask {
+  id: string;
+  score: number;
+  description: string;
+  testcases: TestCase[];
 }
 
 export interface RequestDataProps {
@@ -25,17 +33,19 @@ export interface RequestDataProps {
   level: number;
   memoryLimit: number;
   timeLimit: number;
-  testcases: TestCase[];
+  subtaskDtos: Subtask[];
   source: string;
 }
 
 const formatTextWithLineBreaks = (text: string) =>
   text.split("\n").map((str) => (
-    <>
+    <React.Fragment key={`line-${str}-${Math.random()}`}>
       {str}
       <br />
-    </>
+    </React.Fragment>
   ));
+
+const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const CreateQuestion = () => {
   const navigate = useNavigate();
@@ -52,39 +62,85 @@ export const CreateQuestion = () => {
   const [problemMemoryLimit, setProblemMemoryLimit] = useState("");
   const [problemTimeLimit, setProblemTimeLimit] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [testCases, setTestCases] = useState<TestCase[]>([
-    { input: "", output: "", example: false },
+  const [subtasks, setSubtasks] = useState<Subtask[]>([
+    {
+      id: generateId(),
+      score: 0,
+      description: "",
+      testcases: [{ id: generateId(), input: "", output: "", example: false }],
+    },
   ]);
   const [problemSource, setProblemSource] = useState<string>("");
 
-  const addTestCase = () => {
-    setTestCases([...testCases, { input: "", output: "", example: false }]);
+  const addSubtask = () => {
+    setSubtasks([
+      ...subtasks,
+      {
+        id: generateId(),
+        score: 0,
+        description: "",
+        testcases: [{ id: generateId(), input: "", output: "", example: false }],
+      },
+    ]);
   };
 
-  const removeTestCase = () => {
-    if (testCases.length > 1) {
-      setTestCases(testCases.slice(0, -1));
+  const removeSubtask = () => {
+    if (subtasks.length > 1) {
+      setSubtasks(subtasks.slice(0, -1));
     }
   };
 
-  const toggleSelection = (index: number) => {
-    const newTestCases = [...testCases];
-    newTestCases[index].example = !newTestCases[index].example;
-    setTestCases(newTestCases);
+  const addTestCase = (subtaskIndex: number) => {
+    const newSubtasks = [...subtasks];
+    newSubtasks[subtaskIndex].testcases.push({
+      id: generateId(),
+      input: "",
+      output: "",
+      example: false,
+    });
+    setSubtasks(newSubtasks);
   };
 
-  const handleInputChange = (
-    index: number,
+  const removeTestCase = (subtaskIndex: number) => {
+    const newSubtasks = [...subtasks];
+    if (newSubtasks[subtaskIndex].testcases.length > 1) {
+      newSubtasks[subtaskIndex].testcases = newSubtasks[subtaskIndex].testcases.slice(0, -1);
+      setSubtasks(newSubtasks);
+    }
+  };
+
+  const toggleSelection = (subtaskIndex: number, testCaseIndex: number) => {
+    const newSubtasks = [...subtasks];
+    newSubtasks[subtaskIndex].testcases[testCaseIndex].example = 
+      !newSubtasks[subtaskIndex].testcases[testCaseIndex].example;
+    setSubtasks(newSubtasks);
+  };
+
+  const handleSubtaskChange = (
+    subtaskIndex: number,
+    field: keyof Subtask,
+    value: string | number,
+  ) => {
+    const newSubtasks = [...subtasks];
+    if (field === "score") {
+      newSubtasks[subtaskIndex][field] = value as number;
+    } else if (field === "description") {
+      newSubtasks[subtaskIndex][field] = value as string;
+    }
+    setSubtasks(newSubtasks);
+  };
+
+  const handleTestCaseChange = (
+    subtaskIndex: number,
+    testCaseIndex: number,
     field: keyof TestCase,
     value: string,
   ) => {
-    const newTestCases = [...testCases];
-
+    const newSubtasks = [...subtasks];
     if (field === "input" || field === "output") {
-      newTestCases[index][field] = value;
+      newSubtasks[subtaskIndex].testcases[testCaseIndex][field] = value;
     }
-
-    setTestCases(newTestCases);
+    setSubtasks(newSubtasks);
   };
 
   const showModal = (
@@ -108,6 +164,7 @@ export const CreateQuestion = () => {
       problemMemoryLimit,
       problemTimeLimit,
       problemSource,
+      subtasks,
     );
 
     if (!validationResult.valid) {
@@ -127,7 +184,7 @@ export const CreateQuestion = () => {
       level: selectedLevel !== null ? selectedLevel : 1,
       memoryLimit: parseInt(problemMemoryLimit, 10),
       timeLimit: parseInt(problemTimeLimit, 10),
-      testcases: testCases,
+      subtaskDtos: subtasks,
       source: problemSource,
     };
     try {
@@ -144,6 +201,14 @@ export const CreateQuestion = () => {
       setSelectedLevel(null);
       setProblemMemoryLimit("");
       setProblemTimeLimit("");
+      setSubtasks([
+        {
+          id: generateId(),
+          score: 0,
+          description: "",
+          testcases: [{ id: generateId(), input: "", output: "", example: false }],
+        },
+      ]);
     } catch (err) {
       showModal(
         "나쁨",
@@ -222,36 +287,69 @@ export const CreateQuestion = () => {
             />
           </S.Box>
           <S.Box>
-            <S.Text>
-              테스트 케이스 (좌: 입력, 우: 출력) 토글 버튼으로 등록 가능
-            </S.Text>
-            {testCases.map((testCase, index) => (
-              <S.TestBox>
-                <S.InputBox
-                  value={testCase.input}
-                  onChange={(e) =>
-                    handleInputChange(index, "input", e.target.value)
-                  }
-                />
-                <S.InputBox
-                  value={testCase.output}
-                  onChange={(e) =>
-                    handleInputChange(index, "output", e.target.value)
-                  }
-                />
-                <S.CheckButton
-                  onClick={() => toggleSelection(index)}
-                  selected={testCase.example}
-                >
-                  <img src={Check} alt="Check" />
-                </S.CheckButton>
-              </S.TestBox>
+            <S.Text>서브태스크</S.Text>
+            {subtasks.map((subtask, subtaskIndex) => (
+              <S.SubtaskBox key={subtask.id}>
+                <S.SubtaskHeader>
+                  <S.Text>서브태스크 {subtaskIndex + 1}</S.Text>
+                  <S.SubtaskInputs>
+                    <S.Input
+                      type="number"
+                      placeholder="점수"
+                      value={subtask.score}
+                      onChange={(e) =>
+                        handleSubtaskChange(subtaskIndex, "score", parseInt(e.target.value, 10) || 0)
+                      }
+                    />
+                    <S.Input
+                      placeholder="설명"
+                      value={subtask.description}
+                      onChange={(e) =>
+                        handleSubtaskChange(subtaskIndex, "description", e.target.value)
+                      }
+                    />
+                  </S.SubtaskInputs>
+                </S.SubtaskHeader>
+                <S.Text>
+                  테스트 케이스 (좌: 입력, 우: 출력) 토글 버튼으로 등록 가능
+                </S.Text>
+                {subtask.testcases.map((testCase, testCaseIndex) => (
+                  <S.TestBox key={testCase.id}>
+                    <S.InputBox
+                      value={testCase.input}
+                      onChange={(e) =>
+                        handleTestCaseChange(subtaskIndex, testCaseIndex, "input", e.target.value)
+                      }
+                    />
+                    <S.InputBox
+                      value={testCase.output}
+                      onChange={(e) =>
+                        handleTestCaseChange(subtaskIndex, testCaseIndex, "output", e.target.value)
+                      }
+                    />
+                    <S.CheckButton
+                      onClick={() => toggleSelection(subtaskIndex, testCaseIndex)}
+                      selected={testCase.example}
+                    >
+                      <img src={Check} alt="Check" />
+                    </S.CheckButton>
+                  </S.TestBox>
+                ))}
+                <S.ButtonContainer>
+                  <S.ControlButton onClick={() => removeTestCase(subtaskIndex)}>
+                    <img src={Minus} alt="Minus" />
+                  </S.ControlButton>
+                  <S.ControlButton onClick={() => addTestCase(subtaskIndex)}>
+                    <img src={Plus} alt="Plus" />
+                  </S.ControlButton>
+                </S.ButtonContainer>
+              </S.SubtaskBox>
             ))}
             <S.ButtonContainer>
-              <S.ControlButton onClick={removeTestCase}>
+              <S.ControlButton onClick={removeSubtask}>
                 <img src={Minus} alt="Minus" />
               </S.ControlButton>
-              <S.ControlButton onClick={addTestCase}>
+              <S.ControlButton onClick={addSubtask}>
                 <img src={Plus} alt="Plus" />
               </S.ControlButton>
             </S.ButtonContainer>
@@ -301,24 +399,36 @@ export const CreateQuestion = () => {
               {formatTextWithLineBreaks(problemSource)}
             </S.ProblemContent>
           </S.ProblemContentBox>
-          <S.TestBox>
-            <S.TestInputBox>
-              <S.TestInput>입력 예제</S.TestInput>
-              <S.BoxLayout>
-                {testCases.map((testCase) => (
-                  <S.ExBox>{formatTextWithLineBreaks(testCase.input)}</S.ExBox>
-                ))}
-              </S.BoxLayout>
-            </S.TestInputBox>
-            <S.TestOutputBox>
-              <S.TestInput>출력 예제</S.TestInput>
-              <S.BoxLayout>
-                {testCases.map((testCase) => (
-                  <S.ExBox>{formatTextWithLineBreaks(testCase.output)}</S.ExBox>
-                ))}
-              </S.BoxLayout>
-            </S.TestOutputBox>
-          </S.TestBox>
+                     {subtasks.map((subtask, subtaskIndex) => (
+             <S.SubtaskPreviewBox key={`preview-${subtask.id}`}>
+              <S.Problem>서브태스크 {subtaskIndex + 1} (점수: {subtask.score})</S.Problem>
+              <S.ProblemContent>
+                {formatTextWithLineBreaks(subtask.description)}
+              </S.ProblemContent>
+              <S.TestBox>
+                <S.TestInputBox>
+                  <S.TestInput>입력 예제</S.TestInput>
+                  <S.BoxLayout>
+                    {subtask.testcases.map((testCase, testCaseIndex) => (
+                      <S.ExBox key={`preview-input-${testCase.id}`}>
+                        {formatTextWithLineBreaks(testCase.input)}
+                      </S.ExBox>
+                    ))}
+                  </S.BoxLayout>
+                </S.TestInputBox>
+                <S.TestOutputBox>
+                  <S.TestInput>출력 예제</S.TestInput>
+                  <S.BoxLayout>
+                    {subtask.testcases.map((testCase, testCaseIndex) => (
+                      <S.ExBox key={`preview-output-${testCase.id}`}>
+                        {formatTextWithLineBreaks(testCase.output)}
+                      </S.ExBox>
+                    ))}
+                  </S.BoxLayout>
+                </S.TestOutputBox>
+              </S.TestBox>
+            </S.SubtaskPreviewBox>
+          ))}
         </S.previewSection>
         {isModalOpen && (
           <Modal
