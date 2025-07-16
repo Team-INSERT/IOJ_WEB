@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { Button, MainHeader, Level, Stars } from "@/shared/components";
 import Plus from "@/assets/Plus.svg";
 import Minus from "@/assets/Minus.svg";
@@ -6,8 +6,8 @@ import Check from "@/assets/Check.svg";
 import Out from "@/assets/Out.png";
 
 import Modal from "@/shared/components/Modal";
-import { useNavigate } from "react-router-dom";
-import { postProblem } from "@/pages/admin/api/createProblem";
+import { useNavigate, useLocation } from "react-router-dom";
+import { postProblem, updateProblem, UpdateProblemRequest } from "@/pages/admin/api/createProblem";
 import { validateQuestion } from "@/shared/helper/validateQuestion";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -51,11 +51,16 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const CreateQuestion = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalSubtitle, setModalSubtitle] = useState("");
   const [modalStatus, setModalStatus] = useState<"나쁨" | "좋음">("나쁨");
+  
+  // 수정 모드 관련 상태
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [problemId, setProblemId] = useState<number | null>(null);
 
   const [problemTitle, setProblemTitle] = useState("");
   const [explain, setExplain] = useState("");
@@ -73,6 +78,26 @@ export const CreateQuestion = () => {
     },
   ]);
   const [problemSource, setProblemSource] = useState<string>("");
+
+  // 수정 모드로 전환 시 기존 데이터 불러오기
+  useEffect(() => {
+    if (location.state?.editMode && location.state?.problemId) {
+      setIsEditMode(true);
+      setProblemId(location.state.problemId);
+      // 실제 구현에서는 여기서 API를 호출하여 기존 문제 데이터를 불러와야 합니다
+      // 예시: fetchProblemData(location.state.problemId).then(data => {
+      //   setProblemTitle(data.title);
+      //   setExplain(data.content);
+      //   setInputExplain(data.inputContent);
+      //   setOutputExplain(data.outputContent);
+      //   setProblemSource(data.source);
+      //   setSelectedLevel(data.level);
+      //   setProblemMemoryLimit(data.memoryLimit.toString());
+      //   setProblemTimeLimit(data.timeLimit.toString());
+      //   // subtasks는 별도로 처리 필요
+      // });
+    }
+  }, [location.state]);
 
   const addSubtask = () => {
     setSubtasks([
@@ -218,6 +243,54 @@ export const CreateQuestion = () => {
         "사용자의 네트워크 연결상태를 확인해주세요.",
       );
     }
+  };
+
+  const onQuestionUpdateClick = async () => {
+    if (!problemId) {
+      showModal(
+        "나쁨",
+        "문제 ID가 없습니다.",
+        "수정할 문제를 다시 선택해주세요.",
+      );
+      return;
+    }
+
+    const updateRequestData: UpdateProblemRequest = {
+      id: problemId,
+      content: explain,
+      inputContent: inputExplain,
+      outputContent: outputExplain,
+    };
+
+    try {
+      await updateProblem(updateRequestData);
+      showModal(
+        "좋음",
+        "문제 수정에 성공하였습니다!",
+        "문제가 성공적으로 수정되었습니다!",
+      );
+      setIsEditMode(false);
+      setProblemId(null);
+    } catch (err) {
+      showModal(
+        "나쁨",
+        "문제 수정에 실패하였습니다.",
+        "사용자의 네트워크 연결상태를 확인해주세요.",
+      );
+    }
+  };
+
+  const handleEditMode = (id: number) => {
+    setProblemId(id);
+    setIsEditMode(true);
+    // 실제 구현에서는 여기서 기존 문제 데이터를 불러와서 폼에 채워넣어야 합니다
+    // 예시: fetchProblemData(id).then(data => {
+    //   setProblemTitle(data.title);
+    //   setExplain(data.content);
+    //   setInputExplain(data.inputContent);
+    //   setOutputExplain(data.outputContent);
+    //   // ... 기타 필드들
+    // });
   };
 
   const quillRef = useRef<ReactQuill | null>(null);
@@ -407,9 +480,29 @@ export const CreateQuestion = () => {
               <img src={Out} alt="Out" />
               나가기
             </S.Out>
-            <Button mode="small" color="blue" onClick={onQuestionCreateClick}>
-              문제 생성
-            </Button>
+            <S.FooterButtonContainer>
+              {isEditMode ? (
+                <>
+                  <Button mode="small" color="orange" onClick={onQuestionUpdateClick}>
+                    문제 수정
+                  </Button>
+                  <Button 
+                    mode="small" 
+                    color="red" 
+                    onClick={() => {
+                      setIsEditMode(false);
+                      setProblemId(null);
+                    }}
+                  >
+                    수정 취소
+                  </Button>
+                </>
+              ) : (
+                <Button mode="small" color="blue" onClick={onQuestionCreateClick}>
+                  문제 생성
+                </Button>
+              )}
+            </S.FooterButtonContainer>
           </S.BoxFooter>
         </S.createSection>
         <S.previewSection>

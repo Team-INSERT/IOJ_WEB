@@ -80,6 +80,11 @@ export const ButtonContainer = styled.div`
   margin-top: 10px;
 `;
 
+export const FooterButtonContainer = styled.div`
+  ${flex.FLEX}
+  gap: 12px;
+`;
+
 export const ControlButton = styled.button`
   padding: 1px 0px;
   margin-top: 1px;

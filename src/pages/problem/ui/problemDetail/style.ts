@@ -22,6 +22,27 @@ export const TitleAndLimit = styled.div`
   ${flex.BETWEEN}
   align-items: end;
 `;
+
+export const EditButtonContainer = styled.div`
+  ${flex.FLEX}
+  gap: 12px;
+`;
+
+export const EditTextarea = styled.textarea`
+  ${Pretendard.Text}
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid ${theme.grey300};
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+  
+  &:focus {
+    outline: none;
+    border-color: ${theme.insertBlue};
+  }
+`;
 export const LimitLayout = styled.div`
   ${flex.FLEX}
   gap: 12px;
@@ -106,4 +127,33 @@ export const InputText = styled.pre<{ isScrolling: boolean }>`
   ::-webkit-scrollbar {
     height: ${({ isScrolling }) => (isScrolling ? "12px" : "0px")};
   }
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const ModalContent = styled.div`
+  background: ${theme.white};
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  ${flex.COLUMN_FLEX}
+  gap: 1rem;
+  min-width: 300px;
+`;
+
+export const ModalMessage = styled.p`
+  ${Pretendard.Text}
+  text-align: center;
+  color: ${theme.black};
 `;

@@ -14,7 +14,19 @@ export const CreateContest = styled.div`
   padding-right: 20px;
 `;
 
-export const CreateQ = styled.div``;
+export const CreateQ = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 20px;
+`;
+
+export const ManageProblems = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 20px;
+`;
 
 export const Divider = styled.div`
   border-left: solid 3px ${theme.grey400};

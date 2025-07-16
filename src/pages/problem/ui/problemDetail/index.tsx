@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Footer, MainHeader } from "@/shared/components";
-import { problem } from "@/pages/problem/api/problem";
+import { Footer, MainHeader, Button } from "@/shared/components";
+import { problem, updateProblem, UpdateProblemRequest } from "@/pages/problem/api/problem";
 import * as S from "./style";
 
 interface TestcaseType {
@@ -28,12 +28,24 @@ export const ProblemDetail = () => {
   const inputTextRefs = useRef<(HTMLPreElement | null)[]>([]);
   const [problemDetail, setProblemDetail] = useState<ProblemType>();
   const [isScrolling, setIsScrolling] = useState<boolean[]>([]);
+  
+  // 수정 모드 관련 상태
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editContent, setEditContent] = useState("");
+  const [editInputContent, setEditInputContent] = useState("");
+  const [editOutputContent, setEditOutputContent] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     try {
       (async () => {
         const res = await problem(parseInt(problemId, 10));
         setProblemDetail(res);
+        // 수정 모드 초기화
+        setEditContent(res.content);
+        setEditInputContent(res.inputContent);
+        setEditOutputContent(res.outputContent);
       })();
     } catch (err) {
       /**/
@@ -76,6 +88,49 @@ export const ProblemDetail = () => {
     });
   }, [isScrolling]);
 
+  const handleEditClick = () => {
+    setIsEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+    // 원래 데이터로 복원
+    if (problemDetail) {
+      setEditContent(problemDetail.content);
+      setEditInputContent(problemDetail.inputContent);
+      setEditOutputContent(problemDetail.outputContent);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!problemDetail) return;
+
+    const updateRequestData: UpdateProblemRequest = {
+      id: parseInt(problemId, 10),
+      content: editContent,
+      inputContent: editInputContent,
+      outputContent: editOutputContent,
+    };
+
+    try {
+      await updateProblem(updateRequestData);
+      setModalMessage("문제가 성공적으로 수정되었습니다!");
+      setIsModalOpen(true);
+      setIsEditMode(false);
+      
+      // 수정된 데이터로 problemDetail 업데이트
+      setProblemDetail({
+        ...problemDetail,
+        content: editContent,
+        inputContent: editInputContent,
+        outputContent: editOutputContent,
+      });
+    } catch (err) {
+      setModalMessage("문제 수정에 실패했습니다.");
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <>
       <MainHeader />
@@ -97,6 +152,22 @@ export const ProblemDetail = () => {
               </S.Detail>
             </S.LimitLayout>
           </S.TitleAndLimit>
+          <S.EditButtonContainer>
+            {isEditMode ? (
+              <>
+                <Button mode="small" color="orange" onClick={handleSaveEdit}>
+                  저장
+                </Button>
+                <Button mode="small" color="red" onClick={handleCancelEdit}>
+                  취소
+                </Button>
+              </>
+            ) : (
+              <Button mode="small" color="blue" onClick={handleEditClick}>
+                수정
+              </Button>
+            )}
+          </S.EditButtonContainer>
         </S.ProblemHeader>
         <S.HeaderLine />
         <S.ContentLayout>
@@ -105,27 +176,51 @@ export const ProblemDetail = () => {
               <S.Problem>문제</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo isSource={false}>
-              {problemDetail?.content}
-            </S.ProblemInfo>
+            {isEditMode ? (
+              <S.EditTextarea
+                value={editContent}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditContent(e.target.value)}
+                placeholder="문제 내용을 입력하세요"
+              />
+            ) : (
+              <S.ProblemInfo isSource={false}>
+                {problemDetail?.content}
+              </S.ProblemInfo>
+            )}
           </S.ProblemLayout>
           <S.ProblemLayout>
             <S.SubTitleLayout>
               <S.Problem>입력</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo isSource={false}>
-              {problemDetail?.inputContent}
-            </S.ProblemInfo>
+            {isEditMode ? (
+              <S.EditTextarea
+                value={editInputContent}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditInputContent(e.target.value)}
+                placeholder="입력 설명을 입력하세요"
+              />
+            ) : (
+              <S.ProblemInfo isSource={false}>
+                {problemDetail?.inputContent}
+              </S.ProblemInfo>
+            )}
           </S.ProblemLayout>
           <S.ProblemLayout>
             <S.SubTitleLayout>
               <S.Problem>출력</S.Problem>
               <S.GreyLine />
             </S.SubTitleLayout>
-            <S.ProblemInfo isSource={false}>
-              {problemDetail?.outputContent}
-            </S.ProblemInfo>
+            {isEditMode ? (
+              <S.EditTextarea
+                value={editOutputContent}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditOutputContent(e.target.value)}
+                placeholder="출력 설명을 입력하세요"
+              />
+            ) : (
+              <S.ProblemInfo isSource={false}>
+                {problemDetail?.outputContent}
+              </S.ProblemInfo>
+            )}
           </S.ProblemLayout>
           {problemDetail?.testcases.map((example, index) => (
             <S.ExampleLayout>
@@ -171,6 +266,16 @@ export const ProblemDetail = () => {
         </S.ContentLayout>
       </S.Layout>
       <Footer />
+      {isModalOpen && (
+        <S.ModalOverlay onClick={() => setIsModalOpen(false)}>
+          <S.ModalContent onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <S.ModalMessage>{modalMessage}</S.ModalMessage>
+            <Button mode="small" color="blue" onClick={() => setIsModalOpen(false)}>
+              확인
+            </Button>
+          </S.ModalContent>
+        </S.ModalOverlay>
+      )}
     </>
   );
 };

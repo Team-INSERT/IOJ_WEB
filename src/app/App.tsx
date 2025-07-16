@@ -21,6 +21,7 @@ import {
 } from "@/pages/room";
 import { Result, Detail } from "@/pages/result";
 import { CreateContest, Start, CreateQuestion } from "@/pages/admin";
+import { AdminProblemList } from "@/pages/admin/ui/problemList";
 import { ProblemDetail, ProblemList } from "@/pages/problem";
 import { Ai } from "@/pages/game/ai/ui/page/page";
 import { useAxiosInterceptor } from "@/shared/utils/customAxios";
@@ -67,6 +68,7 @@ const App = () => {
         <Route path="/admin" element={<Start />} />
         <Route path="/admin/contest" element={<CreateContest />} />
         <Route path="/admin/question" element={<CreateQuestion />} />
+        <Route path="/admin/problems" element={<AdminProblemList />} />
         <Route path="/problem" element={<ProblemList />} />
         <Route path="/problem/:problemId" element={<ProblemDetail />} />
         <Route path="/google/callback" element={<Loading />} />
